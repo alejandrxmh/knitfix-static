@@ -6,253 +6,295 @@
   <title>knitfix — amsterdam</title>
   <meta name="description" content="knitfix — verfijnde breigoedreparatie en upcycling in amsterdam." />
 
-  <!-- Futura PT -->
-  <link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- “futura pt” (note: if not available on the device it will fall back to geometric sans) -->
+  <link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CDN -->
+  <!-- tailwind (cdn) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: { bg:"#FAFAFA", ink:"#0F0F0F", sub:"#6B6B6B", line:"#E6E6E6" },
-          fontFamily: { sans:['"Futura PT"','Futura','Helvetica','Arial','sans-serif'] },
-          letterSpacing: { tighter:"-0.025em" }
+          colors: { bg:"#fafafa", ink:"#0f0f0f", sub:"#6b6b6b", line:"#e6e6e6" },
+          fontFamily: { sans:['"Futura PT"','futura','helvetica','arial','ui-sans-serif','system-ui','sans-serif'] }
         }
       }
     };
   </script>
   <style>
     html { scroll-behavior:smooth; text-transform:lowercase; }
-    body { background:#FAFAFA; color:#0F0F0F; font-family:'Futura PT',sans-serif; font-weight:400; letter-spacing:-0.015em; }
-    h1,h2,h3,h4,h5,h6 { text-transform:lowercase; letter-spacing:-0.025em; }
-    input,textarea,button,label,summary,p,span,a { text-transform:lowercase; }
+    body { background:#fafafa; color:#0f0f0f; font-family:'Futura PT',sans-serif; }
 
+    /* global rhythm */
     .maxw { max-width:1080px }
-    .btn{ border:1px solid #0F0F0F; border-radius:0; padding:.4rem .8rem; font-size:.8rem; font-weight:400; transition:.2s; }
-    .btn:hover{ background:#0F0F0F; color:#fff }
-    .btn-ghost{ border:1px solid #E6E6E6; border-radius:0; padding:.35rem .75rem; font-size:.8rem; }
+    .sec { padding-top:8rem; padding-bottom:8rem } /* generous spacing */
+    section + section { margin-top:4rem; }
+
+    /* header */
+    header h1 { font-size:1.2rem; letter-spacing:-0.03em; font-weight:700; }
+    .btn{ border:1px solid #0f0f0f; border-radius:0; padding:.4rem .8rem; font-size:.8rem; font-weight:400; transition:.2s; }
+    .btn:hover{ background:#0f0f0f; color:#fff }
+    .btn-ghost{ border:1px solid #e6e6e6; border-radius:0; padding:.35rem .75rem; font-size:.8rem; }
     .btn-ghost:hover{ background:#fff }
-    .pill{ border:1px solid #E6E6E6; border-radius:9999px; padding:.32rem .65rem; font-size:.78rem }
-    .form-label{ font-size:.6rem; letter-spacing:.08em; color:#6B6B6B }
-    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #E6E6E6; padding:.45rem 0; outline:none; font-size:.9rem }
-    .field:focus{ border-color:#0F0F0F }
-    .textarea{ resize:vertical; line-height:1.45 }
-    .sec{ padding-top:5.5rem; padding-bottom:5.5rem }
-    header h1{ font-size:1.2rem; letter-spacing:-0.03em; font-weight:600; }
+
+    /* pills */
+    .pill{ border:1px solid #e6e6e6; border-radius:9999px; padding:.32rem .65rem; font-size:.78rem }
+
+    /* transparent, underline-only form */
+    .form-label{ font-size:.6rem; letter-spacing:.08em; color:#6b6b6b }
+    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #e6e6e6; padding:.45rem 0; outline:none; font-size:.92rem; }
+    .field:focus{ border-color:#0f0f0f }
+    .textarea{ resize:vertical; line-height:1.5 }
+
+    /* section titles */
+    .sectitle{ font-weight:700; letter-spacing:-0.02em }
+    .sectitle small{ font-weight:400; font-size:.85rem; color:#6b6b6b; margin-left:.35rem }
   </style>
 </head>
 
-
 <body class="antialiased font-sans">
-  <!-- HEADER -->
+  <!-- header (smaller) -->
   <header class="maxw mx-auto w-full px-6 py-2 md:py-3 flex items-center justify-between border-b border-line">
-  <h1>knitfix</h1>
-  <nav class="flex items-center gap-2">
-    <button id="langToggle" class="btn-ghost">en</button>
-    <a id="waTop" href="#" target="_blank" rel="noopener" class="btn-ghost">whatsapp</a>
-  </nav>
-</header>
-
+    <h1>knitfix</h1>
+    <nav class="flex items-center gap-2">
+      <button id="langToggle" class="btn-ghost">en</button>
+      <a id="waTop" href="#" target="_blank" rel="noopener" class="btn-ghost">whatsapp</a>
+    </nav>
+  </header>
 
   <main class="maxw mx-auto w-full px-6">
-    <!-- HERO -->
-  <section class="pt-10 md:pt-12">
-  <div class="md:w-[70%]">
-    <h2 id="heroTitle" class="text-[24px] md:text-[32px] font-[500] leading-[1.25] tracking-[-0.02em]">
-      vertel ons kort over je breiwerk.
-    </h2>
-    <p id="heroIntro" class="mt-2 text-sub md:w-[75%] text-[15px] leading-[1.6]">
-      stuur je aanvraag met foto’s. je ontvangt snel een heldere inschatting en planning.
-    </p>
-  </div>
-</section>
+    <!-- hero (bold af, but harmonious) -->
+    <section class="pt-16 md:pt-20 pb-10">
+      <div class="md:w-[70%]">
+        <h2 id="heroTitle" class="text-[26px] md:text-[36px] font-[700] leading-[1.25] tracking-[-0.025em]">
+          vertel ons kort over je breiwerk.
+        </h2>
+        <p id="heroIntro" class="mt-4 text-sub md:w-[75%] text-[15px] leading-[1.7] tracking-[-0.01em]">
+          stuur je aanvraag met foto’s. je ontvangt snel een heldere inschatting en planning.
+        </p>
+      </div>
+    </section>
 
-
-    <!-- FEEDBACK NOTES (same bg) -->
+    <!-- feedback notes -->
     <div id="formSuccess" class="hidden border border-line rounded-none px-4 py-2 text-sm mt-6">
-      Bedankt — we hebben je aanvraag ontvangen. We nemen spoedig contact met je op.
+      bedankt — we hebben je aanvraag ontvangen. we nemen spoedig contact met je op.
     </div>
     <div id="formError" class="hidden border border-line rounded-none px-4 py-2 text-sm mt-6">
-      Verzenden mislukt. Probeer opnieuw of mail <a class="underline" href="mailto:info@knitfix.nl">info@knitfix.nl</a>.
+      verzenden mislukt. probeer opnieuw of mail <a class="underline" href="mailto:info@knitfix.nl">info@knitfix.nl</a>.
     </div>
 
-    <!-- TRANSPARENT CONTACT FORM (no boxes; underline fields only) -->
+    <!-- transparent contact form -->
     <form id="repairForm" class="mt-6 pb-12 border-b border-line" enctype="multipart/form-data">
-      <div class="grid md:grid-cols-3 gap-6">
+      <div class="grid md:grid-cols-3 gap-8">
         <div>
-          <label id="labName" class="form-label block mb-1">Naam*</label>
-          <input id="fName" name="name" type="text" required class="field" placeholder="Naam" />
+          <label id="labName" class="form-label block mb-1">naam*</label>
+          <input id="fName" name="name" type="text" required class="field" placeholder="naam" />
         </div>
         <div>
-          <label id="labEmail" class="form-label block mb-1">E-mail*</label>
+          <label id="labEmail" class="form-label block mb-1">e-mail*</label>
           <input id="fEmail" name="email" type="email" required class="field" placeholder="you@mail.com" />
         </div>
         <div>
-          <label id="labPhone" class="form-label block mb-1">Telefoon*</label>
+          <label id="labPhone" class="form-label block mb-1">telefoon*</label>
           <input id="fPhone" name="phone" type="tel" required class="field" placeholder="+31…" />
         </div>
       </div>
 
-      <div class="mt-4 grid md:grid-cols-3 gap-6">
+      <div class="mt-6 grid md:grid-cols-3 gap-8">
         <div class="md:col-span-2">
-          <label id="labMsg" class="form-label block mb-1">Bericht*</label>
-          <textarea id="fMessage" name="message" rows="3" required class="field textarea" placeholder="Beschrijf het kledingstuk en de schade…"></textarea>
+          <label id="labMsg" class="form-label block mb-1">bericht*</label>
+          <textarea id="fMessage" name="message" rows="3" required class="field textarea" placeholder="beschrijf het kledingstuk en de schade…"></textarea>
         </div>
         <div>
-          <label id="photosLabel" class="form-label block mb-1">Foto’s (max 5, JPG/PNG)</label>
+          <label id="photosLabel" class="form-label block mb-1">foto’s (max 5, jpg/png)</label>
           <input id="fPhotos" name="photos" type="file" accept="image/*" multiple class="field" />
         </div>
       </div>
 
-      <!-- Repair type pills -->
-      <div class="mt-4">
-        <div id="labType" class="form-label mb-2">Type reparatie</div>
+      <!-- repair type pills -->
+      <div class="mt-6">
+        <div id="labType" class="form-label mb-2">type reparatie</div>
         <div class="flex flex-wrap gap-2">
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="Klein motgaatje">Klein motgaatje</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="Meerdere gaatjes">Meerdere gaatjes</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="Ladder / getrokken draad">Ladder / getrokken draad</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="Losse boord/zoom">Losse boord/zoom</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="Opnieuw blocken / vorm">Opnieuw blocken / vorm</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="Overig">Overig</label>
+          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="klein motgaatje">klein motgaatje</label>
+          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="meerdere gaatjes">meerdere gaatjes</label>
+          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="ladder / getrokken draad">ladder / getrokken draad</label>
+          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="losse boord/zoom">losse boord/zoom</label>
+          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="opnieuw blocken / vorm">opnieuw blocken / vorm</label>
+          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="overig">overig</label>
         </div>
       </div>
 
-      <div class="mt-4 flex items-start gap-2 text-xs text-sub">
+      <div class="mt-6 flex items-start gap-2 text-xs text-sub">
         <input id="consent" type="checkbox" required />
-        <span id="consentText">Ik ga akkoord dat KnitFix contact met mij opneemt over deze aanvraag.</span>
+        <span id="consentText">ik ga akkoord dat knitfix contact met mij opneemt over deze aanvraag.</span>
       </div>
 
-      <div class="mt-5 flex flex-wrap items-center gap-3">
-        <button id="submitBtn" type="submit" class="btn">Verstuur</button>
-        <!-- removed second WhatsApp button to avoid duplicates -->
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button id="submitBtn" type="submit" class="btn">verstuur</button>
+        <!-- only header has whatsapp -->
       </div>
     </form>
 
-    <!-- PRICING -->
+    <!-- pricing -->
     <section id="pricing" class="sec border-b border-line">
-      <h3 id="priceTitle" class="text-[22px] md:text-[26px] font-medium tracking-tight mb-9">Prijzen (indicatie)</h3>
-      <div class="grid md:grid-cols-2 gap-12">
+      <h3 id="priceTitle" class="sectitle text-[20px] md:text-[24px] mb-10">
+        prijzen <small id="priceSmall">(indicatie)</small>
+      </h3>
+      <div class="grid md:grid-cols-2 gap-14">
         <div class="border-t border-line pt-6">
           <div class="flex items-baseline justify-between">
-            <h4 id="p1t" class="text-[18px] font-semibold tracking-tight">Klein gaatje (≤8mm)</h4>
+            <h4 id="p1t" class="text-[18px] font-[600] tracking-[-0.01em]">klein gaatje (≤8mm)</h4>
             <span id="p1p" class="text-[15px]">€10–€15</span>
           </div>
         </div>
         <div class="border-t border-line pt-6">
           <div class="flex items-baseline justify-between">
-            <h4 id="p2t" class="text-[18px] font-semibold tracking-tight">Meerdere gaatjes</h4>
+            <h4 id="p2t" class="text-[18px] font-[600] tracking-[-0.01em]">meerdere gaatjes</h4>
             <span id="p2p" class="text-[15px]">€25–€35</span>
           </div>
         </div>
         <div class="border-t border-line pt-6">
           <div class="flex items-baseline justify-between">
-            <h4 id="p3t" class="text-[18px] font-semibold tracking-tight">Losse boord/zoom</h4>
+            <h4 id="p3t" class="text-[18px] font-[600] tracking-[-0.01em]">losse boord/zoom</h4>
             <span id="p3p" class="text-[15px]">€25–€40</span>
           </div>
         </div>
         <div class="border-t border-line pt-6">
           <div class="flex items-baseline justify-between">
-            <h4 id="p4t" class="text-[18px] font-semibold tracking-tight">Opnieuw blocken / vorm</h4>
+            <h4 id="p4t" class="text-[18px] font-[600] tracking-[-0.01em]">opnieuw blocken / vorm</h4>
             <span id="p4p" class="text-[15px]">€20–€35</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
+    <!-- services -->
+    <section id="services" class="sec border-b border-line">
+      <h3 id="servicesTitle" class="sectitle text-[20px] md:text-[24px] mb-10">diensten</h3>
+      <div class="grid md:grid-cols-2 gap-14">
+        <div class="border-t border-line pt-6">
+          <h4 id="s1t" class="text-[18px] font-[600] tracking-[-0.01em]">reparaties</h4>
+          <p id="s1d" class="mt-2 text-sub">motgaatjes, ladders, losse boorden. subtiel en duurzaam hersteld.</p>
+        </div>
+        <div class="border-t border-line pt-6">
+          <h4 id="s2t" class="text-[18px] font-[600] tracking-[-0.01em]">zichtbaar stopwerk</h4>
+          <p id="s2d" class="mt-2 text-sub">een esthetische keuze voor wie het ambacht mag spreken.</p>
+        </div>
+        <div class="border-t border-line pt-6">
+          <h4 id="s3t" class="text-[18px] font-[600] tracking-[-0.01em]">opnieuw blocken</h4>
+          <p id="s3d" class="mt-2 text-sub">vormcorrectie en verfrissing van breigoed.</p>
+        </div>
+        <div class="border-t border-line pt-6">
+          <h4 id="s4t" class="text-[18px] font-[600] tracking-[-0.01em]">upcycling</h4>
+          <p id="s4d" class="mt-2 text-sub">creatieve herinterpretaties met behoud van materiaal.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- faq -->
     <section id="faq" class="sec">
-      <div class="grid md:grid-cols-2 gap-12">
+      <div class="grid md:grid-cols-2 gap-14">
         <div>
-          <h3 id="faqTitle" class="text-[22px] md:text-[26px] font-medium tracking-tight mb-2">Vragen?</h3>
-          <p id="faqIntro" class="text-sub">Snelle antwoorden hieronder. Meer weten? Stuur een bericht.</p>
+          <h3 id="faqTitle" class="sectitle text-[20px] md:text-[24px] mb-3">vragen?</h3>
+          <p id="faqIntro" class="text-sub">snelle antwoorden hieronder. meer weten? stuur een bericht.</p>
         </div>
         <div class="space-y-2">
           <details class="border-t border-line py-4 group">
             <summary class="flex justify-between items-center cursor-pointer list-none">
-              <span id="q1" class="font-medium">Welke gebieden dekken jullie?</span>
+              <span id="q1" class="font-[600]">welke gebieden dekken jullie?</span>
               <span class="text-sub transition group-open:rotate-45">+</span>
             </summary>
-            <p id="a1" class="mt-2 text-sub">Amsterdam en omgeving. Per post vanuit heel Nederland mogelijk.</p>
+            <p id="a1" class="mt-2 text-sub">amsterdam en omgeving. per post vanuit heel nederland mogelijk.</p>
           </details>
           <details class="border-t border-line py-4 group">
             <summary class="flex justify-between items-center cursor-pointer list-none">
-              <span id="q2" class="font-medium">Wat kost het?</span>
+              <span id="q2" class="font-[600]">wat kost het?</span>
               <span class="text-sub transition group-open:rotate-45">+</span>
             </summary>
-            <p id="a2" class="mt-2 text-sub">Je krijgt een duidelijke indicatie na beoordeling van je foto’s en informatie.</p>
+            <p id="a2" class="mt-2 text-sub">je krijgt een duidelijke indicatie na beoordeling van je foto’s en informatie.</p>
           </details>
           <details class="border-t border-line py-4 group">
             <summary class="flex justify-between items-center cursor-pointer list-none">
-              <span id="q3" class="font-medium">Werken jullie met kasjmier?</span>
+              <span id="q3" class="font-[600]">werken jullie met kasjmier?</span>
               <span class="text-sub transition group-open:rotate-45">+</span>
             </summary>
-            <p id="a3" class="mt-2 text-sub">Ja. We matchen garen en steken zorgvuldig of doen zichtbaar stopwerk op verzoek.</p>
+            <p id="a3" class="mt-2 text-sub">ja. we matchen garen en steken zorgvuldig of doen zichtbaar stopwerk op verzoek.</p>
           </details>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- footer -->
   <footer class="maxw mx-auto w-full px-6 py-8 border-t border-line text-sm text-sub">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      <p id="footerLine">KnitFix — Amsterdam · © <span id="year"></span></p>
+      <p id="footerLine">knitfix — amsterdam · © <span id="year"></span></p>
       <div class="flex gap-2">
-        <a href="#top" class="pill">Top</a>
+        <a href="#top" class="pill">top</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // --- CONFIG ---
-    const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-id"; // replace
-    const WHATSAPP_NUMBER    = "31600000000";                     // replace (numeric only)
-    // --------------
+    // --- config (replace) ---
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-id"; // <- replace
+    const WHATSAPP_NUMBER    = "31600000000";                    // <- replace numeric only
+    // ------------------------
 
-    // Bind WhatsApp (single button in header)
+    // single whatsapp (header)
     const waURL = `https://wa.me/${WHATSAPP_NUMBER}`;
     document.getElementById("waTop").href = waURL;
 
-    // Year
+    // year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Translations (EN/NL)
+    // translations (all lowercase for visual harmony)
     const T = {
       nl: {
-        toggle:"EN",
-        heroTitle:"Vertel ons kort over je breiwerk.",
-        heroIntro:"Stuur je aanvraag met foto’s. Je ontvangt snel een heldere inschatting en planning.",
-        labName:"Naam*", labEmail:"E-mail*", labPhone:"Telefoon*", labMsg:"Bericht*", labType:"Type reparatie",
-        photos:"Foto’s (max 5, JPG/PNG)", consent:"Ik ga akkoord dat KnitFix contact met mij opneemt over deze aanvraag.",
-        submit:"Verstuur",
-        priceTitle:"Prijzen (indicatie)",
-        faqTitle:"Vragen?", faqIntro:"Snelle antwoorden hieronder. Meer weten? Stuur een bericht.",
-        p1t:"Klein gaatje (≤8mm)", p1p:"€10–€15",
-        p2t:"Meerdere gaatjes",   p2p:"€25–€35",
-        p3t:"Losse boord/zoom",   p3p:"€25–€40",
-        p4t:"Opnieuw blocken / vorm", p4p:"€20–€35",
-        q1:"Welke gebieden dekken jullie?", a1:"Amsterdam en omgeving. Per post vanuit heel Nederland mogelijk.",
-        q2:"Wat kost het?", a2:"Je krijgt een duidelijke indicatie na beoordeling van je foto’s en informatie.",
-        q3:"Werken jullie met kasjmier?", a3:"Ja. We matchen garen en steken zorgvuldig of doen zichtbaar stopwerk op verzoek.",
-        footer:"KnitFix — Amsterdam · © "
+        toggle:"en",
+        heroTitle:"vertel ons kort over je breiwerk.",
+        heroIntro:"stuur je aanvraag met foto’s. je ontvangt snel een heldere inschatting en planning.",
+        labName:"naam*", labEmail:"e-mail*", labPhone:"telefoon*", labMsg:"bericht*", labType:"type reparatie",
+        photos:"foto’s (max 5, jpg/png)", consent:"ik ga akkoord dat knitfix contact met mij opneemt over deze aanvraag.",
+        submit:"verstuur",
+        priceTitleHTML:'prijzen <small>(indicatie)</small>',
+        p1t:"klein gaatje (≤8mm)", p1p:"€10–€15",
+        p2t:"meerdere gaatjes",     p2p:"€25–€35",
+        p3t:"losse boord/zoom",     p3p:"€25–€40",
+        p4t:"opnieuw blocken / vorm", p4p:"€20–€35",
+        servicesTitle:"diensten",
+        s1t:"reparaties", s1d:"motgaatjes, ladders, losse boorden. subtiel en duurzaam hersteld.",
+        s2t:"zichtbaar stopwerk", s2d:"een esthetische keuze voor wie het ambacht mag spreken.",
+        s3t:"opnieuw blocken", s3d:"vormcorrectie en verfrissing van breigoed.",
+        s4t:"upcycling", s4d:"creatieve herinterpretaties met behoud van materiaal.",
+        faqTitle:"vragen?", faqIntro:"snelle antwoorden hieronder. meer weten? stuur een bericht.",
+        q1:"welke gebieden dekken jullie?", a1:"amsterdam en omgeving. per post vanuit heel nederland mogelijk.",
+        q2:"wat kost het?", a2:"je krijgt een duidelijke indicatie na beoordeling van je foto’s en informatie.",
+        q3:"werken jullie met kasjmier?", a3:"ja. we matchen garen en steken zorgvuldig of doen zichtbaar stopwerk op verzoek.",
+        footer:"knitfix — amsterdam · © "
       },
       en: {
-        toggle:"NL",
-        heroTitle:"Tell us briefly about your knit.",
-        heroIntro:"Send your request with photos. You’ll receive a clear estimate and timeline.",
-        labName:"Name*", labEmail:"Email*", labPhone:"Phone*", labMsg:"Message*", labType:"Repair type",
-        photos:"Photos (max 5, JPG/PNG)", consent:"I agree that KnitFix may contact me about this request.",
-        submit:"Send",
-        priceTitle:"Pricing (guide)",
-        faqTitle:"Any questions?", faqIntro:"Quick answers below. Want more details? Send us a message.",
-        p1t:"Small hole (≤8mm)", p1p:"€10–€15",
-        p2t:"Multiple holes",     p2p:"€25–€35",
-        p3t:"Loose cuff/hem",     p3p:"€25–€40",
-        p4t:"Re-blocking / reshape", p4p:"€20–€35",
-        q1:"What areas do you cover?", a1:"Amsterdam and nearby. Postal orders accepted across the Netherlands.",
-        q2:"How much does it cost?",  a2:"You’ll receive a clear estimate after we review your photos and details.",
-        q3:"Do you work with cashmere?", a3:"Yes. We carefully match yarn and stitches, or do visible mending on request.",
-        footer:"KnitFix — Amsterdam · © "
+        toggle:"nl",
+        heroTitle:"tell us briefly about your knit.",
+        heroIntro:"send your request with photos. you’ll receive a clear estimate and timeline.",
+        labName:"name*", labEmail:"email*", labPhone:"phone*", labMsg:"message*", labType:"repair type",
+        photos:"photos (max 5, jpg/png)", consent:"i agree that knitfix may contact me about this request.",
+        submit:"send",
+        priceTitleHTML:'pricing <small>(guide)</small>',
+        p1t:"small hole (≤8mm)", p1p:"€10–€15",
+        p2t:"multiple holes",     p2p:"€25–€35",
+        p3t:"loose cuff/hem",     p3p:"€25–€40",
+        p4t:"re-blocking / reshape", p4p:"€20–€35",
+        servicesTitle:"services",
+        s1t:"repairs", s1d:"moth holes, ladders, loose cuffs. subtle, durable finishing.",
+        s2t:"visible mending", s2d:"an aesthetic choice that celebrates craft.",
+        s3t:"re-blocking", s3d:"shape recovery and refresh for knitwear.",
+        s4t:"upcycling", s4d:"creative reinterpretations preserving material.",
+        faqTitle:"any questions?", faqIntro:"quick answers below. want more details? send us a message.",
+        q1:"what areas do you cover?", a1:"amsterdam and nearby. postal orders accepted across the netherlands.",
+        q2:"how much does it cost?",  a2:"you’ll receive a clear estimate after we review your photos and details.",
+        q3:"do you work with cashmere?", a3:"yes. we carefully match yarn and stitches, or do visible mending on request.",
+        footer:"knitfix — amsterdam · © "
       }
     };
 
@@ -263,11 +305,14 @@
       labName:$("labName"), labEmail:$("labEmail"), labPhone:$("labPhone"), labMsg:$("labMsg"),
       labType:$("labType"), photosLabel:$("photosLabel"), consentText:$("consentText"),
       submitBtn:$("submitBtn"),
-      priceTitle:$("priceTitle"),
+      priceTitle:$("priceTitle"), priceSmall:$("priceSmall"),
       p1t:$("p1t"), p1p:$("p1p"),
       p2t:$("p2t"), p2p:$("p2p"),
       p3t:$("p3t"), p3p:$("p3p"),
       p4t:$("p4t"), p4p:$("p4p"),
+      servicesTitle:$("servicesTitle"),
+      s1t:$("s1t"), s1d:$("s1d"), s2t:$("s2d") ? $("s2t") : null, s2d:$("s2d"),
+      s3t:$("s3t"), s3d:$("s3d"), s4t:$("s4t"), s4d:$("s4d"),
       faqTitle:$("faqTitle"), faqIntro:$("faqIntro"),
       q1:$("q1"), a1:$("a1"), q2:$("q2"), a2:$("a2"), q3:$("q3"), a3:$("a3"),
       footerLine:$("footerLine")
@@ -277,22 +322,38 @@
     function setLang(l){
       lang = l;
       const S = T[l];
-      M.langToggle.textContent = S.toggle;
-      M.heroTitle.textContent  = S.heroTitle;
-      M.heroIntro.textContent  = S.heroIntro;
 
+      // header toggle
+      M.langToggle.textContent = S.toggle;
+
+      // hero
+      M.heroTitle.textContent = S.heroTitle;
+      M.heroIntro.textContent = S.heroIntro;
+
+      // form
       M.labName.textContent = S.labName;  M.labEmail.textContent = S.labEmail;
       M.labPhone.textContent = S.labPhone;M.labMsg.textContent   = S.labMsg;
       M.labType.textContent  = S.labType; M.photosLabel.textContent = S.photos;
       M.consentText.textContent = S.consent;
       M.submitBtn.textContent   = S.submit;
 
-      M.priceTitle.textContent = S.priceTitle;
+      // pricing title with small
+      document.getElementById("priceTitle").innerHTML = S.priceTitleHTML;
+
+      // pricing rows
       M.p1t.textContent = S.p1t; M.p1p.textContent = S.p1p;
       M.p2t.textContent = S.p2t; M.p2p.textContent = S.p2p;
       M.p3t.textContent = S.p3t; M.p3p.textContent = S.p3p;
       M.p4t.textContent = S.p4t; M.p4p.textContent = S.p4p;
 
+      // services
+      M.servicesTitle.textContent = S.servicesTitle;
+      $("s1t").textContent = S.s1t; $("s1d").textContent = S.s1d;
+      $("s2t").textContent = S.s2t; $("s2d").textContent = S.s2d;
+      $("s3t").textContent = S.s3t; $("s3d").textContent = S.s3d;
+      $("s4t").textContent = S.s4t; $("s4d").textContent = S.s4d;
+
+      // faq
       M.faqTitle.textContent = S.faqTitle; M.faqIntro.textContent = S.faqIntro;
       M.q1.textContent = S.q1; M.a1.textContent = S.a1;
       M.q2.textContent = S.q2; M.a2.textContent = S.a2;
@@ -300,22 +361,21 @@
 
       // footer
       const year = new Date().getFullYear();
-      $("footerLine").innerHTML = S.footer + '<span id="year">'+year+'</span>';
-      document.getElementById("year").textContent = year;
+      document.getElementById("footerLine").innerHTML = S.footer + '<span id="year">'+year+'</span>';
 
       document.documentElement.lang = (l === "nl" ? "nl" : "en");
     }
-    M.langToggle.addEventListener("click", ()=> setLang(lang === "nl" ? "en" : "nl"));
+    document.getElementById("langToggle").addEventListener("click", ()=> setLang(lang === "nl" ? "en" : "nl"));
     setLang("nl");
 
-    // Form submit to Formspree with quiet inline feedback
+    // simple form submit to formspree
     const form = document.getElementById("repairForm");
     const ok = document.getElementById("formSuccess");
     const err = document.getElementById("formError");
     form.addEventListener("submit", async (e)=>{
       e.preventDefault(); ok.classList.add("hidden"); err.classList.add("hidden");
       const data = new FormData(form);
-      data.append("_subject", "KnitFix — nieuwe aanvraag / new request");
+      data.append("_subject", "knitfix — nieuwe aanvraag / new request");
       data.append("_format", "plain");
       try{
         const res = await fetch(FORMSPREE_ENDPOINT, { method:"POST", headers:{ "Accept":"application/json" }, body:data });
@@ -324,7 +384,7 @@
       }catch{ err.classList.remove("hidden"); err.scrollIntoView({behavior:"smooth", block:"start"}); }
     });
 
-    // WhatsApp link once (header only)
+    // whatsapp link
     document.getElementById("waTop").href = `https://wa.me/${WHATSAPP_NUMBER}`;
   </script>
 </body>
