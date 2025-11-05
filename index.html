@@ -31,11 +31,13 @@
     section + section { margin-top:4rem; }
 
     /* header */
-    header h1 { font-size:1.2rem; letter-spacing:-0.03em; font-weight:700; }
-    .btn{ border:1px solid #0f0f0f; border-radius:0; padding:.4rem .8rem; font-size:.8rem; font-weight:400; transition:.2s; }
-    .btn:hover{ background:#0f0f0f; color:#fff }
-    .btn-ghost{ border:1px solid #e6e6e6; border-radius:0; padding:.35rem .75rem; font-size:.8rem; }
-    .btn-ghost:hover{ background:#fff }
+    <header class="maxw mx-auto w-full px-6 py-2 md:py-3 flex items-center justify-between border-b border-line">
+  <h1>knitfix</h1>
+  <nav class="flex items-center gap-4 text-[0.85rem]">
+    <button id="langToggle" class="text-ink hover:underline focus:outline-none">en</button>
+    <a id="waTop" href="#" target="_blank" rel="noopener" class="text-ink hover:underline">whatsapp</a>
+  </nav>
+</header>
 
     /* pills */
     .pill{ border:1px solid #e6e6e6; border-radius:9999px; padding:.32rem .65rem; font-size:.78rem }
