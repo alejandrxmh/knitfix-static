@@ -3,128 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KnitFix.nl — Breigoedreparatie Amsterdam</title>
-  <meta name="description" content="KnitFix.nl — breigoedreparatie met ophalen & bezorging in Amsterdam en omgeving." />
-  <!-- Tailwind CDN (no build step) -->
+  <title>KnitFix — Breigoedreparatie Amsterdam</title>
+  <meta name="description" content="KnitFix — verfijnde breigoedreparatie en upcycling in Amsterdam." />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { theme: { extend: {} } };
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            lav: "#b69ac9",
+            rose: "#f7c6cc",
+            beige: "#f9f6f1",
+            text: "#2f2f2f",
+            sub: "#6b6b6b"
+          },
+          fontFamily: {
+            sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    };
   </script>
   <style>
-    :root{
-      --lav:#b69ac9;   /* lavender primary */
-      --rose:#f7c6cc;  /* light rose */
-      --beige:#f9f6f1; /* beige bg */
-      --text:#2f2f2f;  /* charcoal */
-      --sub:#6b6b6b;   /* warm grey */
-      --border:#eadfd2;
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      letter-spacing: 0.02em;
+      background-color: #f9f6f1;
+      color: #2f2f2f;
     }
-    html,body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
-    .btn-primary{background:var(--lav);color:#fff}
-    .btn-primary:hover{background:#a789be}
-    .chip{border:1px solid #e5e7eb}
+    p, li { text-align: justify; text-justify: inter-word; }
+    a { transition: opacity .2s ease; }
+    a:hover { opacity: 0.8; }
   </style>
 </head>
-<body class="min-h-screen bg-[var(--beige)] text-[var(--text)]">
+
+<body class="antialiased">
+
   <!-- HEADER -->
-  <header class="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="h-9 w-9 rounded-full grid place-items-center border shadow-sm" style="background:var(--rose);border-color:#e8d7db">
-        <span class="font-bold">K</span>
-      </div>
-      <div>
-        <h1 class="font-semibold tracking-tight">KnitFix.nl</h1>
-        <p class="text-xs text-[var(--sub)]">Repair · Rewear · ReLove</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <button id="toggleLang" class="rounded-2xl px-3 py-2 text-sm border text-[var(--text)] hover:bg-white" style="border-color:var(--lav)">English</button>
-      <a href="#" class="rounded-2xl px-3 py-2 text-sm border text-[var(--text)] hover:bg-white" style="border-color:var(--lav)">WhatsApp</a>
-      <a href="#request" class="btn-primary rounded-2xl px-4 py-2 text-sm shadow">Reparatie aanvragen</a>
-    </div>
+  <header class="max-w-5xl mx-auto px-6 py-8 flex justify-between items-center border-b border-[#eadfd2]">
+    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-[#2f2f2f]">KNITFIX</h1>
+    <nav class="hidden md:flex gap-8 text-sm text-[#2f2f2f]">
+      <a href="#about">Over</a>
+      <a href="#services">Diensten</a>
+      <a href="#contact">Contact</a>
+    </nav>
   </header>
 
-  <!-- HERO + FORM -->
-  <section class="max-w-6xl mx-auto px-6 pt-2 pb-10 grid md:grid-cols-2 gap-10 items-start">
-    <div>
-      <h2 class="text-3xl md:text-5xl font-semibold leading-tight" data-nl="Amsterdam breigoedreparatie met ophalen & bezorging" data-en="Amsterdam knitwear repair with pickup & delivery">
-        Amsterdam breigoedreparatie met ophalen & bezorging
+  <!-- HERO -->
+  <section class="max-w-5xl mx-auto px-6 py-20">
+    <div class="md:w-3/4">
+      <h2 class="text-3xl md:text-5xl font-medium leading-tight mb-6">
+        Ambachtelijke breigoedreparatie & upcycling in Amsterdam.
       </h2>
-      <p class="mt-4 text-[var(--sub)]" data-nl="Kleine motgaatjes, ladders, losgeraakte boorden of opnieuw blocken — KnitFix maakt je favoriete breiwerk weer draagbaar. We starten in de regio Amsterdam. Dien je verzoek in om een prijsinschatting te krijgen."
-         data-en="Small moth holes, ladders, loose cuffs or re-blocking — KnitFix makes your favourite knitwear wearable again. We’re starting in the Amsterdam area. Submit a request to receive an estimate.">
-        Kleine motgaatjes, ladders, losgeraakte boorden of opnieuw blocken — KnitFix maakt je favoriete breiwerk weer draagbaar. We starten in de regio Amsterdam. Dien je verzoek in om een prijsinschatting te krijgen.
+      <p class="text-[#6b6b6b] text-justify">
+        KnitFix brengt vakmanschap en zorg terug in het herstel van breiwerk. 
+        Van kleine motgaatjes tot zorgvuldig zichtbaar stopwerk, wij herstellen 
+        en hergebruiken met oog voor detail. Laat je favoriete trui, kasjmier 
+        sjaal of vest opnieuw tot leven komen — met subtiele elegantie.
       </p>
-      <ul class="mt-6 space-y-2">
-        <li data-nl="• Gratis ophalen in Amsterdam-West en omgeving" data-en="• Free pickup in Amsterdam-West and nearby">• Gratis ophalen in Amsterdam-West en omgeving</li>
-        <li data-nl="• Eerlijke prijzen: kleine reparaties vanaf €10" data-en="• Fair prices: small fixes from €10">• Eerlijke prijzen: kleine reparaties vanaf €10</li>
-        <li data-nl="• Gemiddelde doorlooptijd: 5–7 dagen" data-en="• Typical turnaround: 5–7 days">• Gemiddelde doorlooptijd: 5–7 dagen</li>
-      </ul>
-      <div class="mt-6 flex gap-3">
-        <a href="#request" class="btn-primary rounded-2xl px-4 py-2 text-sm shadow" data-nl="Reparatie aanvragen" data-en="Request a repair">Reparatie aanvragen</a>
-        <a href="#how" class="rounded-2xl px-4 py-2 text-sm border hover:bg-white chip" data-nl="Hoe het werkt" data-en="How it works">Hoe het werkt</a>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-3xl shadow-sm border p-6" style="border-color:var(--border)">
-      <form id="request" class="space-y-4">
-        <h3 class="text-xl font-semibold" data-nl="Reparatieverzoek / wachtlijst" data-en="Repair request / waitlist">Reparatieverzoek / wachtlijst</h3>
-        <p class="text-sm text-[var(--sub)]" data-nl="Vertel iets over je breiwerk — foto’s helpen voor een nauwkeurige prijsinschatting."
-           data-en="Tell us about your knit — photos help with an accurate estimate.">
-          Vertel iets over je breiwerk — foto’s helpen voor een nauwkeurige prijsinschatting.
-        </p>
-
-        <div class="grid md:grid-cols-2 gap-4">
-          <div><label class="text-sm">Naam</label><input class="mt-1 w-full rounded-xl border px-3 py-2" /></div>
-          <div><label class="text-sm">E-mail</label><input type="email" class="mt-1 w-full rounded-xl border px-3 py-2" /></div>
-          <div><label class="text-sm">WhatsApp</label><input class="mt-1 w-full rounded-xl border px-3 py-2" /></div>
-          <div><label class="text-sm">Postcode / Wijk</label><input class="mt-1 w-full rounded-xl border px-3 py-2" /></div>
-        </div>
-
-        <button type="submit" class="w-full rounded-2xl py-3 text-sm font-medium shadow btn-primary">Verzoek versturen</button>
-      </form>
+      <a href="#contact" class="inline-block mt-10 border border-[#b69ac9] text-[#2f2f2f] px-6 py-3 rounded-full text-sm hover:bg-[#b69ac9] hover:text-white transition">
+        Reparatie aanvragen
+      </a>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section id="how" class="max-w-6xl mx-auto px-6 py-12">
-    <h3 class="text-xl font-semibold mb-4">Hoe het werkt</h3>
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="bg-white border rounded-3xl p-6 shadow-sm" style="border-color:var(--border)">
-        <div class="text-sm text-[var(--sub)]">Step 1</div>
-        <h4 class="text-lg font-semibold mt-1">Boeken</h4>
-        <p class="text-[var(--sub)] mt-2">Vul het formulier in en voeg foto’s toe.</p>
+  <!-- ABOUT -->
+  <section id="about" class="max-w-5xl mx-auto px-6 py-20 border-t border-[#eadfd2]">
+    <h3 class="text-2xl font-medium mb-4">Over KnitFix</h3>
+    <div class="md:w-3/4 space-y-4 text-[#6b6b6b]">
+      <p>
+        KnitFix is ontstaan uit de wens om breigoed een tweede leven te geven — 
+        met respect voor textiel, vorm en verhaal. Wij combineren traditionele 
+        technieken met moderne esthetiek en focussen op kwaliteit, niet op snelheid.
+      </p>
+      <p>
+        Elk stuk wordt met zorg hersteld: van wol tot kasjmier, van trui tot 
+        sjaal. Zo blijft wat waardevol is, behouden. Wij werken lokaal in 
+        Amsterdam, met bezorging of verzending binnen Nederland.
+      </p>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="max-w-5xl mx-auto px-6 py-20 border-t border-[#eadfd2]">
+    <h3 class="text-2xl font-medium mb-4">Diensten</h3>
+    <ul class="md:w-3/4 space-y-4 text-[#6b6b6b]">
+      <li><strong>Kleine reparaties</strong> — motgaatjes, ladders, losse boorden.</li>
+      <li><strong>Zichtbaar stopwerk</strong> — een esthetische benadering voor wie vakmanschap wil tonen.</li>
+      <li><strong>Opnieuw blocken</strong> — vormherstel en herstructurering van breigoed.</li>
+      <li><strong>Upcycling</strong> — creatief herontwerp van oude breisels.</li>
+    </ul>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="max-w-5xl mx-auto px-6 py-20 border-t border-[#eadfd2]">
+    <h3 class="text-2xl font-medium mb-4">Contact & Aanvraag</h3>
+    <p class="text-[#6b6b6b] md:w-3/4 mb-8">
+      Stuur foto’s en een korte beschrijving via het formulier hieronder. 
+      Je ontvangt binnen 1–2 werkdagen een prijsinschatting per e-mail of WhatsApp.
+    </p>
+
+    <form
+      action="https://formspree.io/f/your-id" 
+      method="POST"
+      class="space-y-6 md:w-3/4"
+    >
+      <div class="grid md:grid-cols-2 gap-4">
+        <input type="text" name="name" placeholder="Naam" required class="border border-[#eadfd2] rounded-xl px-4 py-3 w-full" />
+        <input type="email" name="email" placeholder="E-mail" required class="border border-[#eadfd2] rounded-xl px-4 py-3 w-full" />
       </div>
-      <div class="bg-white border rounded-3xl p-6 shadow-sm" style="border-color:var(--border)">
-        <div class="text-sm text-[var(--sub)]">Step 2</div>
-        <h4 class="text-lg font-semibold mt-1">Ophalen & herstellen</h4>
-        <p class="text-[var(--sub)] mt-2">We halen lokaal op (of je stuurt per post) en herstellen met zichtbaar of onzichtbaar stopwerk.</p>
+
+      <input type="text" name="whatsapp" placeholder="WhatsApp (+31...)" class="border border-[#eadfd2] rounded-xl px-4 py-3 w-full" />
+
+      <textarea name="message" rows="5" placeholder="Beschrijf het kledingstuk en de schade..." class="border border-[#eadfd2] rounded-xl px-4 py-3 w-full"></textarea>
+
+      <div class="flex items-start gap-2 text-xs text-[#6b6b6b]">
+        <input type="checkbox" required class="mt-1" />
+        <span>Ik ga akkoord dat KnitFix contact met mij opneemt over deze aanvraag.</span>
       </div>
-      <div class="bg-white border rounded-3xl p-6 shadow-sm" style="border-color:var(--border)">
-        <div class="text-sm text-[var(--sub)]">Step 3</div>
-        <h4 class="text-lg font-semibold mt-1">Bezorgen</h4>
-        <p class="text-[var(--sub)] mt-2">Je breiwerk komt gestoomd en draagklaar terug.</p>
-      </div>
+
+      <button type="submit" class="px-6 py-3 rounded-full text-sm bg-[#b69ac9] text-white hover:bg-[#a789be] transition">
+        Verstuur aanvraag
+      </button>
+    </form>
+
+    <div class="mt-10 text-sm text-[#6b6b6b] space-y-1">
+      <p>E-mail: <a href="mailto:info@knitfix.nl" class="underline">info@knitfix.nl</a></p>
+      <p>WhatsApp: <a href="https://wa.me/31600000000" target="_blank" class="underline">+31 6 00 00 00 00</a></p>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="px-6 py-10 border-t bg-white" style="border-color:var(--border)">
-    <div class="max-w-6xl mx-auto text-sm text-[var(--sub)]">
-      <p>KnitFix.nl — Amsterdam knitwear repair & upcycling. © <span id="year"></span></p>
-    </div>
+  <footer class="max-w-5xl mx-auto px-6 py-10 border-t border-[#eadfd2] text-sm text-[#6b6b6b]">
+    <p>KnitFix — Amsterdam · © <span id="year"></span></p>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-    const btn = document.getElementById('toggleLang');
-    let lang = 'nl';
-    btn.onclick = () => {
-      lang = lang === 'nl' ? 'en' : 'nl';
-      document.querySelectorAll('[data-nl]').forEach(el=>{
-        el.textContent = el.getAttribute(lang === 'nl' ? 'data-nl' : 'data-en');
-      });
-      btn.textContent = lang === 'nl' ? 'English' : 'Nederlands';
-    };
   </script>
 </body>
 </html>
