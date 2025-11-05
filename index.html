@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KnitFix — Amsterdam</title>
-  <meta name="description" content="KnitFix — verfijnde breigoedreparatie en upcycling in Amsterdam." />
+  <title>knitfix — amsterdam</title>
+  <meta name="description" content="knitfix — verfijnde breigoedreparatie en upcycling in amsterdam." />
 
-  <!-- Futura PT (via Google Fonts) -->
-  <link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Futura PT -->
+  <link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -16,39 +16,44 @@
       theme: {
         extend: {
           colors: { bg:"#FAFAFA", ink:"#0F0F0F", sub:"#6B6B6B", line:"#E6E6E6" },
-          fontFamily: { sans:['"Futura PT"', 'Futura', 'Helvetica', 'Arial', 'sans-serif'] },
-          letterSpacing: { tightest: "-0.015em" }
+          fontFamily: { sans:['"Futura PT"','Futura','Helvetica','Arial','sans-serif'] },
+          letterSpacing: { tighter:"-0.025em" }
         }
       }
     };
   </script>
   <style>
-    html { scroll-behavior:smooth }
-    body { background:#FAFAFA; color:#0F0F0F; font-weight:400 }
-    h1, h2, h3, h4, h5, h6 { letter-spacing:-0.015em }
+    html { scroll-behavior:smooth; text-transform:lowercase; }
+    body { background:#FAFAFA; color:#0F0F0F; font-family:'Futura PT',sans-serif; font-weight:400; letter-spacing:-0.015em; }
+    h1,h2,h3,h4,h5,h6 { text-transform:lowercase; letter-spacing:-0.025em; }
+    input,textarea,button,label,summary,p,span,a { text-transform:lowercase; }
+
     .maxw { max-width:1080px }
-    .btn{ border:1px solid #0F0F0F; border-radius:0; padding:.55rem 1rem; font-size:.85rem; transition:.2s; font-weight:500 }
+    .btn{ border:1px solid #0F0F0F; border-radius:0; padding:.4rem .8rem; font-size:.8rem; font-weight:400; transition:.2s; }
     .btn:hover{ background:#0F0F0F; color:#fff }
-    .btn-ghost{ border:1px solid #E6E6E6; border-radius:0; padding:.45rem .9rem; font-size:.85rem }
+    .btn-ghost{ border:1px solid #E6E6E6; border-radius:0; padding:.35rem .75rem; font-size:.8rem; }
     .btn-ghost:hover{ background:#fff }
-    .pill{ border:1px solid #E6E6E6; border-radius:9999px; padding:.35rem .7rem; font-size:.8rem }
-    .form-label{ font-size:.65rem; text-transform:uppercase; letter-spacing:.08em; color:#6B6B6B }
-    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #E6E6E6; padding:.5rem 0; outline:none; font-size:.95rem; font-family:'Futura PT', sans-serif }
+    .pill{ border:1px solid #E6E6E6; border-radius:9999px; padding:.32rem .65rem; font-size:.78rem }
+    .form-label{ font-size:.6rem; letter-spacing:.08em; color:#6B6B6B }
+    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #E6E6E6; padding:.45rem 0; outline:none; font-size:.9rem }
     .field:focus{ border-color:#0F0F0F }
     .textarea{ resize:vertical; line-height:1.45 }
-    .sec{ padding-top:6rem; padding-bottom:6rem }
+    .sec{ padding-top:5.5rem; padding-bottom:5.5rem }
+    header h1{ font-size:1.2rem; letter-spacing:-0.03em; font-weight:600; }
   </style>
 </head>
 
+
 <body class="antialiased font-sans">
   <!-- HEADER -->
-  <header class="maxw mx-auto w-full px-6 py-3 md:py-4 flex items-center justify-between border-b border-line">
-    <h1 class="text-[22px] md:text-[26px] leading-none font-bold tracking-tight">KNITFIX</h1>
-    <nav class="flex items-center gap-3">
-      <button id="langToggle" class="btn-ghost">EN</button>
-      <a id="waTop" href="#" target="_blank" rel="noopener" class="btn-ghost">WhatsApp</a>
-    </nav>
-  </header>
+  <<header class="maxw mx-auto w-full px-6 py-2 md:py-3 flex items-center justify-between border-b border-line">
+  <h1>knitfix</h1>
+  <nav class="flex items-center gap-2">
+    <button id="langToggle" class="btn-ghost">en</button>
+    <a id="waTop" href="#" target="_blank" rel="noopener" class="btn-ghost">whatsapp</a>
+  </nav>
+</header>
+
 
   <main class="maxw mx-auto w-full px-6">
     <!-- HERO -->
