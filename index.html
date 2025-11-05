@@ -6,7 +6,7 @@
   <title>knitfix — amsterdam</title>
   <meta name="description" content="knitfix — verfijnde breigoedreparatie en upcycling in amsterdam." />
 
-  <!-- “futura pt” (note: if not available on the device it will fall back to geometric sans) -->
+  <!-- futura pt -->
   <link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;700&display=swap" rel="stylesheet">
 
   <!-- tailwind (cdn) -->
@@ -27,45 +27,51 @@
 
     /* global rhythm */
     .maxw { max-width:1080px }
-    .sec { padding-top:8rem; padding-bottom:8rem } /* generous spacing */
+    .sec { padding-top:8rem; padding-bottom:8rem }
     section + section { margin-top:4rem; }
 
     /* header */
-    <header class="maxw mx-auto w-full px-6 py-2 md:py-3 flex items-center justify-between border-b border-line">
-  <h1>knitfix</h1>
-  <nav class="flex items-center gap-4 text-[0.85rem]">
-    <button id="langToggle" class="text-ink hover:underline focus:outline-none">en</button>
-    <a id="waTop" href="#" target="_blank" rel="noopener" class="text-ink hover:underline">whatsapp</a>
-  </nav>
-</header>
+    header h1 { font-size:1.2rem; letter-spacing:-0.03em; font-weight:700; }
 
-    /* pills */
-    .pill{ border:1px solid #e6e6e6; border-radius:9999px; padding:.32rem .65rem; font-size:.78rem }
+    /* pills — smaller + match title size */
+    .pill{
+      border:1px solid #e6e6e6; border-radius:9999px;
+      padding:.28rem .55rem; font-size:.75rem; /* ↓ smaller */
+    }
 
     /* transparent, underline-only form */
-    .form-label{ font-size:.6rem; letter-spacing:.08em; color:#6b6b6b }
-    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #e6e6e6; padding:.45rem 0; outline:none; font-size:.92rem; }
+    .form-label{ font-size:.75rem; letter-spacing:.06em; color:#6b6b6b; } /* ↑ a bit bigger for clarity */
+    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #e6e6e6; padding:.45rem 0; outline:none; font-size:.9rem }
     .field:focus{ border-color:#0f0f0f }
     .textarea{ resize:vertical; line-height:1.5 }
 
     /* section titles */
     .sectitle{ font-weight:700; letter-spacing:-0.02em }
-    .sectitle small{ font-weight:400; font-size:.85rem; color:#6b6b6b; margin-left:.35rem }
+    .sectitle small{ font-weight:400; font-size:.8rem; color:#6b6b6b; margin-left:.35rem } /* (indicatie) smaller */
+
+    /* sizing tweaks requested */
+    /* pricing row text smaller */
+    .price-title { font-size:1rem; font-weight:600; letter-spacing:-0.01em; }  /* ~16px */
+    .price-amt   { font-size:.9rem; }                                         /* ~14-15px */
+
+    /* services / categories items also smaller */
+    .svc-title { font-size:1rem; font-weight:600; letter-spacing:-0.01em; }   /* ~16px */
+    .svc-copy  { font-size:.92rem; }                                          /* ~15px */
   </style>
 </head>
 
 <body class="antialiased font-sans">
-  <!-- header (smaller) -->
+  <!-- header (more separation between 'en' and 'whatsapp') -->
   <header class="maxw mx-auto w-full px-6 py-2 md:py-3 flex items-center justify-between border-b border-line">
     <h1>knitfix</h1>
-    <nav class="flex items-center gap-2">
-      <button id="langToggle" class="btn-ghost">en</button>
-      <a id="waTop" href="#" target="_blank" rel="noopener" class="btn-ghost">whatsapp</a>
+    <nav class="flex items-center gap-6 md:gap-8 text-[0.9rem]"> <!-- gap increased -->
+      <button id="langToggle" class="text-ink hover:underline focus:outline-none">en</button>
+      <a id="waTop" href="#" target="_blank" rel="noopener" class="text-ink hover:underline">whatsapp</a>
     </nav>
   </header>
 
   <main class="maxw mx-auto w-full px-6">
-    <!-- hero (bold af, but harmonious) -->
+    <!-- hero (bold af, harmonious) -->
     <section class="pt-16 md:pt-20 pb-10">
       <div class="md:w-[70%]">
         <h2 id="heroTitle" class="text-[26px] md:text-[36px] font-[700] leading-[1.25] tracking-[-0.025em]">
@@ -113,7 +119,7 @@
         </div>
       </div>
 
-      <!-- repair type pills -->
+      <!-- repair type pills (same size as title label) -->
       <div class="mt-6">
         <div id="labType" class="form-label mb-2">type reparatie</div>
         <div class="flex flex-wrap gap-2">
@@ -132,70 +138,69 @@
       </div>
 
       <div class="mt-6 flex flex-wrap items-center gap-3">
-        <button id="submitBtn" type="submit" class="btn">verstuur</button>
-        <!-- only header has whatsapp -->
+        <button id="submitBtn" type="submit" class="text-ink underline hover:no-underline">verstuur</button>
       </div>
     </form>
 
-    <!-- pricing -->
+    <!-- pricing (smaller items) -->
     <section id="pricing" class="sec border-b border-line">
       <h3 id="priceTitle" class="sectitle text-[20px] md:text-[24px] mb-10">
         prijzen <small id="priceSmall">(indicatie)</small>
       </h3>
-      <div class="grid md:grid-cols-2 gap-14">
+      <div class="grid md:grid-cols-2 gap-12">
         <div class="border-t border-line pt-6">
           <div class="flex items-baseline justify-between">
-            <h4 id="p1t" class="text-[18px] font-[600] tracking-[-0.01em]">klein gaatje (≤8mm)</h4>
-            <span id="p1p" class="text-[15px]">€10–€15</span>
+            <h4 id="p1t" class="price-title">klein gaatje (≤8mm)</h4>
+            <span id="p1p" class="price-amt">€10–€15</span>
           </div>
         </div>
         <div class="border-t border-line pt-6">
           <div class="flex items-baseline justify-between">
-            <h4 id="p2t" class="text-[18px] font-[600] tracking-[-0.01em]">meerdere gaatjes</h4>
-            <span id="p2p" class="text-[15px]">€25–€35</span>
+            <h4 id="p2t" class="price-title">meerdere gaatjes</h4>
+            <span id="p2p" class="price-amt">€25–€35</span>
           </div>
         </div>
         <div class="border-t border-line pt-6">
           <div class="flex items-baseline justify-between">
-            <h4 id="p3t" class="text-[18px] font-[600] tracking-[-0.01em]">losse boord/zoom</h4>
-            <span id="p3p" class="text-[15px]">€25–€40</span>
+            <h4 id="p3t" class="price-title">losse boord/zoom</h4>
+            <span id="p3p" class="price-amt">€25–€40</span>
           </div>
         </div>
         <div class="border-t border-line pt-6">
           <div class="flex items-baseline justify-between">
-            <h4 id="p4t" class="text-[18px] font-[600] tracking-[-0.01em]">opnieuw blocken / vorm</h4>
-            <span id="p4p" class="text-[15px]">€20–€35</span>
+            <h4 id="p4t" class="price-title">opnieuw blocken / vorm</h4>
+            <span id="p4p" class="price-amt">€20–€35</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- services -->
+    <!-- services (smaller items) -->
     <section id="services" class="sec border-b border-line">
       <h3 id="servicesTitle" class="sectitle text-[20px] md:text-[24px] mb-10">diensten</h3>
-      <div class="grid md:grid-cols-2 gap-14">
+      <div class="grid md:grid-cols-2 gap-12">
         <div class="border-t border-line pt-6">
-          <h4 id="s1t" class="text-[18px] font-[600] tracking-[-0.01em]">reparaties</h4>
-          <p id="s1d" class="mt-2 text-sub">motgaatjes, ladders, losse boorden. subtiel en duurzaam hersteld.</p>
+          <h4 id="s1t" class="svc-title">reparaties</h4>
+          <p id="s1d" class="svc-copy mt-2 text-sub">motgaatjes, ladders, losse boorden. subtiel en duurzaam hersteld.</p>
         </div>
         <div class="border-t border-line pt-6">
-          <h4 id="s2t" class="text-[18px] font-[600] tracking-[-0.01em]">zichtbaar stopwerk</h4>
-          <p id="s2d" class="mt-2 text-sub">een esthetische keuze voor wie het ambacht mag spreken.</p>
+          <h4 id="s2t" class="svc-title">zichtbaar stopwerk</h4>
+          <p id="s2d" class="svc-copy mt-2 text-sub">een esthetische keuze voor wie het ambacht mag spreken.</p>
         </div>
         <div class="border-t border-line pt-6">
-          <h4 id="s3t" class="text-[18px] font-[600] tracking-[-0.01em]">opnieuw blocken</h4>
-          <p id="s3d" class="mt-2 text-sub">vormcorrectie en verfrissing van breigoed.</p>
+          <h4 id="s3t" class="svc-title">opnieuw blocken</h4>
+          <p id="s3d" class="svc-copy mt-2 text-sub">vormcorrectie en verfrissing van breigoed.</p>
         </div>
         <div class="border-t border-line pt-6">
-          <h4 id="s4t" class="text-[18px] font-[600] tracking-[-0.01em]">upcycling</h4>
-          <p id="s4d" class="mt-2 text-sub">creatieve herinterpretaties met behoud van materiaal.</p>
+          <h4 id="s4t" class="svc-title">upcycling</h4>
+          <p id="s4d" class="svc-copy mt-2 text-sub">creatieve herinterpretaties met behoud van materiaal.</p>
         </div>
       </div>
     </section>
 
     <!-- faq -->
     <section id="faq" class="sec">
-      <div class="grid md:grid-cols-2 gap-14">
+      <div class="grid md:grid-cols-2 gap-12">
         <div>
           <h3 id="faqTitle" class="sectitle text-[20px] md:text-[24px] mb-3">vragen?</h3>
           <p id="faqIntro" class="text-sub">snelle antwoorden hieronder. meer weten? stuur een bericht.</p>
@@ -238,10 +243,9 @@
   </footer>
 
   <script>
-    // --- config (replace) ---
-    const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-id"; // <- replace
-    const WHATSAPP_NUMBER    = "31600000000";                    // <- replace numeric only
-    // ------------------------
+    // config
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-id"; // replace
+    const WHATSAPP_NUMBER    = "31600000000";                    // replace (numeric only)
 
     // single whatsapp (header)
     const waURL = `https://wa.me/${WHATSAPP_NUMBER}`;
@@ -250,7 +254,7 @@
     // year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // translations (all lowercase for visual harmony)
+    // translations (lowercase)
     const T = {
       nl: {
         toggle:"en",
@@ -307,14 +311,12 @@
       labName:$("labName"), labEmail:$("labEmail"), labPhone:$("labPhone"), labMsg:$("labMsg"),
       labType:$("labType"), photosLabel:$("photosLabel"), consentText:$("consentText"),
       submitBtn:$("submitBtn"),
-      priceTitle:$("priceTitle"), priceSmall:$("priceSmall"),
+      priceTitle:$("priceTitle"),
       p1t:$("p1t"), p1p:$("p1p"),
       p2t:$("p2t"), p2p:$("p2p"),
       p3t:$("p3t"), p3p:$("p3p"),
       p4t:$("p4t"), p4p:$("p4p"),
       servicesTitle:$("servicesTitle"),
-      s1t:$("s1t"), s1d:$("s1d"), s2t:$("s2d") ? $("s2t") : null, s2d:$("s2d"),
-      s3t:$("s3t"), s3d:$("s3d"), s4t:$("s4t"), s4d:$("s4d"),
       faqTitle:$("faqTitle"), faqIntro:$("faqIntro"),
       q1:$("q1"), a1:$("a1"), q2:$("q2"), a2:$("a2"), q3:$("q3"), a3:$("a3"),
       footerLine:$("footerLine")
@@ -322,55 +324,42 @@
 
     let lang = "nl";
     function setLang(l){
-      lang = l;
-      const S = T[l];
-
-      // header toggle
+      lang = l; const S = T[l];
       M.langToggle.textContent = S.toggle;
 
-      // hero
       M.heroTitle.textContent = S.heroTitle;
       M.heroIntro.textContent = S.heroIntro;
 
-      // form
       M.labName.textContent = S.labName;  M.labEmail.textContent = S.labEmail;
       M.labPhone.textContent = S.labPhone;M.labMsg.textContent   = S.labMsg;
       M.labType.textContent  = S.labType; M.photosLabel.textContent = S.photos;
       M.consentText.textContent = S.consent;
       M.submitBtn.textContent   = S.submit;
 
-      // pricing title with small
       document.getElementById("priceTitle").innerHTML = S.priceTitleHTML;
 
-      // pricing rows
       M.p1t.textContent = S.p1t; M.p1p.textContent = S.p1p;
       M.p2t.textContent = S.p2t; M.p2p.textContent = S.p2p;
       M.p3t.textContent = S.p3t; M.p3p.textContent = S.p3p;
       M.p4t.textContent = S.p4t; M.p4p.textContent = S.p4p;
 
-      // services
       M.servicesTitle.textContent = S.servicesTitle;
-      $("s1t").textContent = S.s1t; $("s1d").textContent = S.s1d;
-      $("s2t").textContent = S.s2t; $("s2d").textContent = S.s2d;
-      $("s3t").textContent = S.s3t; $("s3d").textContent = S.s3d;
-      $("s4t").textContent = S.s4t; $("s4d").textContent = S.s4d;
 
-      // faq
       M.faqTitle.textContent = S.faqTitle; M.faqIntro.textContent = S.faqIntro;
       M.q1.textContent = S.q1; M.a1.textContent = S.a1;
       M.q2.textContent = S.q2; M.a2.textContent = S.a2;
       M.q3.textContent = S.q3; M.a3.textContent = S.a3;
 
-      // footer
       const year = new Date().getFullYear();
       document.getElementById("footerLine").innerHTML = S.footer + '<span id="year">'+year+'</span>';
+      document.getElementById("year").textContent = year;
 
       document.documentElement.lang = (l === "nl" ? "nl" : "en");
     }
     document.getElementById("langToggle").addEventListener("click", ()=> setLang(lang === "nl" ? "en" : "nl"));
     setLang("nl");
 
-    // simple form submit to formspree
+    // form submit
     const form = document.getElementById("repairForm");
     const ok = document.getElementById("formSuccess");
     const err = document.getElementById("formError");
@@ -385,9 +374,6 @@
         else throw new Error();
       }catch{ err.classList.remove("hidden"); err.scrollIntoView({behavior:"smooth", block:"start"}); }
     });
-
-    // whatsapp link
-    document.getElementById("waTop").href = `https://wa.me/${WHATSAPP_NUMBER}`;
   </script>
 </body>
 </html>
