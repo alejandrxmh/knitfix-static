@@ -5,17 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>KnitFix — Breigoedreparatie Amsterdam</title>
   <meta name="description" content="KnitFix — verfijnde breigoedreparatie en upcycling in Amsterdam." />
+
+  <!-- Tailwind (CDN) — no build step -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            lav: "#b69ac9",
-            rose: "#f7c6cc",
-            beige: "#f9f6f1",
-            text: "#2f2f2f",
-            sub: "#6b6b6b"
+            lav: "#b69ac9",   // lavender
+            rose: "#f7c6cc",  // light rose
+            beige: "#f9f6f1", // beige background
+            text: "#2f2f2f",  // charcoal
+            sub: "#6b6b6b",   // warm grey
+            border: "#eadfd2" // soft border
           },
           fontFamily: {
             sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif']
@@ -24,122 +27,207 @@
       }
     };
   </script>
+
   <style>
+    html { scroll-behavior: smooth; }          /* smooth section scrolling */
     body {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      letter-spacing: 0.02em;
-      background-color: #f9f6f1;
+      background: #f9f6f1;
       color: #2f2f2f;
+      letter-spacing: .01em;
     }
     p, li { text-align: justify; text-justify: inter-word; }
-    a { transition: opacity .2s ease; }
-    a:hover { opacity: 0.8; }
+    .btn-ghost {
+      border: 1px solid #e5e7eb;
+      border-radius: 9999px;
+      padding: .625rem 1rem;
+      font-size: .875rem;
+      transition: opacity .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .btn-ghost:hover { background: #fff; }
+    .btn-primary {
+      background: #b69ac9; color:#fff; border-radius: 9999px;
+      padding:.75rem 1.25rem; font-size:.875rem;
+      transition: background-color .2s ease, opacity .2s ease;
+    }
+    .btn-primary:hover { background:#a789be; }
   </style>
 </head>
 
 <body class="antialiased">
 
   <!-- HEADER -->
-  <header class="max-w-5xl mx-auto px-6 py-8 flex justify-between items-center border-b border-[#eadfd2]">
-    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-[#2f2f2f]">KNITFIX</h1>
-    <nav class="hidden md:flex gap-8 text-sm text-[#2f2f2f]">
-      <a href="#about">Over</a>
-      <a href="#services">Diensten</a>
-      <a href="#contact">Contact</a>
+  <header class="max-w-5xl mx-auto px-6 py-6 md:py-8 flex justify-between items-center border-b border-border">
+    <!-- Logo, bold, top-left -->
+    <h1 class="text-2xl md:text-3xl font-bold tracking-tight">KNITFIX</h1>
+
+    <!-- Minimal header actions -->
+    <nav class="flex items-center gap-3">
+      <!-- WhatsApp — replace number -->
+      <a href="https://wa.me/31600000000" target="_blank" rel="noopener"
+         class="btn-ghost text-text hover:opacity-80">WhatsApp</a>
+      <!-- Keep a clean Contact link that jumps to form -->
+      <a href="#contact" class="btn-primary">Contact</a>
     </nav>
   </header>
 
   <!-- HERO -->
-  <section class="max-w-5xl mx-auto px-6 py-20">
+  <section class="max-w-5xl mx-auto px-6 py-16 md:py-20">
     <div class="md:w-3/4">
       <h2 class="text-3xl md:text-5xl font-medium leading-tight mb-6">
         Ambachtelijke breigoedreparatie & upcycling in Amsterdam.
       </h2>
-      <p class="text-[#6b6b6b] text-justify">
-        KnitFix brengt vakmanschap en zorg terug in het herstel van breiwerk. 
-        Van kleine motgaatjes tot zorgvuldig zichtbaar stopwerk, wij herstellen 
-        en hergebruiken met oog voor detail. Laat je favoriete trui, kasjmier 
+      <p class="text-sub">
+        KnitFix brengt vakmanschap en zorg terug in het herstel van breiwerk.
+        Van kleine motgaatjes tot zorgvuldig zichtbaar stopwerk, wij herstellen
+        en hergebruiken met oog voor detail. Laat je favoriete trui, kasjmier
         sjaal of vest opnieuw tot leven komen — met subtiele elegantie.
       </p>
-      <a href="#contact" class="inline-block mt-10 border border-[#b69ac9] text-[#2f2f2f] px-6 py-3 rounded-full text-sm hover:bg-[#b69ac9] hover:text-white transition">
-        Reparatie aanvragen
-      </a>
+
+      <!-- Single, sober CTA in hero -> same anchor as header Contact -->
+      <div class="mt-10">
+        <a href="#contact" class="btn-ghost hover:border-lav hover:text-text"
+           style="border-color:#e5e7eb">Reparatie aanvragen</a>
+      </div>
     </div>
   </section>
 
   <!-- ABOUT -->
-  <section id="about" class="max-w-5xl mx-auto px-6 py-20 border-t border-[#eadfd2]">
+  <section id="about" class="max-w-5xl mx-auto px-6 py-16 md:py-20 border-t border-border">
     <h3 class="text-2xl font-medium mb-4">Over KnitFix</h3>
-    <div class="md:w-3/4 space-y-4 text-[#6b6b6b]">
+    <div class="md:w-3/4 space-y-4 text-sub">
       <p>
-        KnitFix is ontstaan uit de wens om breigoed een tweede leven te geven — 
-        met respect voor textiel, vorm en verhaal. Wij combineren traditionele 
-        technieken met moderne esthetiek en focussen op kwaliteit, niet op snelheid.
+        KnitFix is ontstaan uit de wens om breigoed een tweede leven te geven — met respect
+        voor textiel, vorm en verhaal. Wij combineren traditionele technieken met moderne
+        esthetiek en focussen op kwaliteit, niet op snelheid.
       </p>
       <p>
-        Elk stuk wordt met zorg hersteld: van wol tot kasjmier, van trui tot 
-        sjaal. Zo blijft wat waardevol is, behouden. Wij werken lokaal in 
-        Amsterdam, met bezorging of verzending binnen Nederland.
+        Elk stuk wordt met zorg hersteld: van wol tot kasjmier, van trui tot sjaal. Zo blijft
+        wat waardevol is, behouden. Wij werken lokaal in Amsterdam, met bezorging of verzending
+        binnen Nederland.
       </p>
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section id="services" class="max-w-5xl mx-auto px-6 py-20 border-t border-[#eadfd2]">
+  <!-- SERVICES (short, clean) -->
+  <section id="services" class="max-w-5xl mx-auto px-6 py-16 md:py-20 border-t border-border">
     <h3 class="text-2xl font-medium mb-4">Diensten</h3>
-    <ul class="md:w-3/4 space-y-4 text-[#6b6b6b]">
-      <li><strong>Kleine reparaties</strong> — motgaatjes, ladders, losse boorden.</li>
-      <li><strong>Zichtbaar stopwerk</strong> — een esthetische benadering voor wie vakmanschap wil tonen.</li>
-      <li><strong>Opnieuw blocken</strong> — vormherstel en herstructurering van breigoed.</li>
-      <li><strong>Upcycling</strong> — creatief herontwerp van oude breisels.</li>
+    <ul class="md:w-3/4 space-y-3 text-sub">
+      <li><strong class="text-text">Kleine reparaties</strong> — motgaatjes, ladders, losse boorden.</li>
+      <li><strong class="text-text">Zichtbaar stopwerk</strong> — een esthetische keuze met vakmanschap.</li>
+      <li><strong class="text-text">Opnieuw blocken</strong> — vormherstel en herstructurering.</li>
+      <li><strong class="text-text">Upcycling</strong> — creatief herontwerp van bestaande breisels.</li>
     </ul>
   </section>
 
   <!-- CONTACT -->
-  <section id="contact" class="max-w-5xl mx-auto px-6 py-20 border-t border-[#eadfd2]">
+  <section id="contact" class="max-w-5xl mx-auto px-6 py-16 md:py-20 border-t border-border">
     <h3 class="text-2xl font-medium mb-4">Contact & Aanvraag</h3>
-    <p class="text-[#6b6b6b] md:w-3/4 mb-8">
-      Stuur foto’s en een korte beschrijving via het formulier hieronder. 
-      Je ontvangt binnen 1–2 werkdagen een prijsinschatting per e-mail of WhatsApp.
+    <p class="text-sub md:w-3/4 mb-8">
+      Stuur foto’s en een korte beschrijving via het formulier hieronder. Je ontvangt binnen 1–2 werkdagen
+      een prijsinschatting per e-mail of WhatsApp.
     </p>
 
-    <form
-      action="https://formspree.io/f/your-id" 
-      method="POST"
-      class="space-y-6 md:w-3/4"
-    >
+    <!-- Small success message (hidden by default) -->
+    <div id="form-success" class="hidden mb-6 rounded-xl border border-lav/40 bg-[#fbf9fd] px-4 py-3 text-sm text-text">
+      Bedankt! Je aanvraag is verzonden. We nemen spoedig contact met je op.
+    </div>
+
+    <!-- Small error message (hidden by default) -->
+    <div id="form-error" class="hidden mb-6 rounded-xl border border-rose/50 bg-[#fff7f9] px-4 py-3 text-sm text-text">
+      Er ging iets mis met verzenden. Probeer het opnieuw of mail ons op <a class="underline" href="mailto:info@knitfix.nl">info@knitfix.nl</a>.
+    </div>
+
+    <form id="repair-form" class="space-y-6 md:w-3/4">
       <div class="grid md:grid-cols-2 gap-4">
-        <input type="text" name="name" placeholder="Naam" required class="border border-[#eadfd2] rounded-xl px-4 py-3 w-full" />
-        <input type="email" name="email" placeholder="E-mail" required class="border border-[#eadfd2] rounded-xl px-4 py-3 w-full" />
+        <input type="text" name="name" placeholder="Naam" required
+               class="border border-border rounded-xl px-4 py-3 w-full" />
+        <input type="email" name="email" placeholder="E-mail" required
+               class="border border-border rounded-xl px-4 py-3 w-full" />
       </div>
 
-      <input type="text" name="whatsapp" placeholder="WhatsApp (+31...)" class="border border-[#eadfd2] rounded-xl px-4 py-3 w-full" />
+      <input type="text" name="whatsapp" placeholder="WhatsApp (+31…)"
+             class="border border-border rounded-xl px-4 py-3 w-full" />
 
-      <textarea name="message" rows="5" placeholder="Beschrijf het kledingstuk en de schade..." class="border border-[#eadfd2] rounded-xl px-4 py-3 w-full"></textarea>
+      <textarea name="message" rows="5" placeholder="Beschrijf het kledingstuk en de schade…"
+                class="border border-border rounded-xl px-4 py-3 w-full"></textarea>
 
-      <div class="flex items-start gap-2 text-xs text-[#6b6b6b]">
+      <div class="flex items-start gap-2 text-xs text-sub">
         <input type="checkbox" required class="mt-1" />
         <span>Ik ga akkoord dat KnitFix contact met mij opneemt over deze aanvraag.</span>
       </div>
 
-      <button type="submit" class="px-6 py-3 rounded-full text-sm bg-[#b69ac9] text-white hover:bg-[#a789be] transition">
-        Verstuur aanvraag
-      </button>
+      <div class="flex items-center gap-3">
+        <button type="submit" class="btn-primary">Verstuur aanvraag</button>
+        <a href="https://wa.me/31600000000" target="_blank" rel="noopener"
+           class="btn-ghost" style="border-color:#e5e7eb">WhatsApp openen</a>
+      </div>
     </form>
 
-    <div class="mt-10 text-sm text-[#6b6b6b] space-y-1">
+    <div class="mt-10 text-sm text-sub space-y-1">
       <p>E-mail: <a href="mailto:info@knitfix.nl" class="underline">info@knitfix.nl</a></p>
       <p>WhatsApp: <a href="https://wa.me/31600000000" target="_blank" class="underline">+31 6 00 00 00 00</a></p>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="max-w-5xl mx-auto px-6 py-10 border-t border-[#eadfd2] text-sm text-[#6b6b6b]">
+  <footer class="max-w-5xl mx-auto px-6 py-10 border-t border-border text-sm text-sub">
     <p>KnitFix — Amsterdam · © <span id="year"></span></p>
   </footer>
 
   <script>
+    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // --- Form submission (Formspree + WhatsApp helper) ---
+    // Replace this with your real Formspree endpoint:
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-id"; // << REPLACE
+    // Replace this WhatsApp target:
+    const WHATSAPP_NUMBER = "31600000000"; // numeric, no + (e.g., 31612345678)
+
+    const form = document.getElementById('repair-form');
+    const okBox = document.getElementById('form-success');
+    const errBox = document.getElementById('form-error');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      okBox.classList.add('hidden');
+      errBox.classList.add('hidden');
+
+      const data = new FormData(form);
+      const name = data.get('name') || '';
+      const email = data.get('email') || '';
+      const whatsapp = data.get('whatsapp') || '';
+      const message = data.get('message') || '';
+
+      // 1) Send to Formspree
+      try {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: data
+        });
+
+        if (res.ok) {
+          // 2) Open WhatsApp prefilled (optional but requested)
+          // You can comment this out if you prefer not to auto-open.
+          const waText = encodeURIComponent(
+            `KnitFix aanvraag:\n\nNaam: ${name}\nE-mail: ${email}\nWhatsApp: ${whatsapp}\n\nBericht:\n${message}`
+          );
+          window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`, '_blank');
+
+          form.reset();
+          okBox.classList.remove('hidden');
+          // Scroll to the message for feedback
+          okBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          throw new Error('Formspree response not OK');
+        }
+      } catch (err) {
+        errBox.classList.remove('hidden');
+        errBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   </script>
 </body>
 </html>
