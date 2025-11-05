@@ -6,6 +6,9 @@
   <title>KnitFix — Amsterdam</title>
   <meta name="description" content="KnitFix — verfijnde breigoedreparatie en upcycling in Amsterdam." />
 
+  <!-- Futura PT (via Google Fonts) -->
+  <link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -13,26 +16,27 @@
       theme: {
         extend: {
           colors: { bg:"#FAFAFA", ink:"#0F0F0F", sub:"#6B6B6B", line:"#E6E6E6" },
-          fontFamily: { sans:['"Helvetica Neue"','Helvetica','Arial','ui-sans-serif','system-ui','sans-serif'] }
+          fontFamily: { sans:['"Futura PT"', 'Futura', 'Helvetica', 'Arial', 'sans-serif'] },
+          letterSpacing: { tightest: "-0.015em" }
         }
       }
     };
   </script>
   <style>
     html { scroll-behavior:smooth }
-    body { background:#FAFAFA; color:#0F0F0F }
+    body { background:#FAFAFA; color:#0F0F0F; font-weight:400 }
+    h1, h2, h3, h4, h5, h6 { letter-spacing:-0.015em }
     .maxw { max-width:1080px }
-    .btn{ border:1px solid #0F0F0F; border-radius:0; padding:.55rem 1rem; font-size:.85rem; transition:.2s }
+    .btn{ border:1px solid #0F0F0F; border-radius:0; padding:.55rem 1rem; font-size:.85rem; transition:.2s; font-weight:500 }
     .btn:hover{ background:#0F0F0F; color:#fff }
     .btn-ghost{ border:1px solid #E6E6E6; border-radius:0; padding:.45rem .9rem; font-size:.85rem }
     .btn-ghost:hover{ background:#fff }
     .pill{ border:1px solid #E6E6E6; border-radius:9999px; padding:.35rem .7rem; font-size:.8rem }
-    /* Transparent, minimal form: underline-only fields */
     .form-label{ font-size:.65rem; text-transform:uppercase; letter-spacing:.08em; color:#6B6B6B }
-    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #E6E6E6; padding:.5rem 0; outline:none; font-size:.95rem; }
+    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #E6E6E6; padding:.5rem 0; outline:none; font-size:.95rem; font-family:'Futura PT', sans-serif }
     .field:focus{ border-color:#0F0F0F }
     .textarea{ resize:vertical; line-height:1.45 }
-    .sec{ padding-top:6rem; padding-bottom:6rem } /* airy section spacing */
+    .sec{ padding-top:6rem; padding-bottom:6rem }
   </style>
 </head>
 
