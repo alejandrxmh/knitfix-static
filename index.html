@@ -24,6 +24,11 @@
   <style>
     html { scroll-behavior:smooth; text-transform:lowercase; }
     body { background:#fafafa; color:#0f0f0f; font-family:'Futura PT',sans-serif; }
+    /* header nav spacing (more separation) */
+    header nav { gap: 1.75rem; } 
+    /* was 1rem or similar */
+    @media (min-width: 768px){ header nav { gap: 2rem; } }
+
 
     /* global rhythm */
     .maxw { max-width:1080px }
@@ -32,13 +37,19 @@
 
     /* header */
     header h1 { font-size:1.2rem; letter-spacing:-0.03em; font-weight:700; }
+/* label same visual size as pills */
+.form-label { font-size: .75rem; letter-spacing: .06em; color: #6b6b6b; }
 
-    /* pills — smaller + match title size */
-    .pill{
-      border:1px solid #e6e6e6; border-radius:9999px;
-      padding:.28rem .55rem; font-size:.75rem; /* ↓ smaller */
-    }
+/* smaller, tidy pills */
+.pill{
+  border:1px solid rgba(39,39,39,.15);
+  border-radius:9999px;
+  padding:.26rem .5rem;      /* a touch smaller */
+  font-size:.75rem;          /* matches label height better */
+  line-height:1;
+}
 
+   
     /* transparent, underline-only form */
     .form-label{ font-size:.75rem; letter-spacing:.06em; color:#6b6b6b; } /* ↑ a bit bigger for clarity */
     .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #e6e6e6; padding:.45rem 0; outline:none; font-size:.9rem }
@@ -50,13 +61,17 @@
     .sectitle small{ font-weight:400; font-size:.8rem; color:#6b6b6b; margin-left:.35rem } /* (indicatie) smaller */
 
     /* sizing tweaks requested */
-    /* pricing row text smaller */
-    .price-title { font-size:1rem; font-weight:600; letter-spacing:-0.01em; }  /* ~16px */
-    .price-amt   { font-size:.9rem; }                                         /* ~14-15px */
+    /* pricing rows */
+.price-title { font-size: .95rem; font-weight: 600; letter-spacing: -0.01em; }
+.price-amt   { font-size: .88rem; }
 
-    /* services / categories items also smaller */
-    .svc-title { font-size:1rem; font-weight:600; letter-spacing:-0.01em; }   /* ~16px */
-    .svc-copy  { font-size:.92rem; }                                          /* ~15px */
+/* services / categories */
+.svc-title { font-size: .95rem; font-weight: 600; letter-spacing: -0.01em; }
+.svc-copy  { font-size: .9rem; }
+                                         /* ~15px */
+    /* nudge pill row to align baseline with the label if needed */
+#labType + .flex { margin-top: .1rem; }
+
   </style>
 </head>
 
