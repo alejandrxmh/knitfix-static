@@ -44,6 +44,22 @@
   /* hero */
   h2{font-size:44px;line-height:1.05;letter-spacing:-.02em;margin:48px 0 14px}
   .lead{color:var(--ink-muted);max-width:62ch;margin:0 0 44px}
+<section id="workflow" style="margin-top:48px">
+  <h3 style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0 0 12px">how we work</h3>
+  <div class="strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px">
+    <div class="seg" data-bg="#F6E4DE" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#f6cfc3,#f6e4de)"><span class="label">aanvraag</span></div>
+    <div class="seg" data-bg="#EDE6CF" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#f1e2b2,#ede6cf)"><span class="label">pick-up</span></div>
+    <div class="seg" data-bg="#E3F0DF" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#cfe9c8,#e3f0df)"><span class="label">beoordeling</span></div>
+    <div class="seg" data-bg="#D2ECD8" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#a7dcb8,#d2ecd8)"><span class="label">kleur / steek</span></div>
+    <div class="seg" data-bg="#CBE1F3" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#a7cfee,#cbe1f3)"><span class="label">darning / knit</span></div>
+    <div class="seg" data-bg="#E3DDF1" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#cfc3ee,#e3ddf1)"><span class="label">blocken & return</span></div>
+  </div>
+  <div class="captions" style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:12px;font-size:13px;color:#4b4b4b">
+    <div class="cap">foto + korte omschrijving</div><div class="cap">ophalen / post</div>
+    <div class="cap">inspectie & indicatie</div><div class="cap">garen & steek</div>
+    <div class="cap">onzichtbaar / zichtbaar</div><div class="cap">stomen, blocken, afleveren</div>
+  </div>
+</section>
 
   /* strip */
   .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;align-items:center}
@@ -296,6 +312,17 @@ body{ transition: background-color .7s ease, color .3s ease; }
   document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.animationDelay = (0.06*i)+'s' });
   const hdr=document.querySelector('header');
   addEventListener('scroll',()=>hdr.classList.toggle('is-scrolled', scrollY>8),{passive:true});
+
+
+  const defaultBG=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#F6F3F1';
+const segs=document.querySelectorAll('.seg');
+function setBG(c){ document.body.style.backgroundColor=c; }
+function resetBG(){ document.body.style.backgroundColor=defaultBG; }
+segs.forEach(s=>{
+  s.addEventListener('mouseenter',()=>setBG(s.dataset.bg));
+  s.addEventListener('mouseleave',resetBG);
+  s.addEventListener('click',()=>{ setBG(s.dataset.bg); clearTimeout(s._t); s._t=setTimeout(resetBG,2500); });
+});
 
 
 </script>
