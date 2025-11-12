@@ -3,21 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>knitfix — werkwijze</title>
+<title>knitfix — landing</title>
 
-<!-- futura-like -->
 <link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
   /* ========== design tokens ========== */
   :root{
-    --bg: #F6F2F0;          /* primary / light */
-    --ink: #272727;         /* dark text (auto-updated by js) */
+    --bg: #F5F3F1;          /* soft cream background */
+    --ink: #272727;         /* text color (auto-updated if needed) */
     --accent: #5DA271;      /* knitfix green */
     --ink-muted: #6b6b6b;
     --line: rgba(39,39,39,.14);
-    --radius: 28px;
-    --pill-h: 54px;
+    --radius: 24px;
+    --pill-h: 50px;
     --maxw: 1120px;
   }
 
@@ -26,11 +25,16 @@
   body{
     margin:0; background:var(--bg); color:var(--ink);
     font-family:'Futura PT', futura, helvetica, arial, sans-serif;
-    letter-spacing:-.01em; transition:background-color .6s ease, color .3s ease;
+    letter-spacing:-.01em;
+    transition:background-color .7s ease, color .3s ease;
+    /* subtle paper vignette */
+    background-image:
+      radial-gradient(1200px 600px at 50% -10%, rgba(0,0,0,.04), transparent 60%),
+      radial-gradient(800px 400px at 50% 120%, rgba(0,0,0,.03), transparent 60%);
   }
   *{box-sizing:border-box}
-  a{color:inherit;text-decoration:none}
-  a:hover{ text-decoration:underline }
+  a{color:inherit;text-decoration:none;text-underline-offset:2px}
+  a:hover{ text-decoration-thickness:1px; text-underline-offset:3px; color:var(--accent) }
 
   .frame{max-width:var(--maxw); margin:0 auto; padding:56px 20px 96px}
 
@@ -39,56 +43,39 @@
   header h1{margin:0;font-size:20px;letter-spacing:-.03em;font-weight:700}
   header nav{display:flex;gap:28px}
   header nav a{opacity:.95}
-  header nav a:hover{opacity:1;color:var(--accent)}
+  header nav a:hover{opacity:1}
 
   /* hero */
-  h2{font-size:44px;line-height:1.05;letter-spacing:-.02em;margin:48px 0 14px}
+  h2{font-size:40px;line-height:1.1;letter-spacing:-.022em;margin:48px 0 14px}
   .lead{color:var(--ink-muted);max-width:62ch;margin:0 0 44px}
-<section id="workflow" style="margin-top:48px">
-  <h3 style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0 0 12px">how we work</h3>
-  <div class="strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px">
-    <div class="seg" data-bg="#F6E4DE" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#f6cfc3,#f6e4de)"><span class="label">aanvraag</span></div>
-    <div class="seg" data-bg="#EDE6CF" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#f1e2b2,#ede6cf)"><span class="label">pick-up</span></div>
-    <div class="seg" data-bg="#E3F0DF" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#cfe9c8,#e3f0df)"><span class="label">beoordeling</span></div>
-    <div class="seg" data-bg="#D2ECD8" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#a7dcb8,#d2ecd8)"><span class="label">kleur / steek</span></div>
-    <div class="seg" data-bg="#CBE1F3" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#a7cfee,#cbe1f3)"><span class="label">darning / knit</span></div>
-    <div class="seg" data-bg="#E3DDF1" style="height:50px;border-radius:24px;background:linear-gradient(90deg,#cfc3ee,#e3ddf1)"><span class="label">blocken & return</span></div>
-  </div>
-  <div class="captions" style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:12px;font-size:13px;color:#4b4b4b">
-    <div class="cap">foto + korte omschrijving</div><div class="cap">ophalen / post</div>
-    <div class="cap">inspectie & indicatie</div><div class="cap">garen & steek</div>
-    <div class="cap">onzichtbaar / zichtbaar</div><div class="cap">stomen, blocken, afleveren</div>
-  </div>
-</section>
 
-  /* strip */
-  .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;align-items:center}
+  /* workflow strip */
+  .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;align-items:center}
   .seg{
     height:var(--pill-h);
     border-radius:var(--radius);
     position:relative; cursor:pointer;
     transform:translateZ(0);
-    transition:transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .35s;
+    transition:transform .4s ease, box-shadow .4s ease;
     box-shadow:0 0 0 0 rgba(0,0,0,0);
     will-change:transform;
   }
-  .seg:hover{ transform:scale(1.045); box-shadow:0 10px 24px rgba(0,0,0,.08) }
+  .seg:hover{ transform:scale(1.03); box-shadow:0 6px 18px rgba(0,0,0,.06) }
   .label{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-size:14px; font-weight:600; letter-spacing:.02em;
-    mix-blend:darken;
+    font-size:14px; font-weight:600; letter-spacing:.02em; color:currentColor; mix-blend:normal;
   }
 
   /* captions */
-  .captions{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:12px}
-  .cap{background:rgba(39,39,39,.06); border:1px solid var(--line); border-radius:14px; padding:10px 12px; text-align:center; font-size:13px; color:#333}
+  .captions{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:12px}
+  .cap{background:rgba(39,39,39,.05); border:1px solid var(--line); border-radius:14px; padding:10px 12px; text-align:center; font-size:13px; color:#4b4b4b}
 
-  /* section title + divider */
+  /* sections */
   .section{margin-top:92px}
   .section h3{font-size:20px; letter-spacing:-.02em; font-weight:700; margin:0 0 10px}
   .divider{height:1px; background:var(--line); margin:16px 0 28px}
 
-  /* contact bar */
+  /* contact */
   .contact a{ text-decoration:underline }
   .contact a:hover{ color:var(--accent) }
 
@@ -98,62 +85,30 @@
   /* animations */
   @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .reveal{opacity:0;animation:fadeUp .6s ease forwards}
-  .d1{animation-delay:.05s}.d2{.animation-delay:.12s}
-  @media (prefers-reduced-motion: reduce){ .reveal{animation:none;opacity:1} .seg{transition:none} }
+  .d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.18s}.d4{animation-delay:.24s}.d5{animation-delay:.30s}.d6{animation-delay:.36s}
 
   /* responsive */
   @media (max-width:960px){
-    h2{font-size:36px}
+    h2{font-size:32px}
   }
   @media (max-width:720px){
-    h2{font-size:28px}
+    h2{font-size:26px}
+    .frame{ padding: 44px 18px 72px; }
     .strip,.captions{grid-template-columns:1fr 1fr;gap:10px}
-    .seg{height:48px}
+    .seg{height:46px}
   }
-  :root{ --bg:#F5F3F1; } /* slightly creamier than #F6F2F0 */
 
-/* gentle vignette so the strip sits in focus */
-body{
-  background:var(--bg);
-  background-image:
-    radial-gradient(1200px 600px at 50% -10%, rgba(0,0,0,.04), transparent 60%),
-    radial-gradient(800px 400px at 50% 120%, rgba(0,0,0,.03), transparent 60%);
-}
-/* a touch slimmer, more elegant */
-:root{ --pill-h: 50px; --radius: 24px; }
-.strip{ gap: 16px; }          /* a bit more air */
-.captions{ gap: 16px; }
-/* hero slightly smaller & tighter */
-h2{ font-size: 40px; letter-spacing: -0.022em; }
-
-/* caption chips quieter */
-.cap{ background: rgba(39,39,39,.05); color:#4b4b4b; border-color: rgba(39,39,39,.12); }
-
-  /* softer hover + underline slide-in */
-.seg:hover{ transform: scale(1.03); box-shadow:0 6px 18px rgba(0,0,0,.06); }
-a{ text-underline-offset: 2px; }
-a:hover{ text-decoration-thickness: 1px; text-underline-offset: 3px; color: var(--accent); }
-
-  /* labels follow current text color cleanly */
-.label{ color: currentColor; mix-blend: normal; }
-/* dividers adapt subtly with ink */
-:root{ --line: rgba(39,39,39,.14); }
-.border-line, .divider{ background: var(--line) !important; }
-/* shadow only after scroll for depth */
-header.is-scrolled{ box-shadow: 0 6px 20px rgba(0,0,0,.06); background: color-mix(in oklab, var(--bg) 92%, #fff); }
-@media (max-width:720px){
-  .frame{ padding: 44px 18px 72px; }
-  h2{ font-size: 26px; }
-  .seg{ height: 46px; }
-}
-body{ transition: background-color .7s ease, color .3s ease; }
-
+  /* reduced motion */
+  @media (prefers-reduced-motion:reduce){
+    .reveal{animation:none;opacity:1}
+    .seg{transition:none}
+  }
 </style>
 </head>
 <body>
   <div class="frame">
     <!-- header -->
-    <header>
+    <header class="reveal d1">
       <h1>knitfix</h1>
       <nav>
         <a href="#workflow">werkwijze</a>
@@ -162,54 +117,18 @@ body{ transition: background-color .7s ease, color .3s ease; }
     </header>
 
     <!-- hero / intro -->
-    <section id="workflow" class="reveal">
+    <section id="workflow" class="reveal d2">
       <h2>how we work</h2>
       <p class="lead">een transparant proces in zes rustige stappen. beweeg over de kleuren: de pagina neemt de sfeer van de fase over.</p>
 
-      <!-- colored workflow bar (all colors are soft spins off knitfix palette) -->
+      <!-- colored workflow bar -->
       <div class="strip">
-        <!-- aanvraag -->
-        <div class="seg"
-             data-bg="#F6E4DE"
-             data-ink="#272727"
-             style="background:linear-gradient(90deg,#f6cfc3,#f6e4de)">
-          <span class="label">aanvraag</span>
-        </div>
-        <!-- pick-up -->
-        <div class="seg"
-             data-bg="#EDE6CF"
-             data-ink="#272727"
-             style="background:linear-gradient(90deg,#f1e2b2,#ede6cf)">
-          <span class="label">pick-up</span>
-        </div>
-        <!-- beoordeling -->
-        <div class="seg"
-             data-bg="#E3F0DF"
-             data-ink="#272727"
-             style="background:linear-gradient(90deg,#cfe9c8,#e3f0df)">
-          <span class="label">beoordeling</span>
-        </div>
-        <!-- kleur/steek match -->
-        <div class="seg"
-             data-bg="#D2ECD8"
-             data-ink="#272727"
-             style="background:linear-gradient(90deg,#a7dcb8,#d2ecd8)">
-          <span class="label">kleur / steek-match</span>
-        </div>
-        <!-- darning / knit -->
-        <div class="seg"
-             data-bg="#CBE1F3"
-             data-ink="#272727"
-             style="background:linear-gradient(90deg,#a7cfee,#cbe1f3)">
-          <span class="label">darning / knit</span>
-        </div>
-        <!-- blocken & return -->
-        <div class="seg"
-             data-bg="#E3DDF1"
-             data-ink="#272727"
-             style="background:linear-gradient(90deg,#cfc3ee,#e3ddf1)">
-          <span class="label">blocken & return</span>
-        </div>
+        <div class="seg" data-bg="#F6E4DE" style="background:linear-gradient(90deg,#f6cfc3,#f6e4de)"><span class="label">aanvraag</span></div>
+        <div class="seg" data-bg="#EDE6CF" style="background:linear-gradient(90deg,#f1e2b2,#ede6cf)"><span class="label">pick-up</span></div>
+        <div class="seg" data-bg="#E3F0DF" style="background:linear-gradient(90deg,#cfe9c8,#e3f0df)"><span class="label">beoordeling</span></div>
+        <div class="seg" data-bg="#D2ECD8" style="background:linear-gradient(90deg,#a7dcb8,#d2ecd8)"><span class="label">kleur / steek</span></div>
+        <div class="seg" data-bg="#CBE1F3" style="background:linear-gradient(90deg,#a7cfee,#cbe1f3)"><span class="label">darning / knit</span></div>
+        <div class="seg" data-bg="#E3DDF1" style="background:linear-gradient(90deg,#cfc3ee,#e3ddf1)"><span class="label">blocken & return</span></div>
       </div>
 
       <div class="captions">
@@ -222,15 +141,15 @@ body{ transition: background-color .7s ease, color .3s ease; }
       </div>
     </section>
 
-    <!-- tiny explainer section -->
-    <section class="section reveal">
+    <!-- explainer -->
+    <section class="section reveal d3">
       <h3>wat je kunt verwachten</h3>
       <div class="divider"></div>
       <p class="lead">we streven naar subtiele, duurzame reparaties. wil je juist het ambacht tonen? kies voor zichtbaar stopwerk in harmonieuze tinten. elke stap is zorgvuldig en rustig — net als de site.</p>
     </section>
 
     <!-- contact -->
-    <section id="contact" class="section contact reveal">
+    <section id="contact" class="section contact reveal d4">
       <h3>start je aanvraag</h3>
       <div class="divider"></div>
       <p class="lead">stuur een bericht met 2–3 foto’s. we reageren snel met een heldere indicatie en planning.</p>
@@ -238,34 +157,28 @@ body{ transition: background-color .7s ease, color .3s ease; }
     </section>
 
     <!-- footer -->
-    <footer>
+    <footer class="reveal d5">
       <span>knitfix — amsterdam · © <span id="year"></span></span>
       <a href="#workflow">top</a>
     </footer>
   </div>
 
 <script>
-  // whatsapp
-  const WHATSAPP_NUMBER = "31600000000"; // replace
+  // config
+  const WHATSAPP_NUMBER = "31600000000"; // replace with your number (numeric only)
   document.getElementById('wa').href = `https://wa.me/${WHATSAPP_NUMBER}`;
-
-  // set year
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // ===== background takeover with auto-contrast =====
+  // background takeover on hover/tap with auto-contrast for ink
   const body = document.body;
-  const defaultBG = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#F6F2F0';
+  const defaultBG = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#F5F3F1';
   const defaultInk = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#272727';
   const segs = document.querySelectorAll('.seg');
 
   function hexToRgb(hex){
     const h = hex.replace('#','');
     const b = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
-    return {
-      r: parseInt(b.substring(0,2),16),
-      g: parseInt(b.substring(2,4),16),
-      b: parseInt(b.substring(4,6),16)
-    };
+    return { r:parseInt(b.substring(0,2),16), g:parseInt(b.substring(2,4),16), b:parseInt(b.substring(4,6),16) };
   }
   function luminance(hex){
     const {r,g,b} = hexToRgb(hex);
@@ -276,7 +189,6 @@ body{ transition: background-color .7s ease, color .3s ease; }
     return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
   }
   function setInkFor(bgHex){
-    // choose dark text for light bg, white for dark bg
     const L = luminance(bgHex);
     const nextInk = L > 0.6 ? '#272727' : '#ffffff';
     document.documentElement.style.setProperty('--ink', nextInk);
@@ -285,10 +197,8 @@ body{ transition: background-color .7s ease, color .3s ease; }
   }
   function activate(el){
     const color = el.getAttribute('data-bg') || defaultBG;
-    const customInk = el.getAttribute('data-ink'); // optional override
     body.style.backgroundColor = color;
-    if(customInk){ document.documentElement.style.setProperty('--ink', customInk) }
-    else{ setInkFor(color); }
+    setInkFor(color);
   }
   function reset(){
     body.style.backgroundColor = defaultBG;
@@ -296,35 +206,14 @@ body{ transition: background-color .7s ease, color .3s ease; }
     document.documentElement.style.setProperty('--line', 'rgba(39,39,39,.14)');
     document.documentElement.style.setProperty('--ink-muted', '#6b6b6b');
   }
-
   segs.forEach(s=>{
     s.addEventListener('mouseenter', ()=>activate(s));
     s.addEventListener('mouseleave', reset);
-    // tap: hold color for a moment
-    s.addEventListener('click', ()=>{
-      activate(s);
-      clearTimeout(s._t);
-      s._t = setTimeout(reset, 2500);
-    });
+    s.addEventListener('click', ()=>{ activate(s); clearTimeout(s._t); s._t=setTimeout(reset,2500); });
   });
 
-  // small entrance reveal
+  // entrance reveal stagger
   document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.animationDelay = (0.06*i)+'s' });
-  const hdr=document.querySelector('header');
-  addEventListener('scroll',()=>hdr.classList.toggle('is-scrolled', scrollY>8),{passive:true});
-
-
-  const defaultBG=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#F6F3F1';
-const segs=document.querySelectorAll('.seg');
-function setBG(c){ document.body.style.backgroundColor=c; }
-function resetBG(){ document.body.style.backgroundColor=defaultBG; }
-segs.forEach(s=>{
-  s.addEventListener('mouseenter',()=>setBG(s.dataset.bg));
-  s.addEventListener('mouseleave',resetBG);
-  s.addEventListener('click',()=>{ setBG(s.dataset.bg); clearTimeout(s._t); s._t=setTimeout(resetBG,2500); });
-});
-
-
 </script>
 </body>
 </html>
