@@ -1,394 +1,261 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>knitfix — amsterdam</title>
-  <meta name="description" content="knitfix — verfijnde breigoedreparatie en upcycling in amsterdam." />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>knitfix — werkwijze</title>
 
-  <!-- futura pt -->
-  <link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- futura-like -->
+<link href="https://fonts.googleapis.com/css2?family=Futura+PT:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <!-- tailwind (cdn) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { bg:"#fafafa", ink:"#0f0f0f", sub:"#6b6b6b", line:"#e6e6e6" },
-          fontFamily: { sans:['"Futura PT"','futura','helvetica','arial','ui-sans-serif','system-ui','sans-serif'] }
-        }
-      }
-    };
-  </script>
-  <style>
-    html { scroll-behavior:smooth; text-transform:lowercase; }
-    body { background:#fafafa; color:#0f0f0f; font-family:'Futura PT',sans-serif; }
-    /* header nav spacing (more separation) */
-    header nav { gap: 1.75rem; } 
-    /* was 1rem or similar */
-    @media (min-width: 768px){ header nav { gap: 2rem; } }
+<style>
+  /* ========== design tokens ========== */
+  :root{
+    --bg: #F6F2F0;          /* primary / light */
+    --ink: #272727;         /* dark text (auto-updated by js) */
+    --accent: #5DA271;      /* knitfix green */
+    --ink-muted: #6b6b6b;
+    --line: rgba(39,39,39,.14);
+    --radius: 28px;
+    --pill-h: 54px;
+    --maxw: 1120px;
+  }
 
+  /* ========== base ========== */
+  html{scroll-behavior:smooth;text-transform:lowercase}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Futura PT', futura, helvetica, arial, sans-serif;
+    letter-spacing:-.01em; transition:background-color .6s ease, color .3s ease;
+  }
+  *{box-sizing:border-box}
+  a{color:inherit;text-decoration:none}
+  a:hover{ text-decoration:underline }
 
-    /* global rhythm */
-    .maxw { max-width:1080px }
-    .sec { padding-top:8rem; padding-bottom:8rem }
-    section + section { margin-top:4rem; }
+  .frame{max-width:var(--maxw); margin:0 auto; padding:56px 20px 96px}
 
-    /* header */
-    header h1 { font-size:1.2rem; letter-spacing:-0.03em; font-weight:700; }
-/* label same visual size as pills */
-.form-label { font-size: .75rem; letter-spacing: .06em; color: #6b6b6b; }
+  /* header */
+  header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0 14px}
+  header h1{margin:0;font-size:20px;letter-spacing:-.03em;font-weight:700}
+  header nav{display:flex;gap:28px}
+  header nav a{opacity:.95}
+  header nav a:hover{opacity:1;color:var(--accent)}
 
-/* smaller, tidy pills */
-.pill{
-  border:1px solid rgba(39,39,39,.15);
-  border-radius:9999px;
-  padding:.26rem .5rem;      /* a touch smaller */
-  font-size:.75rem;          /* matches label height better */
-  line-height:1;
-}
+  /* hero */
+  h2{font-size:44px;line-height:1.05;letter-spacing:-.02em;margin:48px 0 14px}
+  .lead{color:var(--ink-muted);max-width:62ch;margin:0 0 44px}
 
-   
-    /* transparent, underline-only form */
-    .form-label{ font-size:.75rem; letter-spacing:.06em; color:#6b6b6b; } /* ↑ a bit bigger for clarity */
-    .field{ width:100%; background:transparent; border:none; border-bottom:1px solid #e6e6e6; padding:.45rem 0; outline:none; font-size:.9rem }
-    .field:focus{ border-color:#0f0f0f }
-    .textarea{ resize:vertical; line-height:1.5 }
+  /* strip */
+  .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;align-items:center}
+  .seg{
+    height:var(--pill-h);
+    border-radius:var(--radius);
+    position:relative; cursor:pointer;
+    transform:translateZ(0);
+    transition:transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .35s;
+    box-shadow:0 0 0 0 rgba(0,0,0,0);
+    will-change:transform;
+  }
+  .seg:hover{ transform:scale(1.045); box-shadow:0 10px 24px rgba(0,0,0,.08) }
+  .label{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:600; letter-spacing:.02em;
+    mix-blend:darken;
+  }
 
-    /* section titles */
-    .sectitle{ font-weight:700; letter-spacing:-0.02em }
-    .sectitle small{ font-weight:400; font-size:.8rem; color:#6b6b6b; margin-left:.35rem } /* (indicatie) smaller */
+  /* captions */
+  .captions{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:12px}
+  .cap{background:rgba(39,39,39,.06); border:1px solid var(--line); border-radius:14px; padding:10px 12px; text-align:center; font-size:13px; color:#333}
 
-    /* sizing tweaks requested */
-    /* pricing rows */
-.price-title { font-size: .95rem; font-weight: 600; letter-spacing: -0.01em; }
-.price-amt   { font-size: .88rem; }
+  /* section title + divider */
+  .section{margin-top:92px}
+  .section h3{font-size:20px; letter-spacing:-.02em; font-weight:700; margin:0 0 10px}
+  .divider{height:1px; background:var(--line); margin:16px 0 28px}
 
-/* services / categories */
-.svc-title { font-size: .95rem; font-weight: 600; letter-spacing: -0.01em; }
-.svc-copy  { font-size: .9rem; }
-                                         /* ~15px */
-    /* nudge pill row to align baseline with the label if needed */
-#labType + .flex { margin-top: .1rem; }
+  /* contact bar */
+  .contact a{ text-decoration:underline }
+  .contact a:hover{ color:var(--accent) }
 
-  </style>
+  /* footer */
+  footer{border-top:1px solid var(--line); padding:24px 0; color:var(--ink-muted); font-size:14px; display:flex; justify-content:space-between; align-items:center}
+
+  /* animations */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .reveal{opacity:0;animation:fadeUp .6s ease forwards}
+  .d1{animation-delay:.05s}.d2{.animation-delay:.12s}
+  @media (prefers-reduced-motion: reduce){ .reveal{animation:none;opacity:1} .seg{transition:none} }
+
+  /* responsive */
+  @media (max-width:960px){
+    h2{font-size:36px}
+  }
+  @media (max-width:720px){
+    h2{font-size:28px}
+    .strip,.captions{grid-template-columns:1fr 1fr;gap:10px}
+    .seg{height:48px}
+  }
+</style>
 </head>
+<body>
+  <div class="frame">
+    <!-- header -->
+    <header>
+      <h1>knitfix</h1>
+      <nav>
+        <a href="#workflow">werkwijze</a>
+        <a href="#contact">contact</a>
+      </nav>
+    </header>
 
-<body class="antialiased font-sans">
-  <!-- header (more separation between 'en' and 'whatsapp') -->
-  <header class="maxw mx-auto w-full px-6 py-2 md:py-3 flex items-center justify-between border-b border-line">
-    <h1>knitfix</h1>
-    <nav class="flex items-center gap-6 md:gap-8 text-[0.9rem]"> <!-- gap increased -->
-      <button id="langToggle" class="text-ink hover:underline focus:outline-none">en</button>
-      <a id="waTop" href="#" target="_blank" rel="noopener" class="text-ink hover:underline">whatsapp</a>
-    </nav>
-  </header>
+    <!-- hero / intro -->
+    <section id="workflow" class="reveal">
+      <h2>how we work</h2>
+      <p class="lead">een transparant proces in zes rustige stappen. beweeg over de kleuren: de pagina neemt de sfeer van de fase over.</p>
 
-  <main class="maxw mx-auto w-full px-6">
-    <!-- hero (bold af, harmonious) -->
-    <section class="pt-16 md:pt-20 pb-10">
-      <div class="md:w-[70%]">
-        <h2 id="heroTitle" class="text-[26px] md:text-[36px] font-[700] leading-[1.25] tracking-[-0.025em]">
-          vertel ons kort over je breiwerk.
-        </h2>
-        <p id="heroIntro" class="mt-4 text-sub md:w-[75%] text-[15px] leading-[1.7] tracking-[-0.01em]">
-          stuur je aanvraag met foto’s. je ontvangt snel een heldere inschatting en planning.
-        </p>
+      <!-- colored workflow bar (all colors are soft spins off knitfix palette) -->
+      <div class="strip">
+        <!-- aanvraag -->
+        <div class="seg"
+             data-bg="#F6E4DE"
+             data-ink="#272727"
+             style="background:linear-gradient(90deg,#f6cfc3,#f6e4de)">
+          <span class="label">aanvraag</span>
+        </div>
+        <!-- pick-up -->
+        <div class="seg"
+             data-bg="#EDE6CF"
+             data-ink="#272727"
+             style="background:linear-gradient(90deg,#f1e2b2,#ede6cf)">
+          <span class="label">pick-up</span>
+        </div>
+        <!-- beoordeling -->
+        <div class="seg"
+             data-bg="#E3F0DF"
+             data-ink="#272727"
+             style="background:linear-gradient(90deg,#cfe9c8,#e3f0df)">
+          <span class="label">beoordeling</span>
+        </div>
+        <!-- kleur/steek match -->
+        <div class="seg"
+             data-bg="#D2ECD8"
+             data-ink="#272727"
+             style="background:linear-gradient(90deg,#a7dcb8,#d2ecd8)">
+          <span class="label">kleur / steek-match</span>
+        </div>
+        <!-- darning / knit -->
+        <div class="seg"
+             data-bg="#CBE1F3"
+             data-ink="#272727"
+             style="background:linear-gradient(90deg,#a7cfee,#cbe1f3)">
+          <span class="label">darning / knit</span>
+        </div>
+        <!-- blocken & return -->
+        <div class="seg"
+             data-bg="#E3DDF1"
+             data-ink="#272727"
+             style="background:linear-gradient(90deg,#cfc3ee,#e3ddf1)">
+          <span class="label">blocken & return</span>
+        </div>
+      </div>
+
+      <div class="captions">
+        <div class="cap">foto + korte omschrijving</div>
+        <div class="cap">ophalen amsterdam / post</div>
+        <div class="cap">inspectie & indicatie</div>
+        <div class="cap">garen & steek afstemmen</div>
+        <div class="cap">onzichtbaar of zichtbaar stopwerk</div>
+        <div class="cap">stomen, blocken, afleveren</div>
       </div>
     </section>
 
-    <!-- feedback notes -->
-    <div id="formSuccess" class="hidden border border-line rounded-none px-4 py-2 text-sm mt-6">
-      bedankt — we hebben je aanvraag ontvangen. we nemen spoedig contact met je op.
-    </div>
-    <div id="formError" class="hidden border border-line rounded-none px-4 py-2 text-sm mt-6">
-      verzenden mislukt. probeer opnieuw of mail <a class="underline" href="mailto:info@knitfix.nl">info@knitfix.nl</a>.
-    </div>
-
-    <!-- transparent contact form -->
-    <form id="repairForm" class="mt-6 pb-12 border-b border-line" enctype="multipart/form-data">
-      <div class="grid md:grid-cols-3 gap-8">
-        <div>
-          <label id="labName" class="form-label block mb-1">naam*</label>
-          <input id="fName" name="name" type="text" required class="field" placeholder="naam" />
-        </div>
-        <div>
-          <label id="labEmail" class="form-label block mb-1">e-mail*</label>
-          <input id="fEmail" name="email" type="email" required class="field" placeholder="you@mail.com" />
-        </div>
-        <div>
-          <label id="labPhone" class="form-label block mb-1">telefoon*</label>
-          <input id="fPhone" name="phone" type="tel" required class="field" placeholder="+31…" />
-        </div>
-      </div>
-
-      <div class="mt-6 grid md:grid-cols-3 gap-8">
-        <div class="md:col-span-2">
-          <label id="labMsg" class="form-label block mb-1">bericht*</label>
-          <textarea id="fMessage" name="message" rows="3" required class="field textarea" placeholder="beschrijf het kledingstuk en de schade…"></textarea>
-        </div>
-        <div>
-          <label id="photosLabel" class="form-label block mb-1">foto’s (max 5, jpg/png)</label>
-          <input id="fPhotos" name="photos" type="file" accept="image/*" multiple class="field" />
-        </div>
-      </div>
-
-      <!-- repair type pills (same size as title label) -->
-      <div class="mt-6">
-        <div id="labType" class="form-label mb-2">type reparatie</div>
-        <div class="flex flex-wrap gap-2">
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="klein motgaatje">klein motgaatje</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="meerdere gaatjes">meerdere gaatjes</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="ladder / getrokken draad">ladder / getrokken draad</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="losse boord/zoom">losse boord/zoom</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="opnieuw blocken / vorm">opnieuw blocken / vorm</label>
-          <label class="pill cursor-pointer"><input class="mr-2" type="checkbox" name="repair_type" value="overig">overig</label>
-        </div>
-      </div>
-
-      <div class="mt-6 flex items-start gap-2 text-xs text-sub">
-        <input id="consent" type="checkbox" required />
-        <span id="consentText">ik ga akkoord dat knitfix contact met mij opneemt over deze aanvraag.</span>
-      </div>
-
-      <div class="mt-6 flex flex-wrap items-center gap-3">
-        <button id="submitBtn" type="submit" class="text-ink underline hover:no-underline">verstuur</button>
-      </div>
-    </form>
-
-    <!-- pricing (smaller items) -->
-    <section id="pricing" class="sec border-b border-line">
-      <h3 id="priceTitle" class="sectitle text-[20px] md:text-[24px] mb-10">
-        prijzen <small id="priceSmall">(indicatie)</small>
-      </h3>
-      <div class="grid md:grid-cols-2 gap-12">
-        <div class="border-t border-line pt-6">
-          <div class="flex items-baseline justify-between">
-            <h4 id="p1t" class="price-title">klein gaatje (≤8mm)</h4>
-            <span id="p1p" class="price-amt">€10–€15</span>
-          </div>
-        </div>
-        <div class="border-t border-line pt-6">
-          <div class="flex items-baseline justify-between">
-            <h4 id="p2t" class="price-title">meerdere gaatjes</h4>
-            <span id="p2p" class="price-amt">€25–€35</span>
-          </div>
-        </div>
-        <div class="border-t border-line pt-6">
-          <div class="flex items-baseline justify-between">
-            <h4 id="p3t" class="price-title">losse boord/zoom</h4>
-            <span id="p3p" class="price-amt">€25–€40</span>
-          </div>
-        </div>
-        <div class="border-t border-line pt-6">
-          <div class="flex items-baseline justify-between">
-            <h4 id="p4t" class="price-title">opnieuw blocken / vorm</h4>
-            <span id="p4p" class="price-amt">€20–€35</span>
-          </div>
-        </div>
-      </div>
+    <!-- tiny explainer section -->
+    <section class="section reveal">
+      <h3>wat je kunt verwachten</h3>
+      <div class="divider"></div>
+      <p class="lead">we streven naar subtiele, duurzame reparaties. wil je juist het ambacht tonen? kies voor zichtbaar stopwerk in harmonieuze tinten. elke stap is zorgvuldig en rustig — net als de site.</p>
     </section>
 
-    <!-- services (smaller items) -->
-    <section id="services" class="sec border-b border-line">
-      <h3 id="servicesTitle" class="sectitle text-[20px] md:text-[24px] mb-10">diensten</h3>
-      <div class="grid md:grid-cols-2 gap-12">
-        <div class="border-t border-line pt-6">
-          <h4 id="s1t" class="svc-title">reparaties</h4>
-          <p id="s1d" class="svc-copy mt-2 text-sub">motgaatjes, ladders, losse boorden. subtiel en duurzaam hersteld.</p>
-        </div>
-        <div class="border-t border-line pt-6">
-          <h4 id="s2t" class="svc-title">zichtbaar stopwerk</h4>
-          <p id="s2d" class="svc-copy mt-2 text-sub">een esthetische keuze voor wie het ambacht mag spreken.</p>
-        </div>
-        <div class="border-t border-line pt-6">
-          <h4 id="s3t" class="svc-title">opnieuw blocken</h4>
-          <p id="s3d" class="svc-copy mt-2 text-sub">vormcorrectie en verfrissing van breigoed.</p>
-        </div>
-        <div class="border-t border-line pt-6">
-          <h4 id="s4t" class="svc-title">upcycling</h4>
-          <p id="s4d" class="svc-copy mt-2 text-sub">creatieve herinterpretaties met behoud van materiaal.</p>
-        </div>
-      </div>
+    <!-- contact -->
+    <section id="contact" class="section contact reveal">
+      <h3>start je aanvraag</h3>
+      <div class="divider"></div>
+      <p class="lead">stuur een bericht met 2–3 foto’s. we reageren snel met een heldere indicatie en planning.</p>
+      <p><a href="mailto:info@knitfix.nl">info@knitfix.nl</a> <span style="opacity:.4">·</span> <a id="wa" href="#" target="_blank">whatsapp</a></p>
     </section>
 
-    <!-- faq -->
-    <section id="faq" class="sec">
-      <div class="grid md:grid-cols-2 gap-12">
-        <div>
-          <h3 id="faqTitle" class="sectitle text-[20px] md:text-[24px] mb-3">vragen?</h3>
-          <p id="faqIntro" class="text-sub">snelle antwoorden hieronder. meer weten? stuur een bericht.</p>
-        </div>
-        <div class="space-y-2">
-          <details class="border-t border-line py-4 group">
-            <summary class="flex justify-between items-center cursor-pointer list-none">
-              <span id="q1" class="font-[600]">welke gebieden dekken jullie?</span>
-              <span class="text-sub transition group-open:rotate-45">+</span>
-            </summary>
-            <p id="a1" class="mt-2 text-sub">amsterdam en omgeving. per post vanuit heel nederland mogelijk.</p>
-          </details>
-          <details class="border-t border-line py-4 group">
-            <summary class="flex justify-between items-center cursor-pointer list-none">
-              <span id="q2" class="font-[600]">wat kost het?</span>
-              <span class="text-sub transition group-open:rotate-45">+</span>
-            </summary>
-            <p id="a2" class="mt-2 text-sub">je krijgt een duidelijke indicatie na beoordeling van je foto’s en informatie.</p>
-          </details>
-          <details class="border-t border-line py-4 group">
-            <summary class="flex justify-between items-center cursor-pointer list-none">
-              <span id="q3" class="font-[600]">werken jullie met kasjmier?</span>
-              <span class="text-sub transition group-open:rotate-45">+</span>
-            </summary>
-            <p id="a3" class="mt-2 text-sub">ja. we matchen garen en steken zorgvuldig of doen zichtbaar stopwerk op verzoek.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-  </main>
+    <!-- footer -->
+    <footer>
+      <span>knitfix — amsterdam · © <span id="year"></span></span>
+      <a href="#workflow">top</a>
+    </footer>
+  </div>
 
-  <!-- footer -->
-  <footer class="maxw mx-auto w-full px-6 py-8 border-t border-line text-sm text-sub">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      <p id="footerLine">knitfix — amsterdam · © <span id="year"></span></p>
-      <div class="flex gap-2">
-        <a href="#top" class="pill">top</a>
-      </div>
-    </div>
-  </footer>
+<script>
+  // whatsapp
+  const WHATSAPP_NUMBER = "31600000000"; // replace
+  document.getElementById('wa').href = `https://wa.me/${WHATSAPP_NUMBER}`;
 
-  <script>
-    // config
-    const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-id"; // replace
-    const WHATSAPP_NUMBER    = "31600000000";                    // replace (numeric only)
+  // set year
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-    // single whatsapp (header)
-    const waURL = `https://wa.me/${WHATSAPP_NUMBER}`;
-    document.getElementById("waTop").href = waURL;
+  // ===== background takeover with auto-contrast =====
+  const body = document.body;
+  const defaultBG = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#F6F2F0';
+  const defaultInk = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#272727';
+  const segs = document.querySelectorAll('.seg');
 
-    // year
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // translations (lowercase)
-    const T = {
-      nl: {
-        toggle:"en",
-        heroTitle:"vertel ons kort over je breiwerk.",
-        heroIntro:"stuur je aanvraag met foto’s. je ontvangt snel een heldere inschatting en planning.",
-        labName:"naam*", labEmail:"e-mail*", labPhone:"telefoon*", labMsg:"bericht*", labType:"type reparatie",
-        photos:"foto’s (max 5, jpg/png)", consent:"ik ga akkoord dat knitfix contact met mij opneemt over deze aanvraag.",
-        submit:"verstuur",
-        priceTitleHTML:'prijzen <small>(indicatie)</small>',
-        p1t:"klein gaatje (≤8mm)", p1p:"€10–€15",
-        p2t:"meerdere gaatjes",     p2p:"€25–€35",
-        p3t:"losse boord/zoom",     p3p:"€25–€40",
-        p4t:"opnieuw blocken / vorm", p4p:"€20–€35",
-        servicesTitle:"diensten",
-        s1t:"reparaties", s1d:"motgaatjes, ladders, losse boorden. subtiel en duurzaam hersteld.",
-        s2t:"zichtbaar stopwerk", s2d:"een esthetische keuze voor wie het ambacht mag spreken.",
-        s3t:"opnieuw blocken", s3d:"vormcorrectie en verfrissing van breigoed.",
-        s4t:"upcycling", s4d:"creatieve herinterpretaties met behoud van materiaal.",
-        faqTitle:"vragen?", faqIntro:"snelle antwoorden hieronder. meer weten? stuur een bericht.",
-        q1:"welke gebieden dekken jullie?", a1:"amsterdam en omgeving. per post vanuit heel nederland mogelijk.",
-        q2:"wat kost het?", a2:"je krijgt een duidelijke indicatie na beoordeling van je foto’s en informatie.",
-        q3:"werken jullie met kasjmier?", a3:"ja. we matchen garen en steken zorgvuldig of doen zichtbaar stopwerk op verzoek.",
-        footer:"knitfix — amsterdam · © "
-      },
-      en: {
-        toggle:"nl",
-        heroTitle:"tell us briefly about your knit.",
-        heroIntro:"send your request with photos. you’ll receive a clear estimate and timeline.",
-        labName:"name*", labEmail:"email*", labPhone:"phone*", labMsg:"message*", labType:"repair type",
-        photos:"photos (max 5, jpg/png)", consent:"i agree that knitfix may contact me about this request.",
-        submit:"send",
-        priceTitleHTML:'pricing <small>(guide)</small>',
-        p1t:"small hole (≤8mm)", p1p:"€10–€15",
-        p2t:"multiple holes",     p2p:"€25–€35",
-        p3t:"loose cuff/hem",     p3p:"€25–€40",
-        p4t:"re-blocking / reshape", p4p:"€20–€35",
-        servicesTitle:"services",
-        s1t:"repairs", s1d:"moth holes, ladders, loose cuffs. subtle, durable finishing.",
-        s2t:"visible mending", s2d:"an aesthetic choice that celebrates craft.",
-        s3t:"re-blocking", s3d:"shape recovery and refresh for knitwear.",
-        s4t:"upcycling", s4d:"creative reinterpretations preserving material.",
-        faqTitle:"any questions?", faqIntro:"quick answers below. want more details? send us a message.",
-        q1:"what areas do you cover?", a1:"amsterdam and nearby. postal orders accepted across the netherlands.",
-        q2:"how much does it cost?",  a2:"you’ll receive a clear estimate after we review your photos and details.",
-        q3:"do you work with cashmere?", a3:"yes. we carefully match yarn and stitches, or do visible mending on request.",
-        footer:"knitfix — amsterdam · © "
-      }
+  function hexToRgb(hex){
+    const h = hex.replace('#','');
+    const b = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
+    return {
+      r: parseInt(b.substring(0,2),16),
+      g: parseInt(b.substring(2,4),16),
+      b: parseInt(b.substring(4,6),16)
     };
-
-    const $ = id => document.getElementById(id);
-    const M = {
-      langToggle:$("langToggle"),
-      heroTitle:$("heroTitle"), heroIntro:$("heroIntro"),
-      labName:$("labName"), labEmail:$("labEmail"), labPhone:$("labPhone"), labMsg:$("labMsg"),
-      labType:$("labType"), photosLabel:$("photosLabel"), consentText:$("consentText"),
-      submitBtn:$("submitBtn"),
-      priceTitle:$("priceTitle"),
-      p1t:$("p1t"), p1p:$("p1p"),
-      p2t:$("p2t"), p2p:$("p2p"),
-      p3t:$("p3t"), p3p:$("p3p"),
-      p4t:$("p4t"), p4p:$("p4p"),
-      servicesTitle:$("servicesTitle"),
-      faqTitle:$("faqTitle"), faqIntro:$("faqIntro"),
-      q1:$("q1"), a1:$("a1"), q2:$("q2"), a2:$("a2"), q3:$("q3"), a3:$("a3"),
-      footerLine:$("footerLine")
-    };
-
-    let lang = "nl";
-    function setLang(l){
-      lang = l; const S = T[l];
-      M.langToggle.textContent = S.toggle;
-
-      M.heroTitle.textContent = S.heroTitle;
-      M.heroIntro.textContent = S.heroIntro;
-
-      M.labName.textContent = S.labName;  M.labEmail.textContent = S.labEmail;
-      M.labPhone.textContent = S.labPhone;M.labMsg.textContent   = S.labMsg;
-      M.labType.textContent  = S.labType; M.photosLabel.textContent = S.photos;
-      M.consentText.textContent = S.consent;
-      M.submitBtn.textContent   = S.submit;
-
-      document.getElementById("priceTitle").innerHTML = S.priceTitleHTML;
-
-      M.p1t.textContent = S.p1t; M.p1p.textContent = S.p1p;
-      M.p2t.textContent = S.p2t; M.p2p.textContent = S.p2p;
-      M.p3t.textContent = S.p3t; M.p3p.textContent = S.p3p;
-      M.p4t.textContent = S.p4t; M.p4p.textContent = S.p4p;
-
-      M.servicesTitle.textContent = S.servicesTitle;
-
-      M.faqTitle.textContent = S.faqTitle; M.faqIntro.textContent = S.faqIntro;
-      M.q1.textContent = S.q1; M.a1.textContent = S.a1;
-      M.q2.textContent = S.q2; M.a2.textContent = S.a2;
-      M.q3.textContent = S.q3; M.a3.textContent = S.a3;
-
-      const year = new Date().getFullYear();
-      document.getElementById("footerLine").innerHTML = S.footer + '<span id="year">'+year+'</span>';
-      document.getElementById("year").textContent = year;
-
-      document.documentElement.lang = (l === "nl" ? "nl" : "en");
-    }
-    document.getElementById("langToggle").addEventListener("click", ()=> setLang(lang === "nl" ? "en" : "nl"));
-    setLang("nl");
-
-    // form submit
-    const form = document.getElementById("repairForm");
-    const ok = document.getElementById("formSuccess");
-    const err = document.getElementById("formError");
-    form.addEventListener("submit", async (e)=>{
-      e.preventDefault(); ok.classList.add("hidden"); err.classList.add("hidden");
-      const data = new FormData(form);
-      data.append("_subject", "knitfix — nieuwe aanvraag / new request");
-      data.append("_format", "plain");
-      try{
-        const res = await fetch(FORMSPREE_ENDPOINT, { method:"POST", headers:{ "Accept":"application/json" }, body:data });
-        if(res.ok){ form.reset(); ok.classList.remove("hidden"); ok.scrollIntoView({behavior:"smooth", block:"start"}); }
-        else throw new Error();
-      }catch{ err.classList.remove("hidden"); err.scrollIntoView({behavior:"smooth", block:"start"}); }
+  }
+  function luminance(hex){
+    const {r,g,b} = hexToRgb(hex);
+    const a = [r,g,b].map(v=>{
+      v/=255;
+      return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
     });
-  </script>
+    return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+  }
+  function setInkFor(bgHex){
+    // choose dark text for light bg, white for dark bg
+    const L = luminance(bgHex);
+    const nextInk = L > 0.6 ? '#272727' : '#ffffff';
+    document.documentElement.style.setProperty('--ink', nextInk);
+    document.documentElement.style.setProperty('--line', nextInk === '#ffffff' ? 'rgba(255,255,255,.18)' : 'rgba(39,39,39,.14)');
+    document.documentElement.style.setProperty('--ink-muted', nextInk === '#ffffff' ? 'rgba(255,255,255,.8)' : '#6b6b6b');
+  }
+  function activate(el){
+    const color = el.getAttribute('data-bg') || defaultBG;
+    const customInk = el.getAttribute('data-ink'); // optional override
+    body.style.backgroundColor = color;
+    if(customInk){ document.documentElement.style.setProperty('--ink', customInk) }
+    else{ setInkFor(color); }
+  }
+  function reset(){
+    body.style.backgroundColor = defaultBG;
+    document.documentElement.style.setProperty('--ink', defaultInk);
+    document.documentElement.style.setProperty('--line', 'rgba(39,39,39,.14)');
+    document.documentElement.style.setProperty('--ink-muted', '#6b6b6b');
+  }
+
+  segs.forEach(s=>{
+    s.addEventListener('mouseenter', ()=>activate(s));
+    s.addEventListener('mouseleave', reset);
+    // tap: hold color for a moment
+    s.addEventListener('click', ()=>{
+      activate(s);
+      clearTimeout(s._t);
+      s._t = setTimeout(reset, 2500);
+    });
+  });
+
+  // small entrance reveal
+  document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.animationDelay = (0.06*i)+'s' });
+</script>
 </body>
 </html>
