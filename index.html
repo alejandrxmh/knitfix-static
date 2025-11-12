@@ -6,6 +6,21 @@
   <title>knitfix</title>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
   <style id="base">
+    /* loop grid */
+.loops{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px}
+.loop{
+  aspect-ratio:1/1;border:0;background:transparent;cursor:pointer;position:relative;
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.loop::before{
+  content:"";position:absolute;inset:18%;border-radius:40%/55%;
+  background:radial-gradient(circle at 50% 45%, #000 55%, transparent 56%);
+  -webkit-mask:radial-gradient(45% 40% at 50% 60%, transparent 46%, #000 47%);
+          mask:radial-gradient(45% 40% at 50% 60%, transparent 46%, #000 47%);
+}
+.loop:hover{transform:scale(1.04);box-shadow:0 10px 24px rgba(0,0,0,.08)}
+@media (max-width:720px){ .loops{gap:10px} .loop{aspect-ratio:4/3} }
+
     :root{
   --bg:#F5F3F1; --ink:#272727; --accent:#5DA271;
   --line:rgba(39,39,39,.14); --max:1120px;
@@ -36,7 +51,18 @@ section{padding:40px 0;border-bottom:1px solid var(--line)}
   </header>
 
   <main>
-    <section id="hero"></section>
+    <section id="hero"><h1 style="margin:0 0 10px;letter-spacing:-.02em">slow repair for soft knitwear</h1>
+<p style="margin:0 0 24px;color:#6b6b6b">hover a loop — the page follows the color</p>
+
+<div class="loops" aria-label="interactive knit loops">
+  <button class="loop" data-color="#f6e4de" aria-label="aanvraag"></button>
+  <button class="loop" data-color="#ede6cf" aria-label="pick-up / post"></button>
+  <button class="loop" data-color="#e3f0df" aria-label="beoordeling"></button>
+  <button class="loop" data-color="#d2ecd8" aria-label="kleur / steek"></button>
+  <button class="loop" data-color="#cbe1f3" aria-label="darning / knit"></button>
+  <button class="loop" data-color="#e3ddf1" aria-label="blocken & return"></button>
+</div>
+</section>
     <section id="workflow"></section>
     <section id="services"></section>
     <section id="prices"></section>
@@ -47,6 +73,19 @@ section{padding:40px 0;border-bottom:1px solid var(--line)}
   <footer>knitfix — amsterdam · <span id="year"></span></footer>
 
   <script id="app">
+    // background tint on hover/tap
+const DEF = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#F5F3F1';
+const loops = [...document.querySelectorAll('.loop')];
+const setBG = c => document.body.style.backgroundColor = c;
+const reset = () => setBG(DEF);
+loops.forEach(b=>{
+  const c = b.dataset.color;
+  b.style.background = `linear-gradient(90deg, ${c}, ${c})`;
+  b.addEventListener('mouseenter', ()=>setBG(c));
+  b.addEventListener('mouseleave', reset);
+  b.addEventListener('click', ()=>{ setBG(c); clearTimeout(b._t); b._t=setTimeout(reset,1800); });
+});
+
     document.getElementById('year').textContent = new Date().getFullYear();
 const L={ nl:{}, en:{} }; // strings will come next
 document.getElementById('lang').onclick=()=>{ 
