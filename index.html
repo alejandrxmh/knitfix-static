@@ -94,6 +94,44 @@
     .strip,.captions{grid-template-columns:1fr 1fr;gap:10px}
     .seg{height:48px}
   }
+  :root{ --bg:#F5F3F1; } /* slightly creamier than #F6F2F0 */
+
+/* gentle vignette so the strip sits in focus */
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(1200px 600px at 50% -10%, rgba(0,0,0,.04), transparent 60%),
+    radial-gradient(800px 400px at 50% 120%, rgba(0,0,0,.03), transparent 60%);
+}
+/* a touch slimmer, more elegant */
+:root{ --pill-h: 50px; --radius: 24px; }
+.strip{ gap: 16px; }          /* a bit more air */
+.captions{ gap: 16px; }
+/* hero slightly smaller & tighter */
+h2{ font-size: 40px; letter-spacing: -0.022em; }
+
+/* caption chips quieter */
+.cap{ background: rgba(39,39,39,.05); color:#4b4b4b; border-color: rgba(39,39,39,.12); }
+
+  /* softer hover + underline slide-in */
+.seg:hover{ transform: scale(1.03); box-shadow:0 6px 18px rgba(0,0,0,.06); }
+a{ text-underline-offset: 2px; }
+a:hover{ text-decoration-thickness: 1px; text-underline-offset: 3px; color: var(--accent); }
+
+  /* labels follow current text color cleanly */
+.label{ color: currentColor; mix-blend: normal; }
+/* dividers adapt subtly with ink */
+:root{ --line: rgba(39,39,39,.14); }
+.border-line, .divider{ background: var(--line) !important; }
+/* shadow only after scroll for depth */
+header.is-scrolled{ box-shadow: 0 6px 20px rgba(0,0,0,.06); background: color-mix(in oklab, var(--bg) 92%, #fff); }
+@media (max-width:720px){
+  .frame{ padding: 44px 18px 72px; }
+  h2{ font-size: 26px; }
+  .seg{ height: 46px; }
+}
+body{ transition: background-color .7s ease, color .3s ease; }
+
 </style>
 </head>
 <body>
@@ -256,6 +294,10 @@
 
   // small entrance reveal
   document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.animationDelay = (0.06*i)+'s' });
+  const hdr=document.querySelector('header');
+  addEventListener('scroll',()=>hdr.classList.toggle('is-scrolled', scrollY>8),{passive:true});
+
+
 </script>
 </body>
 </html>
