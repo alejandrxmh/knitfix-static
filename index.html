@@ -23,7 +23,6 @@
       --ink: #20201f;
       --muted: #918b84;
       --line: #ded6cf;
-      --accent: #b99e8a;
       --max-width: 1120px;
       --radius: 20px;
     }
@@ -42,13 +41,13 @@
       text-decoration: none;
     }
 
-    /* layout */
-
     .page {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
+
+    /* header */
 
     header {
       position: sticky;
@@ -70,20 +69,6 @@
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-mark {
-      width: 26px;
-      height: 26px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: radial-gradient(circle at 10% 0, #ffffff, #eae4dd);
     }
 
     .brand-text {
@@ -242,62 +227,30 @@
         "Liberation Mono", "Courier New", monospace;
     }
 
-    /* hero – split image / text, very open */
+    /* hero – pure type, lots of air */
 
     .hero {
-      padding-top: 56px;
-      padding-bottom: 40px;
+      padding-top: 80px;
+      padding-bottom: 60px;
     }
 
-    .hero-layout {
+    .hero-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
       display: grid;
       grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
       gap: 32px;
-      align-items: stretch;
+      align-items: flex-start;
     }
 
     @media (max-width: 900px) {
-      .hero-layout {
+      .hero-inner {
         grid-template-columns: 1fr;
-        gap: 32px;
       }
     }
 
-    .hero-image-panel {
-      position: relative;
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: #e8e1db;
-      border: 1px solid var(--line);
-    }
-
-    .hero-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      aspect-ratio: 4 / 5;
-      display: block;
-    }
-
-    .hero-overlay-word {
-      position: absolute;
-      left: 16px;
-      bottom: 18px;
-      font-size: 18px;
-      letter-spacing: 0.16em;
-      text-transform: lowercase;
-      color: #111111;
-    }
-
-    .hero-text-panel {
-      background: var(--panel);
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      padding: 26px 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 280px;
+    .hero-main {
+      max-width: 520px;
     }
 
     .hero-eyebrow {
@@ -305,26 +258,41 @@
       letter-spacing: 0.16em;
       text-transform: lowercase;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .hero-headline {
-      font-size: 22px;
+      font-size: clamp(26px, 3.6vw, 32px);
+      line-height: 1.25;
       text-transform: lowercase;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .hero-sub {
       font-size: 14px;
       color: var(--muted);
-      max-width: 320px;
       margin-bottom: 18px;
+      max-width: 380px;
     }
 
-    .hero-footnote {
+    .hero-note {
       font-size: 12px;
       color: var(--muted);
-      max-width: 300px;
+      max-width: 340px;
+    }
+
+    .hero-side {
+      font-size: 12px;
+      color: var(--muted);
+      align-self: stretch;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      text-align: right;
+    }
+
+    .hero-side-inner {
+      max-width: 260px;
     }
 
     /* about */
@@ -340,29 +308,6 @@
       .about-layout {
         grid-template-columns: 1fr;
       }
-    }
-
-    .about-image-panel {
-      border-radius: var(--radius);
-      background: var(--panel);
-      border: 1px solid var(--line);
-      padding: 10px;
-    }
-
-    .about-image {
-      width: 100%;
-      border-radius: calc(var(--radius) - 6px);
-      object-fit: cover;
-      aspect-ratio: 3 / 4;
-      display: block;
-      background: #e2ddd5;
-    }
-
-    .about-caption {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 8px;
-      text-transform: lowercase;
     }
 
     /* contact */
@@ -487,8 +432,6 @@
       gap: 10px;
       flex-wrap: wrap;
     }
-
-    /* room to grow – extra sections can be added below without touching the layout */
   </style>
 </head>
 <body>
@@ -497,16 +440,13 @@
     <header>
       <div class="shell">
         <div class="header-inner">
-          <div class="brand">
-            <div class="brand-mark"></div>
-            <div class="brand-text">
-              <div class="brand-name">knitfix</div>
-              <div
-                class="brand-tagline t"
-                data-en="knitwear repair studio"
-                data-nl="atelier voor breiwerk reparatie"
-              ></div>
-            </div>
+          <div class="brand-text">
+            <div class="brand-name">knitfix</div>
+            <div
+              class="brand-tagline t"
+              data-en="knitwear repair studio"
+              data-nl="atelier voor breiwerk reparatie"
+            ></div>
           </div>
           <nav>
             <a
@@ -545,44 +485,37 @@
     </header>
 
     <main>
-      <!-- hero -->
+      <!-- hero: pure text -->
       <section class="hero">
-        <div class="section-inner">
-          <div class="hero-layout">
-            <!-- left: big image like the thursdate reference -->
-            <div class="hero-image-panel">
-              <!-- replace /images/hero.jpg with your actual image path -->
-              <img
-                src="/images/hero.jpg"
-                alt="close-up of knitwear and skin"
-                class="hero-image"
-              />
-              <div class="hero-overlay-word">knitfix</div>
-            </div>
-
-            <!-- right: calm text block -->
-            <div class="hero-text-panel">
-              <div>
-                <div
-                  class="hero-eyebrow t"
-                  data-en="amsterdam, by appointment"
-                  data-nl="amsterdam, op afspraak"
-                ></div>
-                <div
-                  class="hero-headline t"
-                  data-en="knitwear you already love, repaired quietly."
-                  data-nl="breiwerk dat je al lief is, stil hersteld."
-                ></div>
-                <p
-                  class="hero-sub t"
-                  data-en="small, precise repairs for knits – from moth holes to tired cuffs. no rebranding, no upcycling project, just getting your favourite pieces back into rotation."
-                  data-nl="kleine, precieze reparaties aan breiwerk – van motgaatjes tot vermoeide boorden. geen rebranding, geen upcyclingproject, alleen je favoriete stukken terug in roulatie."
-                ></p>
-              </div>
+        <div class="hero-inner">
+          <div class="hero-main">
+            <div
+              class="hero-eyebrow t"
+              data-en="amsterdam, by appointment"
+              data-nl="amsterdam, op afspraak"
+            ></div>
+            <div
+              class="hero-headline t"
+              data-en="knitwear you already love, repaired quietly."
+              data-nl="breiwerk dat je al lief is, stil hersteld."
+            ></div>
+            <p
+              class="hero-sub t"
+              data-en="small, precise repairs for knits – from moth holes to tired cuffs. no rebranding, no big makeover, just getting your pieces back into rotation."
+              data-nl="kleine, precieze reparaties aan breiwerk – van motgaatjes tot vermoeide boorden. geen rebranding, geen grote make-over, alleen je stukken terug in roulatie."
+            ></p>
+            <p
+              class="hero-note t"
+              data-en="you send a few photos. you receive an honest answer about what’s possible, a price range and timing. then you decide."
+              data-nl="je stuurt een paar foto’s. je krijgt een eerlijk beeld van wat mogelijk is, een richtprijs en timing. daarna beslis je."
+            ></p>
+          </div>
+          <div class="hero-side">
+            <div class="hero-side-inner">
               <p
-                class="hero-footnote t"
-                data-en="send a few photos first. you’ll get an honest answer about what’s possible, estimated price and timing before you send anything in."
-                data-nl="stuur eerst een paar foto’s. je krijgt een eerlijk beeld van wat mogelijk is, een richtprijs en timing, nog voor je iets opstuurt."
+                class="t"
+                data-en="this site is kept intentionally minimal. the focus is the work, the repair, and the pieces staying in your wardrobe a little longer."
+                data-nl="deze site is bewust minimaal gehouden. de focus ligt op het werk, de reparatie en de stukken die nog wat langer in je kast blijven."
               ></p>
             </div>
           </div>
@@ -699,19 +632,12 @@
                 data-nl="hier kun je iets vertellen over je achtergrond in tailoring en mode, waarom reparatie belangrijk voor je is en aan welke breisels je graag werkt. houd het eerder als een gesprek dan als een cv."
               ></p>
             </div>
-
-            <div class="about-image-panel">
-              <!-- replace /images/about.jpg with a studio or portrait image -->
-              <img
-                src="/images/about.jpg"
-                alt="hands working on knitwear"
-                class="about-image"
-              />
-              <div
-                class="about-caption t"
-                data-en="space for a portrait, hands, or a simple studio still."
-                data-nl="plek voor een portret, handen of een eenvoudige studiostill."
-              ></div>
+            <div>
+              <p
+                class="small-text t"
+                data-en="if you ever decide to add images, this area can host a single still: hands, tools, a folded jumper. for now it stays text-only."
+                data-nl="mocht je ooit beelden willen toevoegen, dan kan dit vlak één stilleven dragen: handen, gereedschap, een gevouwen trui. voorlopig blijft het tekst."
+              ></p>
             </div>
           </div>
         </div>
@@ -864,7 +790,7 @@
         </div>
       </section>
 
-      <!-- future sections (gallery, faq, workshops) can be added here -->
+      <!-- future sections can be added here (faq, before/after, workshops) -->
     </main>
 
     <footer>
