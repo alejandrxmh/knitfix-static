@@ -1,97 +1,785 @@
-<!doctype html>
-<html lang="nl">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>knitfix</title>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
-  <style id="base">
-    /* loop grid */
-.loops{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px}
-.loop{
-  aspect-ratio:1/1;border:0;background:transparent;cursor:pointer;position:relative;
-  transition:transform .35s ease, box-shadow .35s ease;
-}
-.loop::before{
-  content:"";position:absolute;inset:18%;border-radius:40%/55%;
-  background:radial-gradient(circle at 50% 45%, #000 55%, transparent 56%);
-  -webkit-mask:radial-gradient(45% 40% at 50% 60%, transparent 46%, #000 47%);
-          mask:radial-gradient(45% 40% at 50% 60%, transparent 46%, #000 47%);
-}
-.loop:hover{transform:scale(1.04);box-shadow:0 10px 24px rgba(0,0,0,.08)}
-@media (max-width:720px){ .loops{gap:10px} .loop{aspect-ratio:4/3} }
+  <meta charset="UTF-8" />
+  <title>KnitFix – Repair & Refresh Your Knitwear</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="KnitFix gives your favourite knitwear a second life with careful repairs, visible mending and gentle refresh services."
+  />
+  <style>
+    /* ---- RESET ---- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    :root{
-  --bg:#F5F3F1; --ink:#272727; --accent:#5DA271;
-  --line:rgba(39,39,39,.14); --max:1120px;
-}
-html{scroll-behavior:smooth;text-transform:lowercase}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Figtree,system-ui,sans-serif}
-header,footer{max-width:var(--max);margin:0 auto;padding:14px 20px;border-bottom:1px solid var(--line)}
-footer{border-top:1px solid var(--line);border-bottom:0}
-header{display:flex;justify-content:space-between;align-items:center}
-header strong{font-weight:700;letter-spacing:-.02em}
-nav{display:flex;gap:20px;align-items:center}
-nav a,nav button{background:none;border:0;font:inherit;color:inherit;cursor:pointer}
-main{max-width:var(--max);margin:0 auto;padding:32px 20px}
-section{padding:40px 0;border-bottom:1px solid var(--line)}
+    :root {
+      --bg: #f7f4fa;
+      --bg-soft: #fdfbff;
+      --accent: #c079ff;
+      --accent-soft: #e7d3ff;
+      --accent-deep: #7c3aed;
+      --ink: #1f172b;
+      --muted: #72647f;
+      --border: #e0d5f0;
+      --radius-lg: 18px;
+      --radius-xl: 28px;
+      --shadow-soft: 0 18px 45px rgba(31, 23, 43, 0.12);
+    }
 
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #fdf6ff, #f3f5ff 60%, #f7f4fa);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ---- LAYOUT ---- */
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 244, 250, 0.9);
+      border-bottom: 1px solid rgba(224, 213, 240, 0.7);
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px 20px;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: conic-gradient(from 140deg, #fef3ff, #c079ff, #ffb8d3, #fef3ff);
+      border: 1px solid #ffffff;
+      box-shadow: 0 10px 24px rgba(192, 121, 255, 0.45);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .brand-name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-tagline {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+    }
+
+    nav a {
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    nav a:hover {
+      background: rgba(231, 211, 255, 0.55);
+      color: var(--ink);
+    }
+
+    .btn-primary {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-deep);
+      background: linear-gradient(135deg, var(--accent), #ff8fbf);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 12px 35px rgba(192, 121, 255, 0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(192, 121, 255, 0.75);
+    }
+
+    main {
+      flex: 1;
+    }
+
+    /* ---- HERO ---- */
+    .hero {
+      padding: 40px 20px 32px;
+    }
+
+    .hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: center;
+    }
+
+    @media (max-width: 860px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pill-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(231, 211, 255, 0.6);
+      border: 1px solid rgba(192, 121, 255, 0.35);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 4.3vw, 44px);
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(120deg, var(--accent-deep), #ff8fbf);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 15px;
+      max-width: 460px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .btn-ghost {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px dashed rgba(124, 58, 237, 0.6);
+      font-size: 13px;
+      color: var(--accent-deep);
+      background: rgba(253, 251, 255, 0.8);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .hero-right {
+      position: relative;
+    }
+
+    .hero-card {
+      position: relative;
+      background: radial-gradient(circle at top left, #ffffff, #f8f2ff 55%, #fbeaff);
+      border-radius: var(--radius-xl);
+      padding: 20px 18px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(224, 213, 240, 0.9);
+      overflow: hidden;
+    }
+
+    .hero-card-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .before-after {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .ba-block {
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(224, 213, 240, 0.9);
+      font-size: 11px;
+    }
+
+    .ba-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .ba-chip {
+      display: inline-block;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(192, 121, 255, 0.08);
+      margin-top: 6px;
+    }
+
+    .floating-pill {
+      position: absolute;
+      right: -4px;
+      top: 14px;
+      border-radius: 999px;
+      padding: 6px 14px;
+      background: #111827;
+      color: #e5e7eb;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.6);
+    }
+
+    .floating-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35);
+    }
+
+    /* ---- SECTIONS ---- */
+    section {
+      padding: 28px 20px 34px;
+    }
+
+    .section-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .section-intro {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (max-width: 860px) {
+      .grid-3,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: rgba(253, 251, 255, 0.94);
+      border-radius: var(--radius-lg);
+      padding: 16px 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(31, 23, 43, 0.04);
+      font-size: 14px;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .meta {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 11px;
+    }
+
+    .tag {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(231, 211, 255, 0.7);
+      border: 1px solid rgba(192, 121, 255, 0.4);
+    }
+
+    /* ---- CONTACT / FOOTER ---- */
+    .contact-box {
+      background: #111827;
+      color: #e5e7eb;
+      border-radius: var(--radius-xl);
+      padding: 20px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    @media (max-width: 720px) {
+      .contact-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contact-box h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .contact-box p {
+      font-size: 14px;
+      color: #d1d5db;
+    }
+
+    .contact-list {
+      font-size: 13px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    footer {
+      padding: 18px 20px 22px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid rgba(224, 213, 240, 0.7);
+      background: rgba(247, 244, 250, 0.9);
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ---- MISC ---- */
+    .hint-text {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .mono {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <strong>knitfix</strong>
-    <nav>
-      <a href="#info">info</a>
-      <a href="#services">services</a>
-      <a href="#prices">prijzen</a>
-      <a href="#contact">contact</a>
-      <button id="lang">en</button>
-    </nav>
-  </header>
+  <div class="page">
+    <!-- HEADER -->
+    <header>
+      <div class="shell">
+        <div class="header-inner">
+          <div class="brand">
+            <div class="brand-mark"></div>
+            <div class="brand-text">
+              <span class="brand-name">KNITFIX</span>
+              <span class="brand-tagline">Repair • Refresh • Rewear</span>
+            </div>
+          </div>
+          <nav>
+            <a href="#how-it-works">How it works</a>
+            <a href="#services">Services</a>
+            <a href="#about">About</a>
+            <a href="#contact" class="btn-primary">Book a repair →</a>
+          </nav>
+        </div>
+      </div>
+    </header>
 
-  <main>
-    <section id="hero"><h1 style="margin:0 0 10px;letter-spacing:-.02em">slow repair for soft knitwear</h1>
-<p style="margin:0 0 24px;color:#6b6b6b">hover a loop — the page follows the color</p>
+    <main>
+      <!-- HERO -->
+      <section class="hero" id="top">
+        <div class="hero-inner">
+          <div>
+            <div class="pill-row">
+              <span>Amsterdam studio</span>
+              <span>•</span>
+              <span>Gentle knitwear repairs</span>
+            </div>
+            <h1 class="hero-title">
+              Give your favourite knits
+              <span class="hero-highlight">a second life.</span>
+            </h1>
+            <p class="hero-subtitle">
+              KnitFix repairs holes, snags and stretched cuffs so you can keep
+              wearing the jumpers, cardigans and scarves you actually love –
+              without buying new.
+            </p>
+            <div class="hero-ctas">
+              <a href="#contact" class="btn-primary">
+                Book a repair slot
+                <span class="mono">⏤ from €25</span>
+              </a>
+              <a href="#how-it-works" class="btn-ghost">
+                See how it works
+              </a>
+            </div>
+            <p class="hero-note">
+              No idea if your knit can be saved? Send a quick photo – I’ll tell
+              you what’s realistic before you ship anything.
+            </p>
+          </div>
 
-<div class="loops" aria-label="interactive knit loops">
-  <button class="loop" data-color="#f6e4de" aria-label="aanvraag"></button>
-  <button class="loop" data-color="#ede6cf" aria-label="pick-up / post"></button>
-  <button class="loop" data-color="#e3f0df" aria-label="beoordeling"></button>
-  <button class="loop" data-color="#d2ecd8" aria-label="kleur / steek"></button>
-  <button class="loop" data-color="#cbe1f3" aria-label="darning / knit"></button>
-  <button class="loop" data-color="#e3ddf1" aria-label="blocken & return"></button>
-</div>
-</section>
-    <section id="workflow"></section>
-    <section id="services"></section>
-    <section id="prices"></section>
-    <section id="info"></section>
-    <section id="contact"></section>
-  </main>
+          <div class="hero-right">
+            <div class="hero-card">
+              <div class="hero-card-label">Before & after snapshot</div>
+              <p style="font-size: 13px; color: var(--muted);">
+                This is a layout preview – swap this text and colours for real
+                photos later. For now, you at least have a page that looks like
+                a brand and not a uni project.
+              </p>
 
-  <footer>knitfix — amsterdam · <span id="year"></span></footer>
+              <div class="before-after">
+                <div class="ba-block">
+                  <div class="ba-label">Before</div>
+                  <p>Elbow hole on wool jumper, loose stitches and a small snag.</p>
+                  <span class="ba-chip">Hole • Thinning knit</span>
+                </div>
+                <div class="ba-block">
+                  <div class="ba-label">After</div>
+                  <p>Rebuilt structure & subtle visible mend in a matching tone.</p>
+                  <span class="ba-chip">Ready to rewear</span>
+                </div>
+              </div>
 
-  <script id="app">
-    // background tint on hover/tap
-const DEF = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#F5F3F1';
-const loops = [...document.querySelectorAll('.loop')];
-const setBG = c => document.body.style.backgroundColor = c;
-const reset = () => setBG(DEF);
-loops.forEach(b=>{
-  const c = b.dataset.color;
-  b.style.background = `linear-gradient(90deg, ${c}, ${c})`;
-  b.addEventListener('mouseenter', ()=>setBG(c));
-  b.addEventListener('mouseleave', reset);
-  b.addEventListener('click', ()=>{ setBG(c); clearTimeout(b._t); b._t=setTimeout(reset,1800); });
-});
+              <div class="floating-pill">
+                <span class="floating-dot"></span>
+                <span>Slots open for this month</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    document.getElementById('year').textContent = new Date().getFullYear();
-const L={ nl:{}, en:{} }; // strings will come next
-document.getElementById('lang').onclick=()=>{ 
-  const b=document.getElementById('lang'); b.textContent=b.textContent==='en'?'nl':'en';
-};
+      <!-- HOW IT WORKS -->
+      <section id="how-it-works">
+        <div class="section-inner">
+          <div class="section-eyebrow">Simple process</div>
+          <h2 class="section-title">How KnitFix works</h2>
+          <p class="section-intro">
+            No complicated forms. Just a quick photo, a price, and a clear
+            timeline. Here’s what happens from the moment you message me to the
+            moment your knit is back in your wardrobe.
+          </p>
 
+          <div class="grid grid-3">
+            <div class="card">
+              <div class="meta">Step 1</div>
+              <h3>Send a photo</h3>
+              <p>
+                WhatsApp or email a couple of photos of the damage (front,
+                inside, and a zoomed out shot). I’ll confirm if it’s repairable
+                and give you a price estimate.
+              </p>
+              <div class="tag-row">
+                <span class="tag">Free assessment</span>
+                <span class="tag">No obligation</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="meta">Step 2</div>
+              <h3>Ship or drop off</h3>
+              <p>
+                Post your knit to the studio or bring it in person. I log it,
+                match yarn as closely as possible and plan the repair so it
+                feels good against the skin.
+              </p>
+              <div class="tag-row">
+                <span class="tag">Tracked postage</span>
+                <span class="tag">Careful handling</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="meta">Step 3</div>
+              <h3>Repair & return</h3>
+              <p>
+                I repair the damaged area, steam-finish the knit and send it
+                back within the agreed timeframe – usually 7 days once it
+                arrives at the studio.
+              </p>
+              <div class="tag-row">
+                <span class="tag">7-day turnaround</span>
+                <span class="tag">Ready to rewear</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section id="services">
+        <div class="section-inner">
+          <div class="section-eyebrow">Services</div>
+          <h2 class="section-title">What I can help with</h2>
+          <p class="section-intro">
+            Pricing depends on the size and position of the damage, but here are
+            the most common repairs. You’ll always get a clear quote before
+            sending anything.
+          </p>
+
+          <div class="grid grid-3">
+            <div class="card">
+              <div class="meta">From €25</div>
+              <h3>Small holes & snags</h3>
+              <p>
+                Perfect for little moth holes, pulled threads or tiny snags on
+                cuffs and hems. I stabilise the knit and blend the repair into
+                the surrounding texture.
+              </p>
+              <div class="tag-row">
+                <span class="tag">Invisible where possible</span>
+                <span class="tag">Soft to the touch</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="meta">From €35</div>
+              <h3>Elbows, cuffs & heavy wear</h3>
+              <p>
+                Larger worn areas get reinforced from the inside and rebuilt on
+                the outside – either to disappear or to become a visible mend,
+                depending on your style.
+              </p>
+              <div class="tag-row">
+                <span class="tag">Reinforced</span>
+                <span class="tag">Visible or subtle</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="meta">Quote on photos</div>
+              <h3>Complex knit issues</h3>
+              <p>
+                Think damaged patterns, multiple holes, or delicate fibres
+                (cashmere, mohair). I’ll talk you through options and what the
+                knit can realistically handle.
+              </p>
+              <div class="tag-row">
+                <span class="tag">Cashmere</span>
+                <span class="tag">Mohair</span>
+                <span class="tag">Mixed yarns</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="hint-text">
+            Note: I don’t wash or dry-clean knits – please send them in
+            freshly cleaned so repairs stay as clean as possible.
+          </p>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about">
+        <div class="section-inner">
+          <div class="section-eyebrow">About</div>
+          <h2 class="section-title">Who’s behind KnitFix?</h2>
+          <p class="section-intro">
+            KnitFix is a tiny studio run out of Amsterdam – focused on slow,
+            careful repairs instead of fast fashion. This is where you can talk
+            a bit about yourself, your tailoring background and why you care
+            about mending.
+          </p>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <div class="meta">Background</div>
+              <h3>Trained tailor, knitwear-obsessed</h3>
+              <p>
+                Replace this with your actual story – your tailoring work,
+                fashion background, or the moment you fixed your first jumper
+                and realised you never wanted to throw clothes away again.
+              </p>
+            </div>
+
+            <div class="card">
+              <div class="meta">Approach</div>
+              <h3>Repairs that feel like care</h3>
+              <p>
+                The goal is simple: make your knit wearable again without
+                turning it into something else. Every mend is done slowly, by
+                hand or on a careful setting, and always with comfort in mind.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact">
+        <div class="section-inner">
+          <div class="section-eyebrow">Contact</div>
+          <h2 class="section-title">Ready to see if your knit can be saved?</h2>
+          <p class="section-intro">
+            Send 2–3 photos of the damage and I’ll reply with what’s possible,
+            a price range and a realistic timeline. No pressure, just an honest
+            answer.
+          </p>
+
+          <div class="contact-box">
+            <div>
+              <h3>Send photos of your knit</h3>
+              <p>
+                You can update these contact details to whatever you actually
+                use: WhatsApp, email, Instagram DMs – or all three. For now,
+                this gives your visitors a clear next step instead of just a
+                dead page.
+              </p>
+            </div>
+            <div class="contact-list">
+              <div class="contact-link">
+                <span class="mono">✉︎</span>
+                <span>
+                  Email:
+                  <a href="mailto:hello@knitfix.nl">hello@knitfix.nl</a>
+                </span>
+              </div>
+              <div class="contact-link">
+                <span class="mono">⌁</span>
+                <span>
+                  WhatsApp:
+                  <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">
+                    +31 6 00 00 00 00
+                  </a>
+                </span>
+              </div>
+              <div class="contact-link">
+                <span class="mono">◎</span>
+                <span>
+                  Instagram:
+                  <a href="https://instagram.com/knitfix.nl" target="_blank" rel="noreferrer">
+                    @knitfix.nl
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <p class="hint-text">
+            Change the email, phone and handle above to your real details before
+            sharing this link with anyone.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <span>© <span id="year"></span> KnitFix. All rights reserved.</span>
+        <span>Built with love in Amsterdam.</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Set current year
+    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
