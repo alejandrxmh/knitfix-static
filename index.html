@@ -700,47 +700,71 @@
             class="section-title t"
             data-en="let’s see the knit, then decide."
             data-nl="toon het breiwerk, beslis daarna."
-          ></h2>
-          <p
-            class="section-lead t"
-            data-en="send 2–4 photos of the damaged area and a short note. you’ll receive an estimate, options and a realistic timeline."
-            data-nl="stuur 2–4 foto’s van de beschadiging en een korte beschrijving. je krijgt een schatting, opties en een realistische timing."
-          ></p>
+         </h2>
+<p
+  class="section-lead t"
+  data-en="send 2–4 photos of the damaged area and a short note. you’ll receive an estimate, options and a realistic timeline."
+  data-nl="stuur 2–4 foto’s van de beschadiging en een korte beschrijving. je krijgt een schatting, opties en een realistische timing."
+></p>
 
-          <div class="contact-wrapper">
-           <form
-  id="contact-form"
-  action="https://formspree.io/f/xrbnaeld"
-  method="POST"
-  enctype="multipart/form-data"
->
-  <!-- your existing inputs here -->
-  <label>
-    your name
-    <input type="text" name="name" required>
-  </label>
+<div class="contact-wrapper">
+  <form
+    id="contact-form"
+    action="https://formspree.io/f/xrbnaeld"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <label class="field-label">
+      <span
+        class="t"
+        data-en="your name"
+        data-nl="je naam"
+      ></span>
+      <input type="text" name="name" required />
+    </label>
 
-  <label>
-    email
-    <input type="email" name="email" required>
-  </label>
+    <label class="field-label">
+      <span
+        class="t"
+        data-en="email"
+        data-nl="e-mail"
+      ></span>
+      <input type="email" name="email" required />
+    </label>
 
-  <label>
-    message
-    <textarea name="message" rows="4" required></textarea>
-  </label>
+    <label class="field-label">
+      <span
+        class="t"
+        data-en="message or description"
+        data-nl="bericht of omschrijving"
+      ></span>
+      <textarea name="message" rows="4" required></textarea>
+    </label>
 
-  <label>
-    photos (optional)
-    <input type="file" name="photos" accept="image/*" multiple>
-  </label>
+    <label class="field-label">
+      <span
+        class="t"
+        data-en="photos (optional)"
+        data-nl="foto’s (optioneel)"
+      ></span>
+      <input type="file" name="photos" accept="image/*" multiple />
+    </label>
 
-  <button type="submit">send</button>
-</form>
+    <button
+      type="submit"
+      class="t"
+      data-en="send"
+      data-nl="versturen"
+    ></button>
+  </form>
 
-<!-- toast / popup -->
-<div id="form-toast" class="toast hidden">
-  submitted — thank you.
+  <!-- toast / popup -->
+  <div
+    id="form-toast"
+    class="toast hidden t"
+    data-en="submitted — thank you."
+    data-nl="verstuurd — dank je."
+  ></div>
 </div>
 
               <!-- optional subject line for emails -->
