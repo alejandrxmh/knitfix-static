@@ -696,125 +696,117 @@
             data-en="contact"
             data-nl="contact"
           ></div>
-          <h2
-            class="section-title t"
-            data-en="let’s see the knit, then decide."
-            data-nl="toon het breiwerk, beslis daarna."
-            >
-        </h2>
-            
+         <h2
+  class="section-title t"
+  data-en="let’s see the knit, then decide."
+  data-nl="toon het breiwerk, beslis daarna.">
+</h2>
+
 <p
   class="section-lead t"
   data-en="send 2–4 photos of the damaged area and a short note. you’ll receive an estimate, options and a realistic timeline."
-  data-nl="stuur 2–4 foto’s van de beschadiging en een korte beschrijving. je krijgt een schatting, opties en een realistische timing."
-></p>
+  data-nl="stuur 2–4 foto’s van de beschadiging en een korte beschrijving. je krijgt een schatting, opties en een realistische timing.">
+</p>
 
-<div class="contact-wrapper">
-  <form
-    id="contact-form"
-    action="https://formspree.io/f/xrbnaeld"
-    method="POST"
-    enctype="multipart/form-data"
-  >
-    <label class="field-label">
-      <span
+<div class="contact-layout">
+  <div class="contact-wrapper">
+    <form
+      id="contact-form"
+      action="https://formspree.io/f/xrbnaeld"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <label class="field-label">
+        <span
+          class="t"
+          data-en="your name"
+          data-nl="je naam"></span>
+        <input type="text" name="name" required />
+      </label>
+
+      <label class="field-label">
+        <span
+          class="t"
+          data-en="email"
+          data-nl="e-mail"></span>
+        <input type="email" name="email" required />
+      </label>
+
+      <label class="field-label">
+        <span
+          class="t"
+          data-en="message or description"
+          data-nl="bericht of omschrijving"></span>
+        <textarea name="message" rows="4" required></textarea>
+      </label>
+
+      <label class="field-label">
+        <span
+          class="t"
+          data-en="photos (optional)"
+          data-nl="foto’s (optioneel)"></span>
+        <input type="file" name="photos" accept="image/*" multiple />
+      </label>
+
+      <!-- subject line MUST be inside the form -->
+      <input type="hidden" name="_subject" value="new knitfix enquiry" />
+
+      <button
+        type="submit"
         class="t"
-        data-en="your name"
-        data-nl="je naam"
-      ></span>
-      <input type="text" name="name" required />
-    </label>
+        data-en="send"
+        data-nl="versturen"></button>
+    </form>
 
-    <label class="field-label">
-      <span
-        class="t"
-        data-en="email"
-        data-nl="e-mail"
-      ></span>
-      <input type="email" name="email" required />
-    </label>
+    <!-- toast / popup -->
+    <div
+      id="form-toast"
+      class="toast hidden t"
+      data-en="submitted — thank you."
+      data-nl="verstuurd — dank je.">
+    </div>
+  </div>
 
-    <label class="field-label">
-      <span
-        class="t"
-        data-en="message or description"
-        data-nl="bericht of omschrijving"
-      ></span>
-      <textarea name="message" rows="4" required></textarea>
-    </label>
+  <div class="contact-side">
+    <div class="contact-line">
+      <div class="contact-label">email</div>
+      <div class="contact-value">
+        <a
+          href="mailto:hello@knitfix.nl"
+          class="mono">
+          hello@knitfix.nl
+        </a>
+      </div>
+    </div>
 
-    <label class="field-label">
-      <span
-        class="t"
-        data-en="photos (optional)"
-        data-nl="foto’s (optioneel)"
-      ></span>
-      <input type="file" name="photos" accept="image/*" multiple />
-    </label>
+    <div class="contact-line">
+      <div class="contact-label">whatsapp</div>
+      <div class="contact-value">
+        <a
+          href="https://wa.me/31600000000"
+          target="_blank"
+          rel="noreferrer"
+          class="mono">
+          +31 6 00 00 00 00
+        </a>
+      </div>
+    </div>
 
-    <button
-      type="submit"
-      class="t"
-      data-en="send"
-      data-nl="versturen"
-    ></button>
-  </form>
-
-  <!-- toast / popup -->
-  <div
-    id="form-toast"
-    class="toast hidden t"
-    data-en="submitted — thank you."
-    data-nl="verstuurd — dank je."
-  ></div>
+    <div class="contact-line">
+      <div class="contact-label">instagram</div>
+      <div class="contact-value">
+        <a
+          href="https://instagram.com/knitfix.nl"
+          target="_blank"
+          rel="noreferrer"
+          class="mono">
+          @knitfix.nl
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 
-              <!-- optional subject line for emails -->
-              <input type="hidden" name="_subject" value="new knitfix enquiry" />
-
-              
-            <div class="contact-side">
-              <div class="contact-line">
-                <div class="contact-label">email</div>
-                <div class="contact-value">
-                  <!-- 1) change to your real email -->
-                  <a
-                    href="mailto:hello@knitfix.nl"
-                    class="mono"
-                    >hello@knitfix.nl</a
-                  >
-                </div>
-              </div>
-              <div class="contact-line">
-                <div class="contact-label">whatsapp</div>
-                <div class="contact-value">
-                  <!-- 2) change the number in the wa.me link to your real one, no spaces -->
-                  <a
-                    href="https://wa.me/31600000000"
-                    target="_blank"
-                    rel="noreferrer"
-                    class="mono"
-                  >
-                    +31 6 00 00 00 00
-                  </a>
-                </div>
-              </div>
-              <div class="contact-line">
-                <div class="contact-label">instagram</div>
-                <div class="contact-value">
-                  <!-- 3) change to your real handle -->
-                  <a
-                    href="https://instagram.com/knitfix.nl"
-                    target="_blank"
-                    rel="noreferrer"
-                    class="mono"
-                    >@knitfix.nl</a
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       <!-- future sections can be added here -->
