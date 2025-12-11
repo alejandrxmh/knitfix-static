@@ -712,48 +712,53 @@
   <!-- LEFT COLUMN: form + note -->
   <div class="contact-main">
     <form
-      id="contact-form"
-      action="https://formspree.io/f/xrbnaeld"
-      method="POST"
-      enctype="multipart/form-data">
-      
-      <label class="field-label">
-        <span class="t"
-              data-en="your name"
-              data-nl="je naam"></span>
-        <input type="text" name="name" required />
-      </label>
+  id="contact-form"
+  action="https://getform.io/f/bvrzrzyb"
+  method="POST"
+  enctype="multipart/form-data"
+>
+  <label class="field-label">
+    <span class="t"
+          data-en="your name"
+          data-nl="je naam"></span>
+    <input type="text" name="full-name" required />
+  </label>
 
-      <label class="field-label">
-        <span class="t"
-              data-en="email"
-              data-nl="e-mail"></span>
-        <input type="email" name="email" required />
-      </label>
+  <label class="field-label">
+    <span class="t"
+          data-en="email"
+          data-nl="e-mail"></span>
+    <input type="email" name="email" required />
+  </label>
 
-      <label class="field-label">
-        <span class="t"
-              data-en="message or description"
-              data-nl="bericht of omschrijving"></span>
-        <textarea name="message" rows="4" required></textarea>
-      </label>
+  <label class="field-label">
+    <span class="t"
+          data-en="message or description"
+          data-nl="bericht of omschrijving"></span>
+    <textarea name="message" rows="4" required></textarea>
+  </label>
 
-      <label class="field-label">
-        <span class="t"
-              data-en="photos (optional)"
-              data-nl="foto’s (optioneel)"></span>
-        <input type="file" name="photos" accept="image/*" multiple />
-      </label>
+  <label class="field-label">
+    <span class="t"
+          data-en="photos (optional)"
+          data-nl="foto’s (optioneel)"></span>
+    <!-- 👇 name MUST be "file" for Getform example -->
+    <input type="file" name="file" accept="image/*" multiple />
+  </label>
 
-      <!-- subject must be inside the form -->
-      <input type="hidden" name="_subject" value="new knitfix enquiry" />
+  <!-- honeypot to reduce spam -->
+  <input type="hidden" name="_gotcha" style="display:none !important" />
 
-      <button
-        type="submit"
-        class="t"
-        data-en="send"
-        data-nl="versturen"></button>
-    </form>
+  <!-- optional subject line -->
+  <input type="hidden" name="subject" value="new knitfix enquiry" />
+
+  <button
+    type="submit"
+    class="t"
+    data-en="send"
+    data-nl="versturen">
+  </button>
+</form>
 
     <p
       class="contact-note t"
