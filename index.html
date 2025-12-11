@@ -708,47 +708,44 @@
   data-nl="stuur 2–4 foto’s van de beschadiging en een korte beschrijving. je krijgt een schatting, opties en een realistische timing.">
 </p>
 
-<div class="contact-layout">
-  <div class="contact-wrapper">
+<div class="contact-wrapper">
+  <!-- LEFT COLUMN: form + note -->
+  <div class="contact-main">
     <form
       id="contact-form"
       action="https://formspree.io/f/xrbnaeld"
       method="POST"
-      enctype="multipart/form-data"
-    >
+      enctype="multipart/form-data">
+      
       <label class="field-label">
-        <span
-          class="t"
-          data-en="your name"
-          data-nl="je naam"></span>
+        <span class="t"
+              data-en="your name"
+              data-nl="je naam"></span>
         <input type="text" name="name" required />
       </label>
 
       <label class="field-label">
-        <span
-          class="t"
-          data-en="email"
-          data-nl="e-mail"></span>
+        <span class="t"
+              data-en="email"
+              data-nl="e-mail"></span>
         <input type="email" name="email" required />
       </label>
 
       <label class="field-label">
-        <span
-          class="t"
-          data-en="message or description"
-          data-nl="bericht of omschrijving"></span>
+        <span class="t"
+              data-en="message or description"
+              data-nl="bericht of omschrijving"></span>
         <textarea name="message" rows="4" required></textarea>
       </label>
 
       <label class="field-label">
-        <span
-          class="t"
-          data-en="photos (optional)"
-          data-nl="foto’s (optioneel)"></span>
+        <span class="t"
+              data-en="photos (optional)"
+              data-nl="foto’s (optioneel)"></span>
         <input type="file" name="photos" accept="image/*" multiple />
       </label>
 
-      <!-- subject line MUST be inside the form -->
+      <!-- subject must be inside the form -->
       <input type="hidden" name="_subject" value="new knitfix enquiry" />
 
       <button
@@ -758,7 +755,12 @@
         data-nl="versturen"></button>
     </form>
 
-    <!-- toast / popup -->
+    <p
+      class="contact-note t"
+      data-en="front, close-up of the damage, inside view and one photo of the whole piece work well."
+      data-nl="een voorkant, close-up van de schade, binnenkant en één foto van het hele stuk werken goed.">
+    </p>
+
     <div
       id="form-toast"
       class="toast hidden t"
@@ -767,14 +769,13 @@
     </div>
   </div>
 
+  <!-- RIGHT COLUMN: contact details -->
   <div class="contact-side">
     <div class="contact-line">
       <div class="contact-label">email</div>
       <div class="contact-value">
-        <a
-          href="mailto:hello@knitfix.nl"
-          class="mono">
-          hello@knitfix.nl
+        <a href="mailto:hello.knitfix@gmail.com" class="mono">
+          hello.knitfix@gmail.com
         </a>
       </div>
     </div>
@@ -783,11 +784,11 @@
       <div class="contact-label">whatsapp</div>
       <div class="contact-value">
         <a
-          href="https://wa.me/31600000000"
+          href="https://wa.me/message/A532JTHN35H6P1"
           target="_blank"
           rel="noreferrer"
           class="mono">
-          +31 6 00 00 00 00
+          +31 6 16 12 08 95
         </a>
       </div>
     </div>
