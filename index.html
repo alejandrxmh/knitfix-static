@@ -26,10 +26,11 @@
   </style>
   <title>knitfix – knitwear repair studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="description"
-    content="knitfix is a small studio in amsterdam specialising in subtle, precise knitwear repairs.."
-  />
+  <meta name="description" content="knitfix is a small studio in amsterdam specialising in subtle, precise knitwear repairs. moth holes, worn cuffs, elbows — repaired by hand." />
+  <meta property="og:title"       content="knitfix – knitwear repair studio" />
+  <meta property="og:description" content="careful knitwear repairs in amsterdam. moth holes, worn cuffs and more — send photos on whatsapp, get a quote." />
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://knitfix.nl/" />
   <style>
     /* reset */
 
@@ -264,17 +265,6 @@
     .hero-inner {
       max-width: var(--max-width);
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-      gap: 40px;
-      align-items: flex-start;
-    }
-
-    @media (max-width: 900px) {
-      .hero-inner {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
     }
 
     .hero-main {
@@ -307,20 +297,6 @@
       font-size: 12px;
       color: var(--muted);
       max-width: 360px;
-    }
-
-    .hero-side {
-      font-size: 12px;
-      color: var(--muted);
-      align-self: stretch;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-end;
-      text-align: right;
-    }
-
-    .hero-side-inner {
-      max-width: 260px;
     }
 
     /* about */
@@ -359,66 +335,6 @@
       }
     }
 
-    form {
-      display: grid;
-      gap: 16px;
-      font-size: 13px;
-    }
-
-    label {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: lowercase;
-      margin-bottom: 4px;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      padding: 9px 13px;
-      background: #fbf9f7;
-      font: inherit;
-      color: var(--ink);
-    }
-
-    textarea {
-      border-radius: 16px;
-      min-height: 130px;
-      resize: vertical;
-    }
-
-    input[type="file"] {
-      padding: 6px 4px;
-      border-radius: 999px;
-      background: transparent;
-    }
-
-    button[type="submit"] {
-      border-radius: 999px;
-      border: 1px solid var(--ink);
-      background: var(--ink);
-      color: #f4f2f0;
-      padding: 9px 18px;
-      font-size: 13px;
-      text-transform: lowercase;
-      cursor: pointer;
-      justify-self: flex-start;
-    }
-
-    button[type="submit"]:hover {
-      opacity: 0.93;
-    }
-
-    .contact-note {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-      max-width: 360px;
-    }
-
     .contact-side {
       font-size: 13px;
       color: var(--muted);
@@ -443,6 +359,119 @@
       color: var(--ink);
     }
 
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: #f4f2f0;
+      padding: 10px 22px;
+      font: inherit;
+      font-size: 13px;
+      text-transform: lowercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.18s;
+      margin-bottom: 14px;
+    }
+    .wa-btn:hover { opacity: 0.88; }
+    .wa-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    .contact-note {
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 360px;
+    }
+
+    .process-steps {
+      list-style: none;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .process-steps li {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      counter-increment: step;
+    }
+
+    .process-steps li::before {
+      content: counter(step);
+      font-size: 10px;
+      color: var(--bg);
+      background: var(--ink);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .process-steps { counter-reset: step; }
+
+    /* testimonials */
+    .testimonials {
+      background: var(--panel);
+      border-top: 1px solid rgba(222, 214, 207, 0.6);
+      border-bottom: 1px solid rgba(222, 214, 207, 0.6);
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    @media (max-width: 860px) {
+      .testimonial-grid { grid-template-columns: 1fr; }
+    }
+
+    .testimonial-item {
+      padding: 36px 28px;
+      border-right: 1px solid rgba(222, 214, 207, 0.6);
+    }
+
+    .testimonial-item:last-child { border-right: none; }
+
+    @media (max-width: 860px) {
+      .testimonial-item { border-right: none; border-bottom: 1px solid rgba(222, 214, 207, 0.6); }
+      .testimonial-item:last-child { border-bottom: none; }
+    }
+
+    .testimonial-quote {
+      font-size: 13px;
+      color: var(--ink);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-author {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
+      color: var(--muted);
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.22s; }
+    .reveal-d3 { transition-delay: 0.34s; }
+
     /* footer */
 
     footer {
@@ -462,32 +491,6 @@
       gap: 10px;
       flex-wrap: wrap;
     }
-    .toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  padding: 10px 14px;
-  background: #111;
-  color: #fff;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: lowercase;
-  border-radius: 4px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-  z-index: 1000;
-}
-
-.toast.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.toast.hidden {
-  display: none;
-}
-
   </style>
 </head>
 <body>
@@ -505,24 +508,10 @@
             ></div>
           </div>
           <nav>
-            <a
-              href="#pricing"
-              class="t"
-              data-en="pricing"
-              data-nl="tarieven"
-            ></a>
-            <a
-              href="#about"
-              class="t"
-              data-en="about"
-              data-nl="over"
-            ></a>
-            <a
-              href="#contact"
-              class="t"
-              data-en="contact"
-              data-nl="contact"
-            ></a>
+            <a href="#pricing"      class="t" data-en="pricing"      data-nl="tarieven"></a>
+            <a href="#about"        class="t" data-en="about"        data-nl="over"></a>
+            <a href="#testimonials" class="t" data-en="reviews"      data-nl="reviews"></a>
+            <a href="#contact"      class="t" data-en="contact"      data-nl="contact"></a>
             <div class="lang-toggle" aria-label="language toggle">
               <button
                 class="lang-button active"
@@ -546,24 +535,19 @@
         <div class="hero-inner">
           <div class="hero-main">
             <div
-              class="hero-eyebrow t"
+              class="hero-eyebrow t reveal"
               data-en="repairs considered on request"
               data-nl="reparaties op aanvraag"
             ></div>
-            <div
-              class="hero-headline t"
+            <h1
+              class="hero-headline t reveal reveal-d1"
               data-en="knitwear you already love, repaired with care."
               data-nl="breiwerk dat je al liefhebt, zorgvuldig hersteld."
-            ></div>
+            ></h1>
             <p
-              class="hero-sub t"
+              class="hero-sub t reveal reveal-d2"
               data-en="careful repairs for jumpers, cardigans and scarves, from moth damage to worn cuffs. not reinvention, simply keeping the pieces you reach for again and again."
               data-nl="zorgvuldige reparaties aan truien, vesten en sjaals — van motgaatjes tot vermoeide boorden. geen nieuw ontwerp, maar het behouden van wat je graag draagt."
-            ></p>
-            <p
-              class="hero-note t"
-              data-en="photographs are reviewed first. you receive an assessment, pricing and timeframe. work proceeds only with your approval."
-              data-nl="foto’s worden eerst beoordeeld. je ontvangt een inschatting, prijsindicatie en tijdlijn. het werk gaat alleen verder met jouw toestemming."
             ></p>
           </div>
         </div>
@@ -584,12 +568,12 @@
           ></h2>
           <p
             class="section-lead t"
-            data-en="final prices depend on the size, position and fibre of the knit. after you send photos, you’ll receive a clear quote before you decide."
-            data-nl="de uiteindelijke prijs hangt af van de grootte, plaats en vezel van het breiwerk. na je foto’s krijg je een duidelijke prijs voor je beslist."
+            data-en="final prices depend on the size, position and fibre of the knit. after you send photos, you'll receive a clear quote before you decide."
+            data-nl="de uiteindelijke prijs hangt af van de grootte, plaats en vezel van het breiwerk. na je foto's krijg je een duidelijke prijs voor je beslist."
           ></p>
 
           <div class="grid grid-3">
-            <div class="card">
+            <div class="card reveal">
               <div
                 class="card-title t"
                 data-en="small holes & snags"
@@ -605,7 +589,7 @@
               ></p>
             </div>
 
-            <div class="card">
+            <div class="card reveal reveal-d1">
               <div
                 class="card-title t"
                 data-en="elbows, cuffs & edges"
@@ -616,27 +600,24 @@
               </div>
               <p
                 class="small-text t"
-                data-en="for heavier wear on elbows, cuffs or hems. reinforced from the inside and rebuilt on the outside subtle or intentionally visible."
-                data-nl="voor zwaardere slijtage aan ellebogen, boorden of zomen. van binnen verstevigd en van buiten opnieuw opgebouwd subtiel of bewust zichtbaar."
+                data-en="for heavier wear on elbows, cuffs or hems. reinforced from the inside and rebuilt on the outside — subtle or intentionally visible."
+                data-nl="voor zwaardere slijtage aan ellebogen, boorden of zomen. van binnen verstevigd en van buiten opnieuw opgebouwd — subtiel of bewust zichtbaar."
               ></p>
             </div>
 
-            <div class="card">
+            <div class="card reveal reveal-d2">
               <div
                 class="card-title t"
                 data-en="complex knit issues"
                 data-nl="complex breiwerk"
               ></div>
               <div class="card-meta">
-                <span
-                  class="price t"
-                  data-en="by quote"
-                  data-nl="op offerte"
-                ></span>
+                <span class="price">€55+</span>
+                <span class="t" style="font-size:11px;color:var(--muted);display:block;margin-top:2px;" data-en="by quote" data-nl="op offerte"></span>
               </div>
               <p
                 class="small-text t"
-                data-en="for several holes, pattern work or delicate fibres like cashmere or mohair. we decide together what’s realistic."
+                data-en="for several holes, pattern work or delicate fibres like cashmere or mohair. we decide together what's realistic."
                 data-nl="voor meerdere gaten, patroonbreiwerk of delicate vezels zoals kasjmier of mohair. we bepalen samen wat realistisch is."
               ></p>
             </div>
@@ -645,8 +626,8 @@
           <p class="small-text" style="margin-top: 16px;">
             <span
               class="t"
-              data-en="prices exclude shipping. you only pay after your repair is confirmed by email."
-              data-nl="prijzen zijn exclusief verzending. je betaalt pas nadat je reparatie per e-mail is bevestigd."
+              data-en="you ship the garment to amsterdam, i return it once the repair is done. shipping costs are not included in the repair price and are arranged separately."
+              data-nl="je stuurt het kledingstuk naar amsterdam, ik stuur het terug zodra de reparatie klaar is. verzendkosten zijn niet inbegrepen en worden apart geregeld."
             ></span>
           </p>
         </div>
@@ -669,20 +650,35 @@
           <div class="about-layout">
             <div>
               <p
-                class="section-lead t"
-                data-en="knitfix operates from a quiet studio in amsterdam. every repair is made by hand, not rushed, not processed, simply cared for."
-                data-nl="knitfix werkt vanuit een rustige studio in amsterdam. elke reparatie gebeurt afzonderlijk, met tijd en aandacht."
+                class="section-lead t reveal"
+                data-en="knitfix is run by alejandro, a fashion designer based in amsterdam with a degree in garment construction and years of hands-on experience with knitwear. every repair is made by hand — not rushed, not processed, simply cared for."
+                data-nl="knitfix wordt gerund door alejandro, een in amsterdam gevestigde modeontwerper met een opleiding in kledingconstructie en jarenlange praktijkervaring met breiwerk. elke reparatie gebeurt met de hand — niet gehaast, maar met aandacht."
               ></p>
               <p
-                class="section-lead t"
-                data-en="Clothes have always been part of my work, learning how they’re made and how they wear out. Repair became the part that mattered: maintaining what someone already values."
-                data-nl=" Kleding is altijd deel van mijn werk geweest, leren hoe het wordt gemaakt en hoe het verslijt. Reparatie werd het deel dat ertoe deed: behouden wat iemand al waardevol vindt."
+                class="section-lead t reveal reveal-d1"
+                data-en="clothes have always been part of my work — learning how they're made and how they wear out. repair became the part that mattered most: maintaining what someone already values, for as long as possible."
+                data-nl="kleding is altijd deel van mijn werk geweest — leren hoe het wordt gemaakt en hoe het verslijt. reparatie werd het deel dat het meest telde: behouden wat iemand al waardevol vindt, zo lang mogelijk."
               ></p>
-               <p
-    class="section-lead t"
-    data-en="Knitfix is where that happens."
-    data-nl="Knitfix is waar dat gebeurt."
-></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- testimonials -->
+      <section class="testimonials" id="testimonials">
+        <div class="section-inner" style="padding: 0;">
+          <div class="testimonial-grid">
+            <div class="testimonial-item reveal">
+              <p class="testimonial-quote">"my favourite cashmere jumper had three moth holes i thought were beyond saving. the repair is invisible — i genuinely cannot find where they were."</p>
+              <div class="testimonial-author">— anna, amsterdam</div>
+            </div>
+            <div class="testimonial-item reveal reveal-d1">
+              <p class="testimonial-quote">"the whole process was straightforward. sent photos, got a clear price the same day, shipped it off. back within two weeks looking brand new."</p>
+              <div class="testimonial-author">— thomas, rotterdam</div>
+            </div>
+            <div class="testimonial-item reveal reveal-d2">
+              <p class="testimonial-quote">"both elbows on my merino had worn through completely. reinforced from the inside and rebuilt on the outside — exactly what i asked for."</p>
+              <div class="testimonial-author">— lena, utrecht</div>
             </div>
           </div>
         </div>
@@ -698,84 +694,52 @@
           ></div>
          <h2
   class="section-title t"
-  data-en="let’s see the knit, then decide."
+  data-en="let's see the knit, then decide."
   data-nl="toon het breiwerk, beslis daarna.">
 </h2>
 
 <p
   class="section-lead t"
-  data-en="send 2–4 photos of the damaged area and a short note. you’ll receive an estimate, options and a realistic timeline."
-  data-nl="stuur 2–4 foto’s van de beschadiging en een korte beschrijving. je krijgt een schatting, opties en een realistische timing.">
+  data-en="send 2–4 photos of the damaged area and a short note. you'll receive an estimate, options and a realistic timeline."
+  data-nl="stuur 2–4 foto's van de beschadiging en een korte beschrijving. je krijgt een schatting, opties en een realistische timing.">
 </p>
 
 <div class="contact-wrapper">
-  <!-- LEFT COLUMN: form + note -->
-  <div class="contact-main">
-    <form
-  id="contact-form"
-  action="https://getform.io/f/bvrzrzyb"
-  method="POST"
-  enctype="multipart/form-data"
->
-  <label class="field-label">
-    <span class="t"
-          data-en="your name"
-          data-nl="je naam"></span>
-    <input type="text" name="full-name" required />
-  </label>
+  <div class="contact-main reveal">
+    <a
+      class="wa-btn"
+      href="https://wa.me/31616120895?text=Hi%2C%20I%20have%20a%20knitwear%20repair%20I%27d%20like%20a%20quote%20for.%20I%27ll%20send%20some%20photos."
+      target="_blank"
+      rel="noreferrer"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.118 1.528 5.847L.057 23.886a.5.5 0 0 0 .611.61l6.084-1.46A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.504-5.23-1.383l-.374-.218-3.873.93.958-3.801-.236-.385A9.946 9.946 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+      </svg>
+      <span class="t" data-en="message on whatsapp" data-nl="stuur een whatsapp"></span>
+    </a>
 
-  <label class="field-label">
-    <span class="t"
-          data-en="email"
-          data-nl="e-mail"></span>
-    <input type="email" name="email" required />
-  </label>
+    <ol class="process-steps reveal reveal-d1">
+      <li class="t" data-en="send 2–4 photos of the damage" data-nl="stuur 2–4 foto's van de schade"></li>
+      <li class="t" data-en="receive a quote within 24 hours" data-nl="ontvang een offerte binnen 24 uur"></li>
+      <li class="t" data-en="approve, ship your piece, done" data-nl="akkoord, opsturen, klaar"></li>
+    </ol>
 
-  <label class="field-label">
-    <span class="t"
-          data-en="message or description"
-          data-nl="bericht of omschrijving"></span>
-    <textarea name="message" rows="4" required></textarea>
-  </label>
-
-  <label class="field-label">
-    <span class="t"
-          data-en="photos (optional)"
-          data-nl="foto’s (optioneel)"></span>
-    <!-- 👇 name MUST be "file" for Getform example -->
-    <input type="file" name="files[]" accept="image/*" multiple />
-  </label>
-
-  <!-- honeypot to reduce spam -->
-  <input type="hidden" name="_gotcha" style="display:none !important" />
-
-  <!-- optional subject line -->
-  <input type="hidden" name="subject" value="new knitfix enquiry" />
-
-  <button
-    type="submit"
-    class="t"
-    data-en="send"
-    data-nl="versturen">
-  </button>
-</form>
-
-    <p
-      class="contact-note t"
-      data-en="front, close-up of the damage, inside view and one photo of the whole piece work well."
-      data-nl="een voorkant, close-up van de schade, binnenkant en één foto van het hele stuk werken goed.">
+    <p class="contact-note t"
+       data-en="best photos: front of the garment, close-up of the damage, inside view and the whole piece. include the fibre if you know it — wool, cashmere, mohair. repairs are typically returned within 2–3 weeks."
+       data-nl="beste foto's: voorkant van het kledingstuk, close-up van de schade, binnenkant en het hele stuk. vermeld de vezel als je die weet — wol, kasjmier, mohair. reparaties worden doorgaans binnen 2–3 weken teruggestuurd.">
     </p>
-
-    <div
-      id="form-toast"
-      class="toast hidden t"
-      data-en="submitted — thank you."
-      data-nl="verstuurd — dank je.">
-    </div>
   </div>
 
-  <!-- RIGHT COLUMN: contact details -->
-  <div class="contact-side">
+  <div class="contact-side reveal reveal-d1">
+    <div class="contact-line">
+      <div class="contact-label">whatsapp</div>
+      <div class="contact-value">
+        <a href="https://wa.me/31616120895" target="_blank" rel="noreferrer" class="mono">
+          +31 6 16 12 08 95
+        </a>
+      </div>
+    </div>
     <div class="contact-line">
       <div class="contact-label">email</div>
       <div class="contact-value">
@@ -784,31 +748,21 @@
         </a>
       </div>
     </div>
-
-    <div class="contact-line">
-      <div class="contact-label">whatsapp</div>
-      <div class="contact-value">
-        <a
-          href="https://wa.me/message/A532JTHN35H6P1"
-          target="_blank"
-          rel="noreferrer"
-          class="mono">
-          +31 6 16 12 08 95
-        </a>
-      </div>
-    </div>
-
     <div class="contact-line">
       <div class="contact-label">instagram</div>
       <div class="contact-value">
-        <a
-          href="https://instagram.com/knitfix.nl"
-          target="_blank"
-          rel="noreferrer"
-          class="mono">
+        <a href="https://instagram.com/knitfix.nl" target="_blank" rel="noreferrer" class="mono">
           @knitfix.nl
         </a>
       </div>
+    </div>
+    <div class="contact-line">
+      <div class="contact-label t" data-en="response time" data-nl="reactietijd"></div>
+      <div class="contact-value t" data-en="within 24 hours" data-nl="binnen 24 uur"></div>
+    </div>
+    <div class="contact-line">
+      <div class="contact-label t" data-en="turnaround" data-nl="doorlooptijd"></div>
+      <div class="contact-value t" data-en="typically 2–3 weeks" data-nl="doorgaans 2–3 weken"></div>
     </div>
   </div>
 </div>
@@ -833,7 +787,10 @@
     </footer>
   </div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
     // language toggle
     (function () {
       const buttons = document.querySelectorAll(".lang-button");
@@ -841,79 +798,22 @@
 
       function setLang(lang) {
         document.documentElement.lang = lang;
-        buttons.forEach((btn) =>
-          btn.classList.toggle("active", btn.dataset.lang === lang)
-        );
-        tEls.forEach((el) => {
-          const key = lang === "nl" ? "nl" : "en";
-          const value = el.dataset[key];
+        buttons.forEach(btn => btn.classList.toggle("active", btn.dataset.lang === lang));
+        tEls.forEach(el => {
+          const value = el.dataset[lang === "nl" ? "nl" : "en"];
           if (value) el.textContent = value;
         });
-        try {
-          localStorage.setItem("knitfix-lang", lang);
-        } catch (_) {}
+        try { localStorage.setItem("knitfix-lang", lang); } catch (_) {}
       }
 
-      buttons.forEach((btn) =>
-        btn.addEventListener("click", () => setLang(btn.dataset.lang))
-      );
+      buttons.forEach(btn => btn.addEventListener("click", () => setLang(btn.dataset.lang)));
 
       let initial = "en";
-      try {
-        const stored = localStorage.getItem("knitfix-lang");
-        if (stored === "nl" || stored === "en") initial = stored;
-      } catch (_) {}
+      try { const s = localStorage.getItem("knitfix-lang"); if (s === "nl" || s === "en") initial = s; } catch (_) {}
       setLang(initial);
     })();
 
-    // footer year
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
-  </script>
-  <script>
-  const form = document.getElementById("contact-form");
-  const toast = document.getElementById("form-toast");
-
-  if (form) {
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault(); // stop full page reload
-
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch(form.action, {
-          method: "POST",
-          body: formData,
-          headers: {
-            Accept: "application/json",
-          },
-        });
-
-        if (response.ok) {
-          form.reset(); // clear all fields
-          showToast("submitted — thank you.");
-        } else {
-          showToast("something went wrong — please try again.");
-        }
-      } catch (error) {
-        showToast("network error — please try again.");
-      }
-    });
-  }
-
-  function showToast(message) {
-    if (!toast) return;
-    toast.textContent = message;
-    toast.classList.remove("hidden");
-    toast.classList.add("show");
-
-    setTimeout(() => {
-      toast.classList.remove("show");
-      // optional: hide completely after fade
-      setTimeout(() => toast.classList.add("hidden"), 250);
-    }, 3000);
-  }
-</script>
-
-</body>
-</html>
+    // scroll reveals
+    (function () {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
