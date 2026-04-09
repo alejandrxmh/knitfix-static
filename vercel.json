@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "functions": {
+    "api/create-checkout.js": { "maxDuration": 15 },
+    "api/webhook.js":         { "maxDuration": 30 }
+  }
+}

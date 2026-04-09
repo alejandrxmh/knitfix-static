@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>knitfix – boeking bevestigd</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f4f2f0; --ink: #20201f; --muted: #918b84;
+      --line: #ded6cf; --accent: #b85c38;
+    }
+    body {
+      font-family: "Jost", system-ui, sans-serif;
+      background: var(--bg); color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 24px; line-height: 1.7;
+    }
+    .card {
+      max-width: 480px; width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .card-top {
+      padding: 36px 40px 28px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      font-size: 10px; letter-spacing: 0.16em;
+      text-transform: lowercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 22px; font-weight: 400;
+      text-transform: lowercase; letter-spacing: 0.04em;
+    }
+    .card-body { padding: 28px 40px; }
+
+    .ref-box {
+      background: var(--bg); padding: 20px 24px; margin-bottom: 28px;
+    }
+    .ref-label {
+      font-size: 10px; letter-spacing: 0.14em;
+      text-transform: lowercase; color: var(--muted); margin-bottom: 8px;
+    }
+    .ref-code {
+      font-size: 24px; letter-spacing: 0.12em;
+      font-family: ui-monospace, monospace; color: var(--ink);
+    }
+    .ref-note { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+
+    .steps { list-style: none; margin-bottom: 28px; }
+    .step {
+      display: flex; gap: 16px; padding: 12px 0;
+      border-bottom: 1px solid var(--line); font-size: 13px;
+    }
+    .step:first-child { border-top: 1px solid var(--line); }
+    .step-num {
+      font-size: 10px; letter-spacing: 0.1em; color: var(--accent);
+      width: 24px; flex-shrink: 0; padding-top: 2px;
+    }
+    .step-text { color: var(--ink); line-height: 1.6; }
+    .step-text strong { font-weight: 500; }
+
+    .wa-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #f4f2f0;
+      border: 1px solid var(--accent); border-radius: 999px;
+      padding: 10px 22px; font: inherit; font-size: 13px;
+      text-transform: lowercase; text-decoration: none;
+      transition: opacity 0.18s; margin-bottom: 20px;
+    }
+    .wa-btn:hover { opacity: 0.85; }
+    .wa-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .back-link {
+      display: block; font-size: 12px; color: var(--muted);
+      text-decoration: none; letter-spacing: 0.04em;
+      transition: color 0.18s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .card-foot {
+      padding: 18px 40px; border-top: 1px solid var(--line);
+    }
+    .card-foot p { font-size: 10px; color: var(--muted); line-height: 1.8; }
+
+    @media (max-width: 520px) {
+      .card-top, .card-body, .card-foot { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-top">
+    <div class="eyebrow">knitfix · breiwerk reparatie atelier</div>
+    <h1>boeking bevestigd.</h1>
+  </div>
+
+  <div class="card-body">
+    <div class="ref-box">
+      <div class="ref-label">jouw referentiecode</div>
+      <div class="ref-code" id="ref-code">—</div>
+      <p class="ref-note">Check je inbox — je ontvangt een bevestigingsmail met je adres en alle instructies. Doe een briefje met deze code bij je pakket.</p>
+    </div>
+
+    <ul class="steps">
+      <li class="step">
+        <span class="step-num">01</span>
+        <span class="step-text"><strong>Check je e-mail</strong> — je ontvangt alle instructies inclusief het bezorgadres van KnitFix.</span>
+      </li>
+      <li class="step">
+        <span class="step-num">02</span>
+        <span class="step-text"><strong>Stuur foto's via WhatsApp</strong> met je referentiecode. Zo starten we de beoordeling zodra je pakket aankomt.</span>
+      </li>
+      <li class="step">
+        <span class="step-num">03</span>
+        <span class="step-text"><strong>Verpak zorgvuldig</strong> — plastic zakje tegen vocht, doos of stevige envelop, briefje met je code erbij.</span>
+      </li>
+      <li class="step">
+        <span class="step-num">04</span>
+        <span class="step-text"><strong>Opsturen via PostNL of DHL</strong> — zodra we het ontvangen sturen we een update en beginnen de reparatie.</span>
+      </li>
+    </ul>
+
+    <a class="wa-btn" id="wa-link" href="https://wa.me/31616120895" target="_blank" rel="noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.118 1.528 5.847L.057 23.886a.5.5 0 0 0 .611.61l6.084-1.46A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.504-5.23-1.383l-.374-.218-3.873.93.958-3.801-.236-.385A9.946 9.946 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+      </svg>
+      stuur foto's via whatsapp
+    </a>
+
+    <br/>
+    <a class="back-link" href="/">← terug naar knitfix.nl</a>
+  </div>
+
+  <div class="card-foot">
+    <p>knitfix · amsterdam · <a href="https://knitfix.nl" style="color:#918b84;">knitfix.nl</a><br/>kvk 42013270 · btw NL005433323B97 · eenmanszaak</p>
+  </div>
+</div>
+
+<script>
+  var params = new URLSearchParams(window.location.search);
+  var ref    = params.get("ref");
+  if (ref) {
+    document.getElementById("ref-code").textContent = ref;
+    var waLink = document.getElementById("wa-link");
+    waLink.href = "https://wa.me/31616120895?text=" + encodeURIComponent("Hi KnitFix! Ik heb zojuist een boeking gedaan (" + ref + ") en stuur hierbij de foto's van de schade.");
+  }
+</script>
+
+</body>
+</html>
