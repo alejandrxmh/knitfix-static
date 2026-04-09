@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>knitfix – privacybeleid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f4f2f0; --panel: #f7f5f3; --ink: #20201f;
+      --muted: #918b84; --line: #ded6cf; --accent: #b85c38; --max: 940px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Jost", system-ui, sans-serif;
+      background: var(--bg); color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.7; letter-spacing: 0.01em;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── header ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(244, 242, 240, 0.96);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(222, 214, 207, 0.6);
+    }
+    .header-inner {
+      max-width: var(--max); margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between; height: 60px;
+    }
+    .brand { display: flex; flex-direction: column; gap: 2px; text-decoration: none; color: inherit; }
+    .brand-name    { font-size: 14px; letter-spacing: 0.12em; text-transform: lowercase; }
+    .brand-tagline { font-size: 10px; letter-spacing: 0.14em; text-transform: lowercase; color: var(--muted); }
+    .back-link { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; text-transform: lowercase; transition: color 0.18s; }
+    .back-link:hover { color: var(--accent); text-decoration: none; }
+
+    /* ── content ── */
+    .page { max-width: 680px; margin: 0 auto; padding: 72px 28px 96px; }
+
+    .eyebrow {
+      font-size: 11px; letter-spacing: 0.16em;
+      text-transform: lowercase; color: var(--accent); margin-bottom: 14px;
+    }
+    h1 {
+      font-size: 22px; font-weight: 400; text-transform: lowercase;
+      letter-spacing: 0.04em; margin-bottom: 40px; line-height: 1.3;
+    }
+    .last-updated {
+      font-size: 11px; color: var(--muted); margin-bottom: 48px;
+      letter-spacing: 0.06em;
+    }
+
+    h2 {
+      font-size: 13px; font-weight: 500; text-transform: lowercase;
+      letter-spacing: 0.08em; margin-bottom: 12px; margin-top: 40px;
+      color: var(--ink);
+    }
+    h2:first-of-type { margin-top: 0; }
+
+    p {
+      font-size: 13px; color: var(--muted); line-height: 1.85; margin-bottom: 14px;
+    }
+    p:last-child { margin-bottom: 0; }
+
+    ul {
+      list-style: none; margin-bottom: 14px;
+    }
+    ul li {
+      font-size: 13px; color: var(--muted); line-height: 1.85;
+      padding-left: 16px; position: relative; margin-bottom: 4px;
+    }
+    ul li::before {
+      content: "—"; position: absolute; left: 0; color: var(--accent);
+    }
+
+    .divider { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+
+    /* ── footer ── */
+    footer {
+      border-top: 1px solid rgba(222, 214, 207, 0.6);
+      font-size: 11px; color: var(--muted); padding: 28px 0;
+    }
+    .footer-inner {
+      max-width: var(--max); margin: 0 auto; padding: 0 28px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .footer-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .footer-legal {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      font-size: 10px; letter-spacing: 0.05em;
+      padding-top: 10px; border-top: 1px solid rgba(222,214,207,0.4);
+    }
+    .footer-legal span { display: flex; gap: 6px; align-items: center; }
+    .footer-legal .lbl { opacity: 0.65; text-transform: lowercase; }
+
+    @media (max-width: 560px) {
+      .page { padding: 56px 20px 72px; }
+      .header-inner { padding: 0 20px; }
+      .footer-inner { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <div class="brand-name">knitfix</div>
+      <div class="brand-tagline">breiwerk reparatie atelier</div>
+    </a>
+    <a href="/" class="back-link">← terug</a>
+  </div>
+</header>
+
+<div class="page">
+  <div class="eyebrow">privacybeleid</div>
+  <h1>hoe knitfix omgaat met jouw gegevens.</h1>
+  <p class="last-updated">laatst bijgewerkt: april 2026</p>
+
+  <h2>wie zijn wij</h2>
+  <p>KnitFix is een eenmanszaak gevestigd in Amsterdam, Nederland. Wij bieden breiwerk reparatie, aanpassingen en kledingverzorging aan.</p>
+  <ul>
+    <li>Handelsnaam: KnitFix</li>
+    <li>KvK-nummer: 42013270</li>
+    <li>BTW-nummer: NL005433323B97</li>
+    <li>E-mail: <a href="mailto:hello.knitfix@gmail.com">hello.knitfix@gmail.com</a></li>
+    <li>Website: <a href="https://knitfix.nl">knitfix.nl</a></li>
+  </ul>
+
+  <hr class="divider" />
+
+  <h2>welke gegevens wij verzamelen</h2>
+  <p>Wanneer je een reparatie boekt via onze website, verzamelen wij de volgende gegevens:</p>
+  <ul>
+    <li>Naam</li>
+    <li>E-mailadres</li>
+    <li>Telefoonnummer (optioneel)</li>
+    <li>Retouradres (straat, huisnummer, postcode, woonplaats)</li>
+    <li>Informatie over het kledingstuk en de schade</li>
+    <li>Betalingsinformatie (verwerkt door Stripe — wij slaan geen kaartgegevens op)</li>
+  </ul>
+
+  <hr class="divider" />
+
+  <h2>waarom wij jouw gegevens gebruiken</h2>
+  <p>Wij gebruiken jouw gegevens uitsluitend voor:</p>
+  <ul>
+    <li>Het verwerken en uitvoeren van jouw reparatieboeking</li>
+    <li>Het versturen van bevestigings- en statusmails</li>
+    <li>Het aanmaken van een retourlabel voor bezorging</li>
+    <li>Contact opnemen over jouw reparatie via e-mail of WhatsApp</li>
+    <li>Het voldoen aan onze wettelijke verplichtingen</li>
+  </ul>
+  <p>Wij gebruiken jouw gegevens nooit voor marketingdoeleinden zonder jouw toestemming en verkopen jouw gegevens nooit aan derden.</p>
+
+  <hr class="divider" />
+
+  <h2>met wie wij jouw gegevens delen</h2>
+  <p>Jouw gegevens worden alleen gedeeld met de partijen die noodzakelijk zijn voor het uitvoeren van onze dienst:</p>
+  <ul>
+    <li><strong>Stripe</strong> — betalingsverwerking (stripe.com/nl/privacy)</li>
+    <li><strong>Resend</strong> — e-mailverzending (resend.com/privacy)</li>
+    <li><strong>MyParcel / PostNL</strong> — verzending en bezorging van pakketten</li>
+    <li><strong>Vercel</strong> — hostingprovider van onze website (vercel.com/legal/privacy-policy)</li>
+  </ul>
+  <p>Al deze partijen verwerken gegevens uitsluitend op basis van onze instructies en zijn gebonden aan verwerkersovereenkomsten.</p>
+
+  <hr class="divider" />
+
+  <h2>hoe lang wij jouw gegevens bewaren</h2>
+  <p>Wij bewaren jouw gegevens zo lang als nodig is voor de uitvoering van de reparatie en de wettelijke bewaarplicht voor financiële administratie (7 jaar op grond van de Nederlandse belastingwetgeving). Na afloop van deze periode worden jouw gegevens verwijderd.</p>
+
+  <hr class="divider" />
+
+  <h2>jouw rechten</h2>
+  <p>Op grond van de AVG (GDPR) heb je de volgende rechten:</p>
+  <ul>
+    <li>Recht op inzage in jouw persoonsgegevens</li>
+    <li>Recht op correctie van onjuiste gegevens</li>
+    <li>Recht op verwijdering van jouw gegevens</li>
+    <li>Recht op beperking van de verwerking</li>
+    <li>Recht op overdraagbaarheid van gegevens</li>
+    <li>Recht om bezwaar te maken tegen verwerking</li>
+  </ul>
+  <p>Stuur een e-mail naar <a href="mailto:hello.knitfix@gmail.com">hello.knitfix@gmail.com</a> om een van deze rechten uit te oefenen. Wij reageren binnen 30 dagen.</p>
+
+  <hr class="divider" />
+
+  <h2>cookies</h2>
+  <p>Onze website maakt gebruik van Google Analytics en Vercel Analytics voor het meten van websitebezoek. Deze tools plaatsen anonieme analytische cookies. Wij plaatsen geen tracking- of advertentiecookies.</p>
+
+  <hr class="divider" />
+
+  <h2>beveiliging</h2>
+  <p>Wij nemen passende technische en organisatorische maatregelen om jouw gegevens te beschermen. Alle communicatie via onze website verloopt via een beveiligde HTTPS-verbinding. Betalingen worden verwerkt door Stripe, een PCI DSS-gecertificeerde betalingsprovider.</p>
+
+  <hr class="divider" />
+
+  <h2>klachten</h2>
+  <p>Als je een klacht hebt over de verwerking van jouw persoonsgegevens, kun je contact met ons opnemen via <a href="mailto:hello.knitfix@gmail.com">hello.knitfix@gmail.com</a>. Je hebt ook het recht om een klacht in te dienen bij de Autoriteit Persoonsgegevens via <a href="https://www.autoriteitpersoonsgegevens.nl" target="_blank" rel="noreferrer">autoriteitpersoonsgegevens.nl</a>.</p>
+
+  <hr class="divider" />
+
+  <h2>wijzigingen</h2>
+  <p>Wij kunnen dit privacybeleid van tijd tot tijd aanpassen. De meest recente versie is altijd beschikbaar op <a href="https://knitfix.nl/privacy.html">knitfix.nl/privacy.html</a>.</p>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <span>© <span id="year"></span> knitfix</span>
+      <span>amsterdam — alleen bezorging in nl</span>
+    </div>
+    <div class="footer-legal">
+      <span><span class="lbl">handelsnaam</span> knitfix</span>
+      <span><span class="lbl">kvk</span> 42013270</span>
+      <span><span class="lbl">btw</span> NL005433323B97</span>
+      <span><span class="lbl">rechtsvorm</span> eenmanszaak</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
