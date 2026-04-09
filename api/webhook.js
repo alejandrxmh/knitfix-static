@@ -208,10 +208,11 @@ module.exports = async function handler(req, res) {
   /* ── email to customer ── */
   try {
     await resend.emails.send({
-      from:    `KnitFix <repairs@knitfix.nl>`,
-      to:      meta.customer_email,
-      subject: `KnitFix · boeking bevestigd (${meta.reference_code})`,
-      html:    customerEmail(meta, knitfixAddress),
+      from:     `KnitFix <hello@knitfix.nl>`,
+      reply_to: `hello.knitfix@gmail.com`,
+      to:       meta.customer_email,
+      subject:  `KnitFix · boeking bevestigd (${meta.reference_code})`,
+      html:     customerEmail(meta, knitfixAddress),
     });
   } catch (err) {
     console.error("Customer email failed:", err.message);
@@ -220,10 +221,11 @@ module.exports = async function handler(req, res) {
   /* ── email to Alejandro ── */
   try {
     await resend.emails.send({
-      from:    `KnitFix Boekingen <repairs@knitfix.nl>`,
-      to:      process.env.KNITFIX_NOTIFY_EMAIL || "hello.knitfix@gmail.com",
-      subject: `Nieuwe boeking: ${meta.reference_code} · ${meta.garment_type}`,
-      html:    adminEmail(meta, shipmentIds),
+      from:     `KnitFix Boekingen <hello@knitfix.nl>`,
+      reply_to: `hello.knitfix@gmail.com`,
+      to:       process.env.KNITFIX_NOTIFY_EMAIL || "hello.knitfix@gmail.com",
+      subject:  `Nieuwe boeking: ${meta.reference_code} · ${meta.garment_type}`,
+      html:     adminEmail(meta, shipmentIds),
     });
   } catch (err) {
     console.error("Admin email failed:", err.message);
