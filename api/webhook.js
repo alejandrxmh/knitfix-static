@@ -12,52 +12,99 @@ async function getRawBody(req) {
   });
 }
 
-/* ── create SendCloud parcel (knitfix → customer) ── */
-async function createReturnShipment(meta) {
-  const publicKey  = process.env.SENDCLOUD_PUBLIC_KEY;
-  const secretKey  = process.env.SENDCLOUD_SECRET_KEY;
-  if (!publicKey || !secretKey) throw new Error("SENDCLOUD keys not set");
+function sendcloudAuth() {
+  const pub = process.env.SENDCLOUD_PUBLIC_KEY;
+  const sec = process.env.SENDCLOUD_SECRET_KEY;
+  return "Basic " + Buffer.from(`${pub}:${sec}`).toString("base64");
+}
 
-  const auth = Buffer.from(`${publicKey}:${secretKey}`).toString("base64");
-
+/* inbound: customer → knitfix (label goes to customer so they can ship to us) */
+async function createInboundParcel(meta) {
   const body = {
     parcel: {
-      name:           meta.customer_name,
-      company_name:   "",
-      address:        `${meta.street} ${meta.house_number}`,
-      city:           meta.city,
-      postal_code:    meta.postal_code,
-      country:        "NL",
-      email:          meta.customer_email,
-      telephone:      meta.customer_phone || "",
-      order_number:   meta.reference_code,
-      weight:         "1.000",
-      shipment: { id: 8 }, // 8 = PostNL standard parcel
-      request_label:  true,
+      name:          meta.customer_name,
+      address:       `${meta.street} ${meta.house_number}`,
+      city:          meta.city,
+      postal_code:   meta.postal_code,
+      country:       "NL",
+      email:         meta.customer_email,
+      telephone:     meta.customer_phone || "",
+      order_number:  meta.reference_code + "-IN",
+      weight:        "1.000",
+      shipment:      { id: 8 },
+      request_label: true,
+      /* ship TO knitfix studio */
+      to_name:         "KnitFix",
+      to_address:      (process.env.KNITFIX_STREET || "") + " " + (process.env.KNITFIX_HOUSE_NUMBER || ""),
+      to_city:         process.env.KNITFIX_CITY || "Amsterdam",
+      to_postal_code:  process.env.KNITFIX_POSTAL || "",
+      to_country:      "NL",
     },
   };
 
   const res = await fetch("https://panel.sendcloud.sc/api/v2/parcels", {
     method: "POST",
-    headers: {
-      Authorization:  `Basic ${auth}`,
-      "Content-Type": "application/json",
-    },
+    headers: { Authorization: sendcloudAuth(), "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
   if (!res.ok) {
     const txt = await res.text();
-    throw new Error(`SendCloud error ${res.status}: ${txt}`);
+    throw new Error(`SendCloud inbound error ${res.status}: ${txt}`);
   }
 
   const data = await res.json();
-  return data.parcel ? data.parcel.id : null;
+  const parcel = data.parcel;
+  const labelUrl = parcel?.label?.normal_printer?.[0] || null;
+  return { id: parcel?.id, labelUrl };
+}
+
+/* outbound: knitfix → customer (Alejandro prints this when repair is done) */
+async function createOutboundParcel(meta) {
+  const body = {
+    parcel: {
+      name:          meta.customer_name,
+      address:       `${meta.street} ${meta.house_number}`,
+      city:          meta.city,
+      postal_code:   meta.postal_code,
+      country:       "NL",
+      email:         meta.customer_email,
+      telephone:     meta.customer_phone || "",
+      order_number:  meta.reference_code + "-OUT",
+      weight:        "1.000",
+      shipment:      { id: 8 },
+      request_label: true,
+    },
+  };
+
+  const res = await fetch("https://panel.sendcloud.sc/api/v2/parcels", {
+    method: "POST",
+    headers: { Authorization: sendcloudAuth(), "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`SendCloud outbound error ${res.status}: ${txt}`);
+  }
+
+  const data = await res.json();
+  return data.parcel?.id || null;
 }
 
 /* ── email templates ── */
-function customerEmail(meta, address) {
+function customerEmail(meta, address, labelUrl) {
   const firstName = meta.customer_name.split(" ")[0];
+  const labelBlock = labelUrl
+    ? `<div style="background:#f4f2f0;padding:20px 24px;margin-bottom:28px;border-left:2px solid #b85c38;">
+        <p style="font-size:10px;letter-spacing:0.14em;text-transform:lowercase;color:#b85c38;margin:0 0 8px;">jouw verzendetiket</p>
+        <p style="font-size:12px;color:#20201f;margin:0 0 12px;line-height:1.6;">Print dit etiket, plak het op je pakket en lever het in bij een PostNL punt.</p>
+        <a href="${labelUrl}" style="display:inline-block;background:#b85c38;color:#f4f2f0;padding:10px 20px;font-size:12px;text-decoration:none;letter-spacing:0.06em;text-transform:lowercase;">download verzendetiket</a>
+      </div>`
+    : `<div style="background:#f4f2f0;padding:20px 24px;margin-bottom:28px;">
+        <p style="font-size:12px;color:#918b84;margin:0;line-height:1.6;">Je ontvangt je verzendetiket apart via e-mail. Je kunt ook zelf opsturen via PostNL, DHL of een andere aanbieder en de kosten declareren.</p>
+      </div>`;
+
   return `<!DOCTYPE html>
 <html><head><meta charset="UTF-8"/></head>
 <body style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#f4f2f0;margin:0;padding:40px 20px;">
@@ -67,13 +114,14 @@ function customerEmail(meta, address) {
     <h1 style="font-size:20px;font-weight:400;color:#20201f;margin:0;text-transform:lowercase;letter-spacing:0.04em;">boeking bevestigd.</h1>
   </div>
   <div style="padding:32px 40px;">
-    <p style="font-size:14px;color:#20201f;margin:0 0 24px;line-height:1.7;">Hoi ${firstName}, je boeking is ontvangen en de aanbetaling is verwerkt. Hieronder vind je alles wat je nodig hebt.</p>
+    <p style="font-size:14px;color:#20201f;margin:0 0 24px;line-height:1.7;">Hoi ${firstName}, je boeking is ontvangen en de aanbetaling is verwerkt.</p>
     <div style="background:#f4f2f0;padding:20px 24px;margin-bottom:28px;">
       <p style="font-size:10px;letter-spacing:0.14em;text-transform:lowercase;color:#b85c38;margin:0 0 10px;">jouw referentiecode</p>
       <p style="font-size:26px;letter-spacing:0.14em;color:#20201f;margin:0;font-family:monospace;font-weight:600;">${meta.reference_code}</p>
       <p style="font-size:11px;color:#918b84;margin:8px 0 0;line-height:1.6;">Schrijf deze code op een briefje en doe het bij je pakket.</p>
     </div>
-    <p style="font-size:10px;letter-spacing:0.12em;text-transform:lowercase;color:#b85c38;margin:0 0 6px;">sturen naar</p>
+    ${labelBlock}
+    <p style="font-size:10px;letter-spacing:0.12em;text-transform:lowercase;color:#b85c38;margin:0 0 8px;">sturen naar</p>
     <p style="font-size:14px;color:#20201f;margin:0 0 28px;line-height:1.7;">${address}<br/><span style="color:#918b84;font-size:12px;">Nederland</span></p>
     <p style="font-size:10px;letter-spacing:0.12em;text-transform:lowercase;color:#b85c38;margin:0 0 8px;">wat je hebt geboekt</p>
     <table style="width:100%;font-size:13px;color:#20201f;margin-bottom:28px;border-collapse:collapse;">
@@ -86,7 +134,7 @@ function customerEmail(meta, address) {
     </table>
     <div style="border-left:2px solid #b85c38;padding-left:16px;margin-bottom:28px;">
       <p style="font-size:13px;color:#20201f;margin:0 0 8px;font-weight:500;">verpakkingstips</p>
-      <p style="font-size:12px;color:#918b84;margin:0;line-height:1.75;">Verpak het kledingstuk in een plastic zakje tegen vocht, daarna in een doos of stevige envelop. Voeg een briefje toe met je referentiecode. Je kunt opsturen via PostNL, DHL of een andere aanbieder.</p>
+      <p style="font-size:12px;color:#918b84;margin:0;line-height:1.75;">Verpak het kledingstuk in een plastic zakje tegen vocht, daarna in een doos of stevige envelop. Voeg een briefje toe met je referentiecode.</p>
     </div>
     <p style="font-size:13px;color:#20201f;margin:0 0 8px;line-height:1.7;">Stuur ook <strong>2 tot 4 foto's van de schade</strong> via WhatsApp naar <a href="https://wa.me/31616120895" style="color:#b85c38;text-decoration:none;">+31 6 16120895</a> met je referentiecode ${meta.reference_code}.</p>
     <p style="font-size:13px;color:#918b84;margin:0;line-height:1.7;">Na ontvangst sturen we een bevestiging en de definitieve planning. Het restbedrag wordt daarna gefactureerd.</p>
@@ -98,10 +146,9 @@ function customerEmail(meta, address) {
 </body></html>`;
 }
 
-function adminEmail(meta, parcelId) {
-  const sendcloudLink = parcelId
-    ? `<a href="https://app.sendcloud.com/v2/shipping/parcel/${parcelId}" style="color:#b85c38;font-size:13px;">open sendcloud → print label</a><br/><span style="font-size:11px;color:#918b84;">parcel id: ${parcelId}</span>`
-    : `<span style="font-size:12px;color:#918b84;">SendCloud aanmaken mislukt — maak handmatig aan op sendcloud.com</span>`;
+function adminEmail(meta, inboundId, outboundId) {
+  const inLink  = inboundId  ? `<a href="https://app.sendcloud.com/v2/shipping/parcel/${inboundId}"  style="color:#b85c38;">inbound label (klant → knitfix)</a>` : "aanmaken mislukt";
+  const outLink = outboundId ? `<a href="https://app.sendcloud.com/v2/shipping/parcel/${outboundId}" style="color:#b85c38;">outbound label (knitfix → klant)</a>` : "aanmaken mislukt";
 
   return `<!DOCTYPE html>
 <html><head><meta charset="UTF-8"/></head>
@@ -122,8 +169,11 @@ function adminEmail(meta, parcelId) {
     <tr><td style="padding:5px 0;color:#918b84;vertical-align:top;">reparatiestijl</td><td>${meta.repair_preference}</td></tr>
   </table>
   <div style="background:#f4f2f0;padding:16px 20px;margin-bottom:8px;">
-    <p style="font-size:10px;letter-spacing:0.1em;text-transform:lowercase;color:#918b84;margin:0 0 8px;">retourlabel (sendcloud)</p>
-    ${sendcloudLink}
+    <p style="font-size:10px;letter-spacing:0.1em;text-transform:lowercase;color:#918b84;margin:0 0 10px;">sendcloud labels</p>
+    <p style="font-size:13px;margin:0 0 6px;">${inLink}</p>
+    <p style="font-size:11px;color:#918b84;margin:0 0 14px;">klant heeft dit label al ontvangen per email. print voor je eigen administratie.</p>
+    <p style="font-size:13px;margin:0 0 6px;">${outLink}</p>
+    <p style="font-size:11px;color:#918b84;margin:0;">print dit label wanneer de reparatie klaar is en stuur het pakket terug.</p>
   </div>
   <p style="font-size:11px;color:#918b84;margin:16px 0 0;">knitfix · kvk 42013270</p>
 </div>
@@ -136,8 +186,8 @@ module.exports = async function handler(req, res) {
 
   const rawBody = await getRawBody(req);
   const sig     = req.headers["stripe-signature"];
+  const stripe  = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   let event;
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
@@ -154,13 +204,25 @@ module.exports = async function handler(req, res) {
   const meta    = session.metadata;
   const resend  = new Resend(process.env.RESEND_API_KEY);
 
-  /* create SendCloud parcel */
-  let parcelId = null;
+  /* create both labels */
+  let inboundId  = null;
+  let inboundLabelUrl = null;
+  let outboundId = null;
+
   try {
-    parcelId = await createReturnShipment(meta);
-    console.log("SendCloud parcel created:", parcelId);
+    const inbound = await createInboundParcel(meta);
+    inboundId      = inbound.id;
+    inboundLabelUrl = inbound.labelUrl;
+    console.log("SendCloud inbound created:", inboundId);
   } catch (err) {
-    console.error("SendCloud failed (non-fatal):", err.message);
+    console.error("SendCloud inbound failed:", err.message);
+  }
+
+  try {
+    outboundId = await createOutboundParcel(meta);
+    console.log("SendCloud outbound created:", outboundId);
+  } catch (err) {
+    console.error("SendCloud outbound failed:", err.message);
   }
 
   const knitfixAddress = [
@@ -177,7 +239,7 @@ module.exports = async function handler(req, res) {
       reply_to: "hello.knitfix@gmail.com",
       to:       meta.customer_email,
       subject:  `KnitFix · boeking bevestigd (${meta.reference_code})`,
-      html:     customerEmail(meta, knitfixAddress),
+      html:     customerEmail(meta, knitfixAddress, inboundLabelUrl),
     });
   } catch (err) {
     console.error("Customer email failed:", err.message);
@@ -190,7 +252,7 @@ module.exports = async function handler(req, res) {
       reply_to: "hello.knitfix@gmail.com",
       to:       process.env.KNITFIX_NOTIFY_EMAIL || "hello.knitfix@gmail.com",
       subject:  `Nieuwe boeking: ${meta.reference_code} · ${meta.garment_type}`,
-      html:     adminEmail(meta, parcelId),
+      html:     adminEmail(meta, inboundId, outboundId),
     });
   } catch (err) {
     console.error("Admin email failed:", err.message);
