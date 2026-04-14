@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "routes": [
+    { "src": "/admin", "dest": "/admin.html" }
+  ],
   "functions": {
     "api/create-checkout.js": { "maxDuration": 15 },
     "api/webhook.js":         { "maxDuration": 30 },
