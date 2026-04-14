@@ -50,7 +50,8 @@ async function createInboundParcel(meta) {
   const body = {
     parcel: {
       name:          meta.customer_name,
-      address:       `${meta.street} ${meta.house_number}`,
+      address:       meta.street,
+      house_number:  meta.house_number,
       city:          meta.city,
       postal_code:   meta.postal_code,
       country:       "NL",
@@ -62,7 +63,8 @@ async function createInboundParcel(meta) {
       request_label: true,
       /* ship TO knitfix studio */
       to_name:         "KnitFix",
-      to_address:      (process.env.KNITFIX_STREET || "") + " " + (process.env.KNITFIX_HOUSE_NUMBER || ""),
+      to_address:      process.env.KNITFIX_STREET || "",
+      to_house_number: process.env.KNITFIX_HOUSE_NUMBER || "",
       to_city:         process.env.KNITFIX_CITY || "Amsterdam",
       to_postal_code:  process.env.KNITFIX_POSTAL || "",
       to_country:      "NL",
@@ -91,7 +93,8 @@ async function createOutboundParcel(meta) {
   const body = {
     parcel: {
       name:          meta.customer_name,
-      address:       `${meta.street} ${meta.house_number}`,
+      address:       meta.street,
+      house_number:  meta.house_number,
       city:          meta.city,
       postal_code:   meta.postal_code,
       country:       "NL",
