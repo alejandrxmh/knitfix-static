@@ -55,8 +55,7 @@ async function createInboundParcel(meta) {
 
   const data = await res.json();
   const parcel = data.parcel;
-  const labelUrl = parcel?.label?.normal_printer?.[0] || null;
-  return { id: parcel?.id, labelUrl };
+  return { id: parcel?.id };
 }
 
 /* outbound: knitfix → customer (Alejandro prints this when repair is done) */
@@ -212,7 +211,9 @@ module.exports = async function handler(req, res) {
   try {
     const inbound = await createInboundParcel(meta);
     inboundId      = inbound.id;
-    inboundLabelUrl = inbound.labelUrl;
+    inboundLabelUrl = inboundId
+      ? `${process.env.BASE_URL}/api/label?id=${inboundId}`
+      : null;
     console.log("SendCloud inbound created:", inboundId);
   } catch (err) {
     console.error("SendCloud inbound failed:", err.message);
