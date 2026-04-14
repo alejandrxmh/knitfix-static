@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KnitFix · Dashboard</title>
+<link rel="icon" href="/favicon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#20201f;--bg:#f4f2f0;--white:#fff;--accent:#b85c38;--muted:#918b84;--line:#ded6cf;--font:'Jost',sans-serif}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100vh}
+
+/* LOGIN */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{background:var(--white);border:1px solid var(--line);padding:48px 40px;max-width:360px;width:100%}
+.login-logo{font-size:11px;letter-spacing:0.16em;text-transform:lowercase;color:var(--muted);margin-bottom:6px}
+.login-logo span{color:var(--accent)}
+.login-title{font-size:20px;font-weight:400;margin-bottom:32px;text-transform:lowercase}
+.login-box input{width:100%;border:1px solid var(--line);background:var(--bg);padding:10px 14px;font:inherit;font-size:13px;margin-bottom:12px;outline:none}
+.login-box input:focus{border-color:var(--accent)}
+.login-box button{width:100%;padding:10px 24px;background:var(--accent);color:var(--white);border:none;font:inherit;font-size:12px;letter-spacing:0.08em;text-transform:lowercase;cursor:pointer}
+.login-error{font-size:12px;color:var(--accent);margin-top:8px;display:none}
+
+/* DASHBOARD */
+#dashboard{display:none}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.logo{font-size:11px;letter-spacing:0.16em;text-transform:lowercase;font-weight:500}
+.logo span{color:var(--accent)}
+.logout-btn{font-size:11px;letter-spacing:0.08em;text-transform:lowercase;color:var(--muted);cursor:pointer;border:none;background:none;font:inherit;padding:4px 0}
+.logout-btn:hover{color:var(--ink)}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:24px 32px}
+.stat{background:var(--white);border:1px solid var(--line);padding:20px 24px}
+.stat-label{font-size:10px;letter-spacing:0.14em;text-transform:lowercase;color:var(--muted);margin-bottom:8px}
+.stat-val{font-size:26px;font-weight:400}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+.section{padding:0 32px 32px}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.pill{font-size:11px;letter-spacing:0.08em;padding:5px 14px;border-radius:999px;border:1px solid var(--line);cursor:pointer;color:var(--muted);background:transparent;font:inherit;text-transform:lowercase;transition:all 0.15s}
+.pill.active{background:var(--accent);color:var(--white);border-color:var(--accent)}
+
+.table-wrap{background:var(--white);border:1px solid var(--line);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{border-bottom:1px solid var(--line)}
+thead th{padding:12px 16px;text-align:left;font-size:10px;letter-spacing:0.12em;text-transform:lowercase;color:var(--muted);font-weight:400}
+tbody tr{border-bottom:1px solid var(--line);cursor:pointer;transition:background 0.1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg)}
+td{padding:14px 16px;vertical-align:middle}
+.ref{font-family:monospace;font-size:12px;color:var(--accent);white-space:nowrap}
+.garment-name{font-weight:500;margin-bottom:2px}
+.garment-sub{font-size:11px;color:var(--muted)}
+.badge{font-size:10px;letter-spacing:0.08em;padding:3px 8px;border-radius:2px;display:inline-block;white-space:nowrap}
+.b-ontvangen{background:#faeeda;color:#854f0b}
+.b-behandeling{background:#e6f1fb;color:#185fa5}
+.b-klaar{background:#eaf3de;color:#3b6d11}
+.b-verzonden{background:#e1f5ee;color:#0f6e56}
+
+/* DETAIL PANEL */
+#detail-panel{position:fixed;top:0;right:0;width:420px;height:100vh;background:var(--white);border-left:1px solid var(--line);transform:translateX(100%);transition:transform 0.25s ease;overflow-y:auto;z-index:20}
+#detail-panel.open{transform:translateX(0)}
+.panel-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white)}
+.panel-ref{font-family:monospace;font-size:14px;color:var(--accent)}
+.close-btn{border:none;background:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
+.panel-body{padding:24px}
+.panel-section{margin-bottom:24px}
+.panel-section-title{font-size:10px;letter-spacing:0.14em;text-transform:lowercase;color:var(--accent);margin-bottom:12px}
+.detail-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}
+.detail-row:last-child{border-bottom:none}
+.detail-label{color:var(--muted)}
+.detail-val{text-align:right;max-width:60%}
+.status-select{width:100%;border:1px solid var(--line);padding:8px 12px;font:inherit;font-size:12px;background:var(--bg);margin-bottom:12px;cursor:pointer;text-transform:lowercase;letter-spacing:0.06em}
+.status-select:focus{outline:none;border-color:var(--accent)}
+.save-btn{width:100%;padding:10px;background:var(--accent);color:var(--white);border:none;font:inherit;font-size:12px;letter-spacing:0.08em;text-transform:lowercase;cursor:pointer}
+.save-btn:hover{opacity:0.85}
+.wa-link{display:block;margin-top:8px;font-size:12px;color:var(--accent);text-decoration:none;letter-spacing:0.04em}
+.wa-link:hover{text-decoration:underline}
+.sc-link{display:block;margin-top:8px;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:0.04em}
+.sc-link:hover{color:var(--ink)}
+
+.empty{padding:48px;text-align:center;color:var(--muted);font-size:13px}
+.loading{padding:48px;text-align:center;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <p class="login-logo"><span>knitfix</span> · studio</p>
+    <h1 class="login-title">inloggen</h1>
+    <input type="password" id="pw-input" placeholder="wachtwoord" onkeydown="if(event.key==='Enter')login()"/>
+    <button onclick="login()">inloggen →</button>
+    <p class="login-error" id="login-error">onjuist wachtwoord</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="logo"><span>knitfix</span> · bestellingen</div>
+    <button class="logout-btn" onclick="logout()">uitloggen</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">totaal</div>
+      <div class="stat-val" id="s-total">—</div>
+      <div class="stat-sub">bestellingen</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">ontvangen</div>
+      <div class="stat-val" id="s-revenue">—</div>
+      <div class="stat-sub">aanbetaling</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">in behandeling</div>
+      <div class="stat-val" id="s-progress">—</div>
+      <div class="stat-sub">reparaties</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">verzonden</div>
+      <div class="stat-val" id="s-shipped">—</div>
+      <div class="stat-sub">klaar</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="filters">
+      <button class="pill active" onclick="filter('all',this)">alle</button>
+      <button class="pill" onclick="filter('ontvangen',this)">ontvangen</button>
+      <button class="pill" onclick="filter('in behandeling',this)">in behandeling</button>
+      <button class="pill" onclick="filter('klaar',this)">klaar</button>
+      <button class="pill" onclick="filter('verzonden',this)">verzonden</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="loading" id="loading">bestellingen laden...</div>
+      <table id="orders-table" style="display:none">
+        <thead>
+          <tr>
+            <th>referentie</th>
+            <th>bestelling</th>
+            <th>klant</th>
+            <th>status</th>
+            <th>bedrag</th>
+            <th>datum</th>
+          </tr>
+        </thead>
+        <tbody id="orders-body"></tbody>
+      </table>
+      <div class="empty" id="empty" style="display:none">geen bestellingen gevonden</div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div id="detail-panel">
+  <div class="panel-header">
+    <span class="panel-ref" id="panel-ref">—</span>
+    <button class="close-btn" onclick="closePanel()">×</button>
+  </div>
+  <div class="panel-body">
+    <div class="panel-section">
+      <p class="panel-section-title">status bijwerken</p>
+      <select class="status-select" id="status-select">
+        <option value="ontvangen">ontvangen</option>
+        <option value="in behandeling">in behandeling</option>
+        <option value="klaar">klaar</option>
+        <option value="verzonden">verzonden</option>
+      </select>
+      <button class="save-btn" onclick="saveStatus()">opslaan →</button>
+    </div>
+    <div class="panel-section">
+      <p class="panel-section-title">bestelling</p>
+      <div id="panel-order"></div>
+    </div>
+    <div class="panel-section">
+      <p class="panel-section-title">klant</p>
+      <div id="panel-customer"></div>
+    </div>
+    <div class="panel-section">
+      <p class="panel-section-title">acties</p>
+      <a id="wa-link" class="wa-link" href="#" target="_blank">→ whatsapp klant</a>
+      <a class="sc-link" href="https://app.sendcloud.com/v2/shipping/create" target="_blank">→ label aanmaken in sendcloud</a>
+    </div>
+  </div>
+</div>
+
+<script>
+let allOrders = [];
+let currentOrder = null;
+let activeFilter = 'all';
+
+function badgeClass(s){
+  if(s==='ontvangen') return 'b-ontvangen';
+  if(s==='in behandeling') return 'b-behandeling';
+  if(s==='klaar') return 'b-klaar';
+  if(s==='verzonden') return 'b-verzonden';
+  return 'b-ontvangen';
+}
+
+async function login(){
+  const pw = document.getElementById('pw-input').value;
+  const err = document.getElementById('login-error');
+  err.style.display='none';
+  const res = await fetch('/api/admin-auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+  if(res.ok){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    loadOrders();
+  } else {
+    err.style.display='block';
+  }
+}
+
+function logout(){
+  document.cookie='kf_session=; Max-Age=0; Path=/';
+  location.reload();
+}
+
+async function loadOrders(){
+  const res = await fetch('/api/admin-orders');
+  if(res.status===401){location.reload();return;}
+  const {orders} = await res.json();
+  allOrders = orders || [];
+  document.getElementById('loading').style.display='none';
+  document.getElementById('orders-table').style.display='table';
+  updateStats();
+  render(allOrders);
+}
+
+function updateStats(){
+  document.getElementById('s-total').textContent = allOrders.length;
+  const rev = allOrders.reduce((a,o)=>a+parseFloat(o.amount),0);
+  document.getElementById('s-revenue').textContent = '€'+rev.toFixed(0);
+  document.getElementById('s-progress').textContent = allOrders.filter(o=>o.status==='in behandeling').length;
+  document.getElementById('s-shipped').textContent = allOrders.filter(o=>o.status==='verzonden').length;
+}
+
+function render(list){
+  const body = document.getElementById('orders-body');
+  const empty = document.getElementById('empty');
+  if(!list.length){body.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  body.innerHTML = list.map(o=>`
+    <tr onclick="openPanel('${o.ref}')">
+      <td><span class="ref">${o.ref}</span></td>
+      <td><div class="garment-name">${o.garment}</div><div class="garment-sub">${o.material} · ${o.damage}</div></td>
+      <td><div class="garment-name">${o.name}</div><div class="garment-sub">${o.email}</div></td>
+      <td><span class="badge ${badgeClass(o.status)}">${o.status}</span></td>
+      <td>€${o.amount}</td>
+      <td style="color:var(--muted)">${o.date}</td>
+    </tr>
+  `).join('');
+}
+
+function filter(status, btn){
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = status;
+  const list = status==='all' ? allOrders : allOrders.filter(o=>o.status===status);
+  render(list);
+}
+
+function openPanel(ref){
+  const o = allOrders.find(x=>x.ref===ref);
+  if(!o) return;
+  currentOrder = o;
+  document.getElementById('panel-ref').textContent = o.ref;
+  document.getElementById('status-select').value = o.status;
+  document.getElementById('panel-order').innerHTML = `
+    <div class="detail-row"><span class="detail-label">kledingstuk</span><span class="detail-val">${o.garment}</span></div>
+    <div class="detail-row"><span class="detail-label">materiaal</span><span class="detail-val">${o.material}</span></div>
+    <div class="detail-row"><span class="detail-label">schade</span><span class="detail-val">${o.damage}</span></div>
+    ${o.description?`<div class="detail-row"><span class="detail-label">omschrijving</span><span class="detail-val">${o.description}</span></div>`:''}
+    <div class="detail-row"><span class="detail-label">stijl</span><span class="detail-val">${o.style}</span></div>
+    <div class="detail-row"><span class="detail-label">aanbetaling</span><span class="detail-val">€${o.amount}</span></div>
+  `;
+  document.getElementById('panel-customer').innerHTML = `
+    <div class="detail-row"><span class="detail-label">naam</span><span class="detail-val">${o.name}</span></div>
+    <div class="detail-row"><span class="detail-label">email</span><span class="detail-val">${o.email}</span></div>
+    ${o.phone?`<div class="detail-row"><span class="detail-label">telefoon</span><span class="detail-val">${o.phone}</span></div>`:''}
+    <div class="detail-row"><span class="detail-label">retouradres</span><span class="detail-val">${o.address}</span></div>
+  `;
+  const waNum = o.phone ? o.phone.replace(/\D/g,'') : '31616120895';
+  document.getElementById('wa-link').href = `https://wa.me/${waNum}?text=Hoi ${o.name.split(' ')[0]}, je bestelling ${o.ref} is klaar!`;
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closePanel(){
+  document.getElementById('detail-panel').classList.remove('open');
+  currentOrder = null;
+}
+
+async function saveStatus(){
+  if(!currentOrder) return;
+  const status = document.getElementById('status-select').value;
+  const btn = document.querySelector('.save-btn');
+  btn.textContent = 'opslaan...';
+  await fetch('/api/admin-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:currentOrder.ref,status})});
+  currentOrder.status = status;
+  const o = allOrders.find(x=>x.ref===currentOrder.ref);
+  if(o) o.status = status;
+  updateStats();
+  filter(activeFilter, document.querySelector('.pill.active'));
+  btn.textContent = 'opgeslagen ✓';
+  setTimeout(()=>btn.textContent='opslaan →', 2000);
+}
+
+document.getElementById('detail-panel').addEventListener('click', e=>{
+  if(e.target===document.getElementById('detail-panel')) closePanel();
+});
+</script>
+</body>
+</html>
