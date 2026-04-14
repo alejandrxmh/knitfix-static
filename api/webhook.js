@@ -18,8 +18,35 @@ function sendcloudAuth() {
   return "Basic " + Buffer.from(`${pub}:${sec}`).toString("base64");
 }
 
+/* resolve shipping method ID by name (or fall back to env var / default) */
+async function resolveShipmentId() {
+  if (process.env.SENDCLOUD_SHIPMENT_ID) {
+    return parseInt(process.env.SENDCLOUD_SHIPMENT_ID);
+  }
+  const targetName = process.env.SENDCLOUD_SHIPMENT_NAME || "PostNL Klein Pakket - 10 liter";
+  try {
+    const res = await fetch(
+      "https://panel.sendcloud.sc/api/v2/shipping_methods?from_country=NL&to_country=NL",
+      { headers: { Authorization: sendcloudAuth() } }
+    );
+    const data = await res.json();
+    const match = data.shipping_methods?.find(m =>
+      m.name.toLowerCase().includes(targetName.toLowerCase())
+    );
+    if (match) {
+      console.log(`Resolved shipment ID ${match.id} for "${match.name}"`);
+      return match.id;
+    }
+  } catch (err) {
+    console.error("Failed to resolve shipment ID:", err.message);
+  }
+  console.warn("Falling back to shipment ID 8");
+  return 8;
+}
+
 /* inbound: customer → knitfix (label goes to customer so they can ship to us) */
 async function createInboundParcel(meta) {
+  const shipmentId = await resolveShipmentId();
   const body = {
     parcel: {
       name:          meta.customer_name,
@@ -31,7 +58,7 @@ async function createInboundParcel(meta) {
       telephone:     meta.customer_phone || "",
       order_number:  meta.reference_code + "-IN",
       weight:        "1.000",
-      shipment:      { id: 8 },
+      shipment:      { id: shipmentId },
       request_label: true,
       /* ship TO knitfix studio */
       to_name:         "KnitFix",
@@ -60,6 +87,7 @@ async function createInboundParcel(meta) {
 
 /* outbound: knitfix → customer (Alejandro prints this when repair is done) */
 async function createOutboundParcel(meta) {
+  const shipmentId = await resolveShipmentId();
   const body = {
     parcel: {
       name:          meta.customer_name,
@@ -71,7 +99,7 @@ async function createOutboundParcel(meta) {
       telephone:     meta.customer_phone || "",
       order_number:  meta.reference_code + "-OUT",
       weight:        "1.000",
-      shipment:      { id: 8 },
+      shipment:      { id: shipmentId },
       request_label: true,
     },
   };
