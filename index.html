@@ -704,4 +704,22 @@
         body: JSON.stringify(collectData()),
       })
         .then(function (res) { return res.json(); })
-        .then(function (json
+        .then(function (json) {
+          if (json.url) {
+            window.location.href = json.url;
+          } else {
+            showError(json.error || "Er is iets misgegaan. Probeer opnieuw.");
+            btn.textContent = "bevestig & betaal →";
+            btn.disabled = false;
+          }
+        })
+        .catch(function () {
+          showError("Er is iets misgegaan. Probeer opnieuw.");
+          btn.textContent = "bevestig & betaal →";
+          btn.disabled = false;
+        });
+    });
+  })();
+  </script>
+</body>
+</html>
