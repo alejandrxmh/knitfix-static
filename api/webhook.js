@@ -1,5 +1,6 @@
 const Stripe = require("stripe");
 const { Resend } = require("resend");
+const createMoneybirdInvoice = require("./moneybird-invoice");
 
 async function getRawBody(req) {
   if (Buffer.isBuffer(req.body)) return req.body;
@@ -132,6 +133,13 @@ module.exports = async function handler(req, res) {
     console.log("Admin email sent");
   } catch (err) {
     console.error("Admin email failed:", err.message);
+  }
+
+  /* create draft Moneybird invoice */
+  try {
+    await createMoneybirdInvoice(meta);
+  } catch (err) {
+    console.error("Moneybird failed:", err.message);
   }
 
   return res.status(200).json({ received: true });
