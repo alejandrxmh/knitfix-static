@@ -187,7 +187,7 @@ td{padding:14px 16px;vertical-align:middle}
         <input type="date" id="ready-by-input" placeholder="klaar op (optioneel)"/>
         <span style="font-size:11px;color:var(--muted)">klaar op</span>
       </div>
-      <button class="save-btn" onclick="saveStatus()">opslaan →</button>
+      <button class="save-btn" id="save-status-btn" onclick="saveStatus()">opslaan →</button>
     </div>
     <div class="panel-section">
       <p class="panel-section-title">bestelling</p>
@@ -375,7 +375,7 @@ async function saveStatus(){
   if(!currentOrder) return;
   const status = document.getElementById('status-select').value;
   const readyBy = document.getElementById('ready-by-input').value;
-  const btn = document.querySelector('.save-btn');
+  const btn = document.getElementById('save-status-btn');
   btn.textContent = 'opslaan...';
   await fetch('/api/admin-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:currentOrder.ref,status,customer_email:currentOrder.email,customer_name:currentOrder.name,ready_by:readyBy||null})});
   currentOrder.status = status;
