@@ -186,6 +186,7 @@ td{padding:14px 16px;vertical-align:middle}
       <p class="panel-section-title">acties</p>
       <a id="wa-link" class="wa-link" href="#" target="_blank">→ whatsapp klant</a>
       <a class="sc-link" href="https://app.sendcloud.com/v2/shipping/create" target="_blank">→ label aanmaken in sendcloud</a>
+      <button class="save-btn" id="review-btn" style="margin-top:12px;background:var(--muted)" onclick="sendReview()">→ recensie vragen</button>
     </div>
   </div>
 </div>
@@ -301,7 +302,7 @@ async function saveStatus(){
   const status = document.getElementById('status-select').value;
   const btn = document.querySelector('.save-btn');
   btn.textContent = 'opslaan...';
-  await fetch('/api/admin-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:currentOrder.ref,status})});
+  await fetch('/api/admin-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:currentOrder.ref,status,customer_email:currentOrder.email,customer_name:currentOrder.name})});
   currentOrder.status = status;
   const o = allOrders.find(x=>x.ref===currentOrder.ref);
   if(o) o.status = status;
@@ -309,6 +310,15 @@ async function saveStatus(){
   filter(activeFilter, document.querySelector('.pill.active'));
   btn.textContent = 'opgeslagen ✓';
   setTimeout(()=>btn.textContent='opslaan →', 2000);
+}
+
+async function sendReview(){
+  if(!currentOrder) return;
+  const btn = document.getElementById('review-btn');
+  btn.textContent = 'verzenden...';
+  await fetch('/api/review-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentOrder.email,name:currentOrder.name,ref:currentOrder.ref})});
+  btn.textContent = 'verzonden ✓';
+  setTimeout(()=>btn.textContent='→ recensie vragen', 3000);
 }
 
 document.getElementById('detail-panel').addEventListener('click', e=>{
