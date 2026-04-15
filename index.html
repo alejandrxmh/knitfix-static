@@ -31,7 +31,7 @@
   <meta property="og:url" content="https://knitfix.nl/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -60,7 +60,7 @@
     .lang-toggle { display: inline-flex; align-items: center; gap: 1px; padding: 3px; border-radius: 999px; border: 1px solid var(--line); }
     .lang-button { border: none; background: transparent; padding: 3px 9px; border-radius: 999px; cursor: pointer; text-transform: lowercase; color: var(--muted); font: inherit; font-size: 11px; transition: background 0.18s, color 0.18s; }
     .lang-button.active { background: var(--accent); color: var(--bg); }
-    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 210; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
+    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 210; }
     .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--ink); transition: transform 0.25s ease, opacity 0.25s ease; }
     .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
     .hamburger.open span:nth-child(2) { opacity: 0; }
@@ -74,31 +74,13 @@
     .nav-mobile-lang button.active { color: var(--accent); }
     @media (max-width: 640px) { .header-left { display: none; } .header-right { display: none; } .hamburger { display: flex; } .nav-mobile { display: flex; } }
 
+    .logo-panel { position: fixed; top: 69px; left: 50%; transform: translateX(-50%) translateY(-8px); background: var(--white); border-radius: 16px; box-shadow: 0 8px 40px rgba(31,24,17,0.12), 0 0 0 1px rgba(31,24,17,0.05); opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.22,1,0.36,1); z-index: 190; min-width: 200px; padding: 8px; }
+    .logo-panel.open { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+    .logo-menu-item { display: block; padding: 11px 20px; font-size: 13px; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); text-decoration: none; border-radius: 10px; transition: background 0.15s, color 0.15s; }
     .logo-menu-item:hover { background: var(--bg); color: var(--accent); }
-    .logo-panel.open { opacity: 1 !important; pointer-events: all !important; transform: translateX(-50%) translateY(0) !important; }
-    .panel-overlay { display: none; position: fixed; inset: 0; z-index: 180; }
+        .panel-overlay { display: none; position: fixed; inset: 0; z-index: 180; }
     .panel-overlay.open { display: block; }
 
-    .panel-services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-    .panel-svc { padding: 0 24px 0 0; border-right: 1px solid var(--line); }
-    .panel-svc:first-child { padding-left: 0; }
-    .panel-svc:nth-child(2) { padding-left: 24px; }
-    .panel-svc:nth-child(3) { padding-left: 24px; }
-    .panel-svc:last-child { border-right: none; padding-left: 24px; padding-right: 0; }
-    .panel-svc-name { font-size: 13px; text-transform: lowercase; letter-spacing: 0.04em; margin-bottom: 6px; }
-    .panel-svc-desc { font-size: 11px; color: var(--muted); line-height: 1.7; }
-    .panel-svc-price { font-size: 11px; color: var(--accent); margin-top: 8px; }
-    @media (max-width: 680px) { .panel-services-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } .panel-svc { border-right: none; padding: 0; } }
-
-    .panel-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
-    .panel-about-text p { font-size: 13px; color: var(--muted); line-height: 1.85; margin-bottom: 14px; }
-    .panel-about-text p:last-child { margin-bottom: 0; }
-    .panel-contact-link { display: flex; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); transition: color 0.18s; }
-    .panel-contact-link:first-child { border-top: 1px solid var(--line); }
-    .panel-contact-link:hover { color: var(--accent); }
-    .panel-contact-label { font-size: 10px; letter-spacing: 0.12em; text-transform: lowercase; width: 72px; flex-shrink: 0; }
-    .panel-contact-val { font-family: ui-monospace, monospace; font-size: 11px; }
-    @media (max-width: 680px) { .panel-about-grid { grid-template-columns: 1fr; gap: 24px; } }
 
     main { flex: 1; }
     section { padding: 88px 28px 72px; border-bottom: 1px solid var(--line); background: var(--bg); }
@@ -259,33 +241,32 @@
 
   <div class="panel-overlay" id="panel-overlay"></div>
 
-  <!-- Logo dropdown -->
-  <div class="logo-panel" id="logo-panel" style="position:fixed;top:69px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--white);border-radius:16px;box-shadow:0 8px 40px rgba(31,24,17,0.12),0 0 0 1px rgba(31,24,17,0.05);opacity:0;pointer-events:none;transition:opacity 0.2s ease,transform 0.26s cubic-bezier(0.22,1,0.36,1);z-index:190;min-width:200px;padding:8px;">
-    <a href="/services.html" class="logo-menu-item t" data-en="services" data-nl="diensten" style="display:block;padding:11px 20px;font-size:13px;letter-spacing:0.04em;text-transform:lowercase;color:var(--ink);text-decoration:none;border-radius:10px;transition:background 0.15s,color 0.15s;">diensten</a>
-    <a href="/about.html" class="logo-menu-item t" data-en="about" data-nl="over" style="display:block;padding:11px 20px;font-size:13px;letter-spacing:0.04em;text-transform:lowercase;color:var(--ink);text-decoration:none;border-radius:10px;transition:background 0.15s,color 0.15s;">over</a>
-  </div>
+<div class="logo-panel" id="logo-panel">
+  <a href="/services.html" class="logo-menu-item t" data-en="services" data-nl="diensten">diensten</a>
+  <a href="/about.html" class="logo-menu-item t" data-en="about" data-nl="over">over</a>
+</div>
 
-  <header>
-    <div class="header-inner">
-        <div class="header-left">
-          <div class="lang-toggle">
-            <button class="lang-button" data-lang="en" type="button">en</button>
-            <button class="lang-button active" data-lang="nl" type="button">nl</button>
-          </div>
-        </div>
-        <div class="header-center">
-          <button class="logo-btn" id="logo-btn" aria-expanded="false" aria-label="knitfix — menu">
-            <img src="/knitfix_logo.png" alt="knitfix" width="56" height="56" style="font-size:0;color:transparent;">
-          </button>
-        </div>
-        <div class="header-right">
-          <a class="cta-pill t" id="cta-pill" href="#book" data-en="book a repair" data-nl="reparatie boeken">reparatie boeken</a>
-        </div>
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="lang-toggle">
+        <button class="lang-button" data-lang="en" type="button">en</button>
+        <button class="lang-button active" data-lang="nl" type="button">nl</button>
+      </div>
     </div>
-    <button class="hamburger" id="hamburger" aria-label="open menu" type="button" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
+    <div class="header-center">
+      <button class="logo-btn" id="logo-btn" aria-expanded="false" aria-label="knitfix — menu">
+        <img src="/knitfix_logo.png" alt="knitfix" width="56" height="56" style="font-size:0;color:transparent;">
+      </button>
+    </div>
+    <div class="header-right">
+      <a class="cta-pill t" id="cta-pill" href="#book" data-en="book a repair" data-nl="reparatie boeken">reparatie boeken</a>
+    </div>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="open menu" type="button">
+    <span></span><span></span><span></span>
+  </button>
+</header>
 
   <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
     <a href="/services.html" class="t" data-en="services" data-nl="diensten"></a>
