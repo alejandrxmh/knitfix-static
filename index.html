@@ -52,7 +52,7 @@
     .header-right { display: flex; align-items: center; justify-content: flex-end; }
     .logo-btn { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.18s, transform 0.18s; }
     .logo-btn:hover, .logo-btn.open { opacity: 0.75; transform: scale(0.95); }
-    .logo-btn img { display: block; width: 40px; height: 40px; }
+    .logo-btn img { display: block; width: 56px; height: 56px; }
     .cta-pill { display: inline-flex; align-items: center; padding: 9px 22px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent) !important; font-size: 12px; letter-spacing: 0.06em; text-transform: lowercase; transition: background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s; white-space: nowrap; }
     .cta-pill:hover { background: var(--accent); color: var(--bg) !important; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(184,92,56,0.22); }
     .lang-toggle { display: inline-flex; align-items: center; gap: 1px; padding: 3px; border-radius: 999px; border: 1px solid var(--line); }
@@ -143,9 +143,12 @@
     .form-textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
     .form-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23918b84'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 6px center; padding-right: 24px; }
     .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); opacity: 0.6; font-size: 13px; }
-    .form-radio-group { display: flex; gap: 28px; padding: 8px 0; flex-wrap: wrap; }
-    .form-radio { display: flex; align-items: center; gap: 9px; cursor: pointer; font-size: 13px; color: var(--ink); }
-    .form-radio input[type="radio"] { width: 14px; height: 14px; accent-color: var(--accent); flex-shrink: 0; }
+    .form-radio-group { display: flex; gap: 10px; padding: 8px 0; flex-wrap: wrap; }
+    .form-radio { cursor: pointer; }
+    .form-radio input[type="radio"] { display: none; }
+    .form-radio span { display: inline-block; padding: 8px 20px; border-radius: 999px; border: 1.5px solid var(--line); font-size: 12px; letter-spacing: 0.04em; text-transform: lowercase; color: var(--muted); background: transparent; transition: all 0.18s; }
+    .form-radio:hover span { border-color: var(--accent); color: var(--accent); }
+    .form-radio input[type="radio"]:checked + span { background: var(--accent); border-color: var(--accent); color: var(--white); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
     .address-heading { font-size: 10px; letter-spacing: 0.14em; text-transform: lowercase; color: var(--muted); border-top: 1px solid var(--line); padding-top: 24px; margin-bottom: 20px; margin-top: 4px; }
@@ -258,7 +261,6 @@
   <div class="logo-panel" id="logo-panel" style="position:fixed;top:69px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--white);border-radius:16px;box-shadow:0 8px 40px rgba(31,24,17,0.12),0 0 0 1px rgba(31,24,17,0.05);opacity:0;pointer-events:none;transition:opacity 0.2s ease,transform 0.26s cubic-bezier(0.22,1,0.36,1);z-index:190;min-width:200px;padding:8px;">
     <a href="/services.html" class="logo-menu-item t" data-en="services" data-nl="diensten" style="display:block;padding:11px 20px;font-size:13px;letter-spacing:0.04em;text-transform:lowercase;color:var(--ink);text-decoration:none;border-radius:10px;transition:background 0.15s,color 0.15s;">diensten</a>
     <a href="/about.html" class="logo-menu-item t" data-en="about" data-nl="over" style="display:block;padding:11px 20px;font-size:13px;letter-spacing:0.04em;text-transform:lowercase;color:var(--ink);text-decoration:none;border-radius:10px;transition:background 0.15s,color 0.15s;">over</a>
-    <a href="#book" class="logo-menu-item t" data-en="book a repair" data-nl="reparatie boeken" style="display:block;padding:11px 20px 14px;font-size:13px;letter-spacing:0.04em;text-transform:lowercase;color:var(--accent);text-decoration:none;border-radius:0 0 8px 8px;transition:background 0.15s,color 0.15s;margin-top:4px;border-top:1px solid var(--line);">reparatie boeken</a>
   </div>
 
   <header>
@@ -272,7 +274,7 @@
         </div>
         <div class="header-center">
           <button class="logo-btn" id="logo-btn" aria-expanded="false" aria-label="knitfix — menu">
-            <img src="/knitfix_logo.png" alt="knitfix" width="40" height="40">
+            <img src="/knitfix_logo.png" alt="knitfix" width="56" height="56">
           </button>
         </div>
         <div class="header-right">
@@ -492,10 +494,7 @@
         </div>
 
         <div class="contact-links">
-          <a href="/cdn-cgi/l/email-protection#167e737a7a79387d787f62707f6e56717b777f7a3875797b" class="contact-link">
-            <span class="contact-link-label">email</span>
-            <span class="contact-link-val"><span class="__cf_email__" data-cfemail="f49c9198989bda9f9a9d80929d8cb49399959d98da979b99">[email&#160;protected]</span></span>
-          </a>
+          <a href="mailto:hello.knitfix@gmail.com" class="contact-link"><span class="contact-link-label">email</span><span class="contact-link-val">hello.knitfix@gmail.com</span></a>
           <a href="https://instagram.com/knitfix.nl" target="_blank" rel="noreferrer" class="contact-link">
             <span class="contact-link-label">instagram</span>
             <span class="contact-link-val">@knitfix.nl</span>
