@@ -150,34 +150,5 @@ module.exports = async function handler(req, res) {
     console.error("Admin email failed:", err.message);
   }
 
-  /* notify Make.com for Moneybird automation */
-  if (process.env.MAKE_WEBHOOK_URL) {
-    try {
-      await fetch(process.env.MAKE_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          reference_code:     meta.reference_code,
-          customer_name:      meta.customer_name,
-          customer_email:     meta.customer_email,
-          customer_phone:     meta.customer_phone || "",
-          garment_type:       meta.garment_type,
-          material:           meta.material,
-          damage_type:        meta.damage_type,
-          damage_description: meta.damage_description || "",
-          repair_preference:  meta.repair_preference,
-          street:             meta.street,
-          house_number:       meta.house_number,
-          postal_code:        meta.postal_code,
-          city:               meta.city,
-          amount:             "30.00",
-        }),
-      });
-      console.log("Make.com webhook triggered");
-    } catch (err) {
-      console.error("Make.com webhook failed:", err.message);
-    }
-  }
-
   return res.status(200).json({ received: true });
 };
