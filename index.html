@@ -51,10 +51,10 @@
     .header-center { display: flex; justify-content: center; }
     .header-right { display: flex; align-items: center; justify-content: flex-end; }
 
-    .logo-btn { background: none; border: none; cursor: pointer; font: inherit; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 12px; border-radius: 10px; transition: background 0.18s; }
-    .logo-btn:hover, .logo-btn.open { background: rgba(184,92,56,0.07); }
-    .logo-btn-name { font-size: 14px; letter-spacing: 0.12em; text-transform: lowercase; color: var(--ink); }
-    .logo-btn-sub { font-size: 9px; letter-spacing: 0.13em; text-transform: lowercase; color: var(--muted); }
+    .logo-btn { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px; transition: opacity 0.18s, transform 0.18s; }
+    .logo-btn:hover { opacity: 0.78; transform: scale(0.96); }
+    .logo-btn.open { opacity: 0.78; transform: scale(0.96); }
+    .logo-btn img { display: block; width: 40px; height: 40px; border-radius: 10px; }
 
     .cta-pill { display: inline-flex; align-items: center; padding: 9px 22px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent) !important; font-size: 12px; letter-spacing: 0.06em; text-transform: lowercase; transition: background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s; white-space: nowrap; }
     .cta-pill:hover { background: var(--accent); color: var(--bg) !important; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(184,92,56,0.22); }
@@ -192,9 +192,8 @@ to   { transform: translateX(-50%); }
           </div>
         </div>
         <div class="header-center">
-          <button class="logo-btn" id="logo-btn" aria-expanded="false" aria-controls="logo-panel">
-            <span class="logo-btn-name">knitfix</span>
-            <span class="logo-btn-sub t" data-en="knitwear repair studio" data-nl="breiwerk reparatie atelier">breiwerk reparatie atelier</span>
+          <button class="logo-btn" id="logo-btn" aria-expanded="false" aria-controls="logo-panel" aria-label="knitfix — menu">
+            <img src="/knitfix_logo.jpg" alt="knitfix" width="40" height="40">
           </button>
         </div>
         <div class="header-right">
