@@ -65,8 +65,8 @@ module.exports = async function createMoneybirdInvoice(meta) {
           prices_are_incl_tax: true,
           details_attributes: [
             {
-              description: `KnitFix reparatie aanbetaling — ${meta.garment_type} (${meta.material})\nReferentie: ${meta.reference_code}`,
-              price:        "30.00",
+              description: meta._override_description || `KnitFix reparatie aanbetaling — ${meta.garment_type} (${meta.material})\nReferentie: ${meta.reference_code}`,
+              price:        meta._override_price || "30.00",
               amount:       "1",
               tax_rate_id:  process.env.MONEYBIRD_TAX_RATE_ID || null,
               ledger_account_id: process.env.MONEYBIRD_LEDGER_ID || null,
