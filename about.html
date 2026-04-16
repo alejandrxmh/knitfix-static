@@ -32,19 +32,21 @@
     .lang-toggle { display: inline-flex; align-items: center; gap: 1px; padding: 3px; border-radius: 999px; border: 1px solid var(--line); }
     .lang-button { border: none; background: transparent; padding: 3px 9px; border-radius: 999px; cursor: pointer; text-transform: lowercase; color: var(--muted); font: inherit; font-size: 11px; transition: background 0.18s, color 0.18s; }
     .lang-button.active { background: var(--accent); color: var(--bg); }
-    .hamburger { display: none; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 210; }
-    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--ink); transition: transform 0.25s ease, opacity 0.25s ease; }
-    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-    .nav-mobile { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 190; flex-direction: column; align-items: center; justify-content: center; gap: 36px; opacity: 0; pointer-events: none; transition: opacity 0.28s ease; }
-    .nav-mobile.open { opacity: 1; pointer-events: all; }
-    .nav-mobile a { font-size: 22px; text-transform: lowercase; letter-spacing: 0.06em; color: var(--ink); }
-    .nav-mobile .cta-pill { font-size: 14px; padding: 10px 28px; }
-    .nav-mobile-lang { display: flex; gap: 16px; margin-top: 8px; }
-    .nav-mobile-lang button { border: none; background: none; font: inherit; font-size: 14px; letter-spacing: 0.08em; color: var(--muted); cursor: pointer; text-transform: lowercase; }
-    .nav-mobile-lang button.active { color: var(--accent); }
-    @media (max-width: 640px) { .header-left { display: none; } .header-right { display: none; } .hamburger { display: flex; } .nav-mobile { display: flex; } } }
+    @media (max-width: 600px) {
+      .header-inner { height: 60px; padding: 0 16px; }
+      .nav-link { display: none; }
+      .lang-toggle { display: none; }
+    }
+    @media (max-width: 380px) {
+      .cta-pill { padding: 7px 14px; font-size: 11px; }
+    } .header-right { display: none; } .hamburger { display: flex; } .nav-mobile { display: flex; } }
+    main { flex: 1; }
+    .page-hero { padding: 80px 28px 64px; border-bottom: 1px solid var(--line); max-width: var(--max); margin: 0 auto; }
+    .page-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; color: var(--accent-lt); margin-bottom: 14px; }
+    .page-title { font-size: clamp(30px, 4vw, 48px); font-weight: 300; line-height: 1.15; letter-spacing: 0.02em; }
+    .about-body { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; padding: 64px 0; border-bottom: 1px solid var(--line); }
+    @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; gap: 40px; padding: 48px 0; } }
     .about-text p { font-size: 15px; color: var(--soft); line-height: 1.85; margin-bottom: 20px; }
     .about-text p:last-child { margin-bottom: 0; }
     .about-text strong { color: var(--ink); font-weight: 500; }
@@ -106,20 +108,9 @@
       <a class="cta-pill t" href="/#book" data-en="book a repair" data-nl="reparatie boeken">reparatie boeken</a>
     </div>
   </div>
-  <button class="hamburger" id="hamburger" aria-label="open menu" type="button">
-    <span></span><span></span><span></span>
-  </button>
 </header>
 
-<div class="nav-mobile" id="nav-mobile" aria-hidden="true">
-  <a href="/services.html" class="t" data-en="services" data-nl="diensten"></a>
-  <a href="/about.html" class="t" data-en="about" data-nl="over"></a>
-  <a class="cta-pill t" href="/#book" data-en="book a repair" data-nl="reparatie boeken"></a>
-  <div class="nav-mobile-lang">
-    <button class="lang-button" data-lang="en" type="button">en</button>
-    <button class="lang-button active" data-lang="nl" type="button">nl</button>
-  </div>
-</div>
+
 
 <main>
   <div class="page-hero">
