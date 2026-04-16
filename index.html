@@ -43,24 +43,24 @@
     a { color: inherit; text-decoration: none; }
     h1, h2 { font-weight: normal; letter-spacing: 0.04em; }
     h1 { line-height: 1.2; }
-    .page { min-height: 100vh; display: flex; flex-direction: column; }
     .shell { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
 
     header { position: sticky; top: 0; z-index: 200; background: rgba(247,242,237,0.97); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-bottom: 1px solid rgba(237,233,227,0.6); }
-    .header-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 64px; max-width: var(--max); margin: 0 auto; padding: 0 28px; }
-    .header-left { display: flex; align-items: center; }
+    .header-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 72px; max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+    .header-left { display: flex; align-items: center; gap: 20px; }
     .header-center { display: flex; justify-content: center; }
     .header-right { display: flex; align-items: center; justify-content: flex-end; }
-    .logo-btn { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.18s, transform 0.18s; }
-    .logo-btn:hover, .logo-btn.open { opacity: 0.75; transform: scale(0.95); }
-    .logo-btn { width: 56px; height: 56px; }
-    .logo-btn img { display: block; width: 56px; height: 56px; font-size: 0; color: transparent; }
+    .logo-link { display: flex; align-items: center; transition: opacity 0.18s; }
+    .logo-link:hover { opacity: 0.75; }
+    .logo-link img { display: block; width: 68px; height: 68px; }
+    .nav-link { font-size: 12px; letter-spacing: 0.06em; text-transform: lowercase; color: var(--muted); transition: color 0.18s; white-space: nowrap; }
+    .nav-link:hover { color: var(--accent); }
     .cta-pill { display: inline-flex; align-items: center; padding: 9px 22px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent) !important; font-size: 12px; letter-spacing: 0.06em; text-transform: lowercase; transition: background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s; white-space: nowrap; }
     .cta-pill:hover { background: var(--accent); color: var(--bg) !important; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(184,92,56,0.22); }
     .lang-toggle { display: inline-flex; align-items: center; gap: 1px; padding: 3px; border-radius: 999px; border: 1px solid var(--line); }
     .lang-button { border: none; background: transparent; padding: 3px 9px; border-radius: 999px; cursor: pointer; text-transform: lowercase; color: var(--muted); font: inherit; font-size: 11px; transition: background 0.18s, color 0.18s; }
     .lang-button.active { background: var(--accent); color: var(--bg); }
-    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 210; }
+    .hamburger { display: none; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 210; }
     .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--ink); transition: transform 0.25s ease, opacity 0.25s ease; }
     .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
     .hamburger.open span:nth-child(2) { opacity: 0; }
@@ -72,14 +72,8 @@
     .nav-mobile-lang { display: flex; gap: 16px; margin-top: 8px; }
     .nav-mobile-lang button { border: none; background: none; font: inherit; font-size: 14px; letter-spacing: 0.08em; color: var(--muted); cursor: pointer; text-transform: lowercase; }
     .nav-mobile-lang button.active { color: var(--accent); }
-    @media (max-width: 640px) { .header-left { display: none; } .header-right { display: none; } .hamburger { display: flex; } .nav-mobile { display: flex; } }
+    @media (max-width: 640px) { .header-left { display: none; } .header-right { display: none; } .hamburger { display: flex; } .nav-mobile { display: flex; } } .header-right { display: none; } .hamburger { display: flex; } .nav-mobile { display: flex; } }
 
-    .logo-panel { position: fixed; top: 69px; left: 50%; transform: translateX(-50%) translateY(-8px); background: var(--white); border-radius: 16px; box-shadow: 0 8px 40px rgba(31,24,17,0.12), 0 0 0 1px rgba(31,24,17,0.05); opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.22,1,0.36,1); z-index: 190; min-width: 200px; padding: 8px; }
-    .logo-panel.open { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
-    .logo-menu-item { display: block; padding: 11px 20px; font-size: 13px; letter-spacing: 0.04em; text-transform: lowercase; color: var(--ink); text-decoration: none; border-radius: 10px; transition: background 0.15s, color 0.15s; }
-    .logo-menu-item:hover { background: var(--bg); color: var(--accent); }
-        .panel-overlay { display: none; position: fixed; inset: 0; z-index: 180; }
-    .panel-overlay.open { display: block; }
 
 
     main { flex: 1; }
@@ -237,14 +231,6 @@
   </script>
 </head>
 <body>
-<div class="page">
-
-  <div class="panel-overlay" id="panel-overlay"></div>
-
-<div class="logo-panel" id="logo-panel">
-  <a href="/services.html" class="logo-menu-item t" data-en="services" data-nl="diensten">diensten</a>
-  <a href="/about.html" class="logo-menu-item t" data-en="about" data-nl="over">over</a>
-</div>
 
 <header>
   <div class="header-inner">
@@ -253,14 +239,16 @@
         <button class="lang-button" data-lang="en" type="button">en</button>
         <button class="lang-button active" data-lang="nl" type="button">nl</button>
       </div>
+      <a href="/services.html" class="nav-link t" data-en="services" data-nl="diensten">diensten</a>
+      <a href="/about.html" class="nav-link t" data-en="about" data-nl="over">over</a>
     </div>
     <div class="header-center">
-      <button class="logo-btn" id="logo-btn" aria-expanded="false" aria-label="knitfix — menu">
-        <img src="/knitfix_logo.png" alt="knitfix" width="56" height="56" style="font-size:0;color:transparent;">
-      </button>
+      <a href="/" class="logo-link" aria-label="knitfix — home">
+        <img src="/knitfix_logo.png" alt="knitfix" width="68" height="68" style="font-size:0;color:transparent;">
+      </a>
     </div>
     <div class="header-right">
-      <a class="cta-pill t" id="cta-pill" href="#book" data-en="book a repair" data-nl="reparatie boeken">reparatie boeken</a>
+      <a class="cta-pill t" href="#book" data-en="book a repair" data-nl="reparatie boeken">reparatie boeken</a>
     </div>
   </div>
   <button class="hamburger" id="hamburger" aria-label="open menu" type="button">
@@ -268,15 +256,15 @@
   </button>
 </header>
 
-  <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
-    <a href="/services.html" class="t" data-en="services" data-nl="diensten"></a>
-    <a href="/about.html" class="t" data-en="about" data-nl="over"></a>
-    <a class="cta-pill t" id="cta-pill-mobile" href="#book" data-en="book a repair" data-nl="reparatie boeken"></a>
-    <div class="nav-mobile-lang">
-      <button class="lang-button" data-lang="en" type="button">en</button>
-      <button class="lang-button active" data-lang="nl" type="button">nl</button>
-    </div>
+<div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+  <a href="/services.html" class="t" data-en="services" data-nl="diensten"></a>
+  <a href="/about.html" class="t" data-en="about" data-nl="over"></a>
+  <a class="cta-pill t" href="#book" data-en="book a repair" data-nl="reparatie boeken"></a>
+  <div class="nav-mobile-lang">
+    <button class="lang-button" data-lang="en" type="button">en</button>
+    <button class="lang-button active" data-lang="nl" type="button">nl</button>
   </div>
+</div>
 
   <main>
 
@@ -502,9 +490,7 @@
     </div>
   </footer>
 
-</div>
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
   (function () {
@@ -522,18 +508,6 @@
     setLang(init);
   })();
 
-  (function () {
-    var overlay = document.getElementById("panel-overlay");
-    var btn = document.getElementById("logo-btn");
-    var panel = document.getElementById("logo-panel");
-    var open = false;
-    function close() { open = false; btn.classList.remove("open"); panel.classList.remove("open"); overlay.classList.remove("open"); btn.setAttribute("aria-expanded","false"); }
-    function openIt() { open = true; btn.classList.add("open"); panel.classList.add("open"); overlay.classList.add("open"); btn.setAttribute("aria-expanded","true"); }
-    btn.addEventListener("click", function(e){ e.stopPropagation(); open ? close() : openIt(); });
-    overlay.addEventListener("click", close);
-    document.addEventListener("keydown", function(e){ if(e.key==="Escape") close(); });
-    document.querySelectorAll(".cta-pill, #logo-panel a").forEach(function(el){ el.addEventListener("click", close); });
-  })();
 
   (function () {
     var btn = document.getElementById("hamburger");
