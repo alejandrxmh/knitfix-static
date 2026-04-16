@@ -35,13 +35,13 @@
     .logo-link img { display: block; width: 68px; height: 68px; }
     .nav-link { font-size: 12px; letter-spacing: 0.06em; text-transform: lowercase; color: var(--muted); transition: color 0.18s; white-space: nowrap; }
     .nav-link:hover { color: var(--accent); }
-    .cta-pill { display: inline-flex; align-items: center; padding: 9px 22px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent); font-size: 12px; letter-spacing: 0.06em; text-transform: lowercase; transition: background 0.18s, color 0.18s, transform 0.18s; white-space: nowrap; }
-    .cta-pill:hover { background: var(--accent); color: var(--bg); transform: translateY(-1px); }
+    .cta-pill { display: inline-flex; align-items: center; padding: 9px 22px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent) !important; font-size: 12px; letter-spacing: 0.06em; text-transform: lowercase; transition: background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s; white-space: nowrap; }
+    .cta-pill:hover { background: var(--accent); color: var(--bg) !important; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(184,92,56,0.22); }
     .lang-toggle { display: inline-flex; align-items: center; gap: 1px; padding: 3px; border-radius: 999px; border: 1px solid var(--line); }
     .lang-button { border: none; background: transparent; padding: 3px 9px; border-radius: 999px; cursor: pointer; text-transform: lowercase; color: var(--muted); font: inherit; font-size: 11px; transition: background 0.18s, color 0.18s; }
     .lang-button.active { background: var(--accent); color: var(--bg); }
+    @media (max-width: 600px) { .nav-link { display: none; } .lang-toggle { display: none; } .header-inner { height: 60px; padding: 0 16px; } }
 
-    /* ── content ── */
     .page { max-width: 680px; margin: 0 auto; padding: 72px 28px 96px; }
 
     .eyebrow {
