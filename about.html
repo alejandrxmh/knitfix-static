@@ -32,14 +32,8 @@
     .lang-toggle { display: inline-flex; align-items: center; gap: 1px; padding: 3px; border-radius: 999px; border: 1px solid var(--line); }
     .lang-button { border: none; background: transparent; padding: 3px 9px; border-radius: 999px; cursor: pointer; text-transform: lowercase; color: var(--muted); font: inherit; font-size: 11px; transition: background 0.18s, color 0.18s; }
     .lang-button.active { background: var(--accent); color: var(--bg); }
-    @media (max-width: 600px) {
-      .header-inner { height: 60px; padding: 0 16px; }
-      .nav-link { display: none; }
-      .lang-toggle { display: none; }
-    }
-    @media (max-width: 380px) {
-      .cta-pill { padding: 7px 14px; font-size: 11px; }
-    } .header-right { display: none; } .hamburger { display: flex; } .nav-mobile { display: flex; } }
+    @media (max-width: 600px) { .nav-link { display: none; } .lang-toggle { display: none; } .header-inner { height: 60px; padding: 0 16px; } }
+
     main { flex: 1; }
     .page-hero { padding: 80px 28px 64px; border-bottom: 1px solid var(--line); max-width: var(--max); margin: 0 auto; }
     .page-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; color: var(--accent-lt); margin-bottom: 14px; }
