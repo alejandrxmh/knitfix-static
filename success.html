@@ -10,8 +10,8 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f4f2f0; --ink: #20201f; --muted: #918b84;
-      --line: #ded6cf; --accent: #b85c38;
+      --bg: #f7f2ed; --ink: #1f1811; --soft: #7a5e50; --muted: #b0998a;
+      --line: #ede9e3; --accent: #b85c38; --note: #fdf8f5; --white: #fff;
     }
     body {
       font-family: "Jost", system-ui, sans-serif;
@@ -23,12 +23,14 @@
     }
     .card {
       max-width: 480px; width: 100%;
-      border: 1px solid var(--line);
-      background: #fff;
+      border-radius: 20px;
+      background: var(--white);
+      box-shadow: 0 4px 32px rgba(31,24,17,0.09), 0 0 0 1px rgba(31,24,17,0.05);
     }
     .card-top {
       padding: 36px 40px 28px;
       border-bottom: 1px solid var(--line);
+      border-radius: 20px 20px 0 0;
     }
     .eyebrow {
       font-size: 10px; letter-spacing: 0.16em;
@@ -42,7 +44,7 @@
     .card-body { padding: 28px 40px; }
 
     .ref-box {
-      background: var(--bg); padding: 20px 24px; margin-bottom: 28px;
+      background: var(--note); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 20px 24px; margin-bottom: 28px;
     }
     .ref-label {
       font-size: 10px; letter-spacing: 0.14em;
@@ -69,7 +71,7 @@
 
     .wa-btn {
       display: inline-flex; align-items: center; gap: 8px;
-      background: var(--accent); color: #f4f2f0;
+      background: var(--accent); color: var(--bg);
       border: 1px solid var(--accent); border-radius: 999px;
       padding: 10px 22px; font: inherit; font-size: 13px;
       text-transform: lowercase; text-decoration: none;
@@ -156,5 +158,10 @@
   }
 </script>
 
+  <div style="margin-top:24px;text-align:center;">
+    <a href="/" style="display:inline-flex;align-items:center;opacity:0.6;transition:opacity 0.18s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">
+      <img src="/knitfix_logo.png" alt="knitfix" width="32" height="32" style="font-size:0;color:transparent;">
+    </a>
+  </div>
 </body>
 </html>
