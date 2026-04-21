@@ -12,6 +12,7 @@
     "api/admin-auth.js":           { "maxDuration": 10 },
     "api/review-email.js":         { "maxDuration": 10 },
     "api/admin-quote.js":          { "maxDuration": 15 },
-    "api/admin-final-invoice.js":  { "maxDuration": 15 }
+    "api/admin-final-invoice.js":  { "maxDuration": 15 },
+    "api/admin-send-label.js":     { "maxDuration": 15 }
   }
 }
