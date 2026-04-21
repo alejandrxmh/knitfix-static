@@ -8,7 +8,7 @@ function authCheck(req) {
 }
 
 // ─── Design tokens (mirrored from admin-status.js) ───────────────────────────
-const LOGO_URL  = "https://knitfix.nl/knitfix_logo.jpg";
+const LOGO_URL  = "https://knitfix.nl/knitfix_logo.png";
 const F         = "'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 const BG        = "#f7f2ed";
 const WHITE     = "#ffffff";
@@ -33,8 +33,8 @@ function labelEmailHtml(name, ref, trackingCode) {
 <table width="540" cellpadding="0" cellspacing="0" border="0" style="max-width:540px;width:100%;">
 
   <tr><td style="padding-bottom:28px;text-align:center;">
-    <img src="${LOGO_URL}" width="64" height="64" alt="KnitFix"
-      style="display:block;margin:0 auto;border-radius:14px;">
+    <img src="${LOGO_URL}" width="120" alt="KnitFix"
+      style="display:block;margin:0 auto;">
   </td></tr>
 
   <tr><td style="background-color:${WHITE};border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(40,20,10,0.08);">
