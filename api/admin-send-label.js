@@ -186,6 +186,7 @@ module.exports = async function handler(req, res) {
   const { fields, files } = parseMultipart(body, boundary);
   const ref = fields.ref;
   const trackingCode = fields.tracking_code;
+  const overrideEmail = (fields.override_email || "").trim();
   const pdf = files.label;
 
   if (!ref || !trackingCode || !pdf) {
@@ -197,11 +198,16 @@ module.exports = async function handler(req, res) {
   const session = sessions.data.find((s) => s.metadata?.reference_code === ref);
   if (!session) return res.status(404).json({ error: "Order not found" });
 
-  const email = session.metadata?.customer_email;
   const fullName = session.metadata?.customer_name || "";
   const name = fullName.split(" ")[0] || "";
 
+  // Override email wins if provided; otherwise use the one saved on the order
+  const email = overrideEmail || session.metadata?.customer_email;
+
   if (!email) return res.status(400).json({ error: "No customer email on this order" });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: "Email address looks invalid" });
+  }
 
   // Send the email with PDF attached
   try {
@@ -238,5 +244,21 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  return res.status(200).json({ ok: true });
+  // If an override email was used, persist it to the checkout session metadata
+  // so future emails (status updates, final invoice, review) go to the right address
+  if (overrideEmail && overrideEmail !== session.metadata?.customer_email) {
+    try {
+      await stripe.checkout.sessions.update(session.id, {
+        metadata: {
+          ...session.metadata,
+          customer_email: overrideEmail,
+        },
+      });
+    } catch (err) {
+      console.error("Could not persist override email to session metadata:", err.message);
+      // non-fatal — the label was sent successfully
+    }
+  }
+
+  return res.status(200).json({ ok: true, sent_to: email });
 };
