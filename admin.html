@@ -227,7 +227,7 @@ td{padding:14px 16px;vertical-align:middle}
     <div class="panel-section">
       <p class="panel-section-title">acties</p>
       <a id="wa-link" class="wa-link" href="#" target="_blank">→ whatsapp klant</a>
-      <a class="sc-link" href="https://app.sendcloud.com/v2/shipping/create" target="_blank">→ label aanmaken in sendcloud</a>
+      <button class="save-btn" id="send-label-btn" style="margin-top:0" onclick="openSendLabel()">→ verzendlabel sturen</button>
       <button class="save-btn" id="review-btn" style="margin-top:12px;background:var(--muted)" onclick="sendReview()">→ recensie vragen</button>
       <button class="save-btn" id="final-invoice-btn" style="margin-top:8px" onclick="openFinalInvoice()">→ stuur eindfactuur</button>
     </div>
@@ -254,6 +254,32 @@ td{padding:14px 16px;vertical-align:middle}
     </div>
     <button id="fi-send-btn" class="modal-btn" onclick="sendFinalInvoice()">verstuur eindfactuur →</button>
     <p id="fi-msg" class="modal-msg"></p>
+  </div>
+</div>
+
+<!-- SEND LABEL MODAL -->
+<div id="send-label-panel" class="modal-overlay">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header">
+      <div>
+        <p class="modal-label">knitfix</p>
+        <h2 class="modal-title">verzendlabel sturen</h2>
+      </div>
+      <button class="modal-close" onclick="closeSendLabel()">×</button>
+    </div>
+    <div id="sl-order-summary" class="modal-summary"></div>
+
+    <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;font-weight:500">PostNL label (PDF)</label>
+    <label for="sl-file" style="display:block;padding:14px;border:1.5px dashed var(--line);border-radius:10px;text-align:center;cursor:pointer;font-size:13px;color:var(--soft);margin-bottom:14px">
+      <span id="sl-file-name">kies PDF…</span>
+    </label>
+    <input id="sl-file" type="file" accept="application/pdf" style="display:none" onchange="onSlFileChange()"/>
+
+    <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;font-weight:500">tracking code (3S…)</label>
+    <input id="sl-tracking" type="text" placeholder="3SOPKA844772776" class="modal-input" style="text-transform:uppercase"/>
+
+    <button id="sl-send-btn" class="modal-btn" onclick="sendLabel()">verstuur label →</button>
+    <p id="sl-msg" class="modal-msg"></p>
   </div>
 </div>
 
@@ -375,6 +401,7 @@ function openPanel(ref){
     ${o.description?`<div class="detail-row"><span class="detail-label">omschrijving</span><span class="detail-val">${o.description}</span></div>`:''}
     <div class="detail-row"><span class="detail-label">stijl</span><span class="detail-val">${o.style}</span></div>
     <div class="detail-row"><span class="detail-label">aanbetaling</span><span class="detail-val">€${o.amount}</span></div>
+    ${o.inbound_tracking?`<div class="detail-row"><span class="detail-label">tracking</span><span class="detail-val">${o.inbound_tracking}</span></div>`:''}
   `;
   document.getElementById('panel-customer').innerHTML = `
     <div class="detail-row"><span class="detail-label">naam</span><span class="detail-val">${o.name}</span></div>
@@ -490,6 +517,59 @@ async function sendReview(){
   btn.textContent = 'verzonden ✓';
   setTimeout(()=>btn.textContent='→ recensie vragen', 3000);
 }
+
+function openSendLabel(){
+  if(!currentOrder) return;
+  document.getElementById('sl-order-summary').innerHTML =
+    `<div class="modal-preview-row"><span style="color:var(--muted)">klant</span><span>${currentOrder.name}</span></div>
+     <div class="modal-preview-row"><span style="color:var(--muted)">email</span><span style="font-size:12px">${currentOrder.email}</span></div>
+     <div class="modal-preview-row"><span style="color:var(--muted)">ref</span><span>${currentOrder.ref}</span></div>`;
+  document.getElementById('sl-file').value = '';
+  document.getElementById('sl-file-name').textContent = 'kies PDF…';
+  document.getElementById('sl-tracking').value = currentOrder.inbound_tracking || '';
+  document.getElementById('sl-msg').style.display = 'none';
+  document.getElementById('send-label-panel').classList.add('active');
+}
+function closeSendLabel(){
+  document.getElementById('send-label-panel').classList.remove('active');
+}
+function onSlFileChange(){
+  const f = document.getElementById('sl-file').files[0];
+  document.getElementById('sl-file-name').textContent = f ? f.name : 'kies PDF…';
+}
+async function sendLabel(){
+  if(!currentOrder) return;
+  const file = document.getElementById('sl-file').files[0];
+  const tracking = document.getElementById('sl-tracking').value.trim().toUpperCase();
+  const msg = document.getElementById('sl-msg');
+  const btn = document.getElementById('sl-send-btn');
+  if(!file){ msg.textContent = 'kies eerst een PDF'; msg.style.display='block'; return; }
+  if(!tracking){ msg.textContent = 'tracking code is verplicht'; msg.style.display='block'; return; }
+  btn.textContent = 'verzenden...'; btn.disabled = true; msg.style.display = 'none';
+  const form = new FormData();
+  form.append('ref', currentOrder.ref);
+  form.append('tracking_code', tracking);
+  form.append('label', file);
+  try {
+    const res = await fetch('/api/admin-send-label', { method:'POST', body: form });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Verzenden mislukt');
+    currentOrder.inbound_tracking = tracking;
+    const o = allOrders.find(x=>x.ref===currentOrder.ref);
+    if(o) o.inbound_tracking = tracking;
+    btn.textContent = 'verzonden ✓';
+    setTimeout(()=>{ closeSendLabel(); btn.textContent='verstuur label →'; btn.disabled=false; }, 1200);
+  } catch(err){
+    msg.textContent = err.message;
+    msg.style.display = 'block';
+    btn.textContent = 'verstuur label →';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('send-label-panel').addEventListener('click', e=>{
+  if(e.target===document.getElementById('send-label-panel')) closeSendLabel();
+});
 
 document.getElementById('detail-panel').addEventListener('click', e=>{
   if(e.target===document.getElementById('detail-panel')) closePanel();
