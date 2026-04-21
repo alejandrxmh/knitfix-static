@@ -102,6 +102,8 @@ module.exports = async function handler(req, res) {
     const shippedAt  = pi?.metadata?.kf_shipped_at ? parseInt(pi.metadata.kf_shipped_at) : null;
     const reviewSent = pi?.metadata?.kf_review_sent === "true";
     const readyBy    = pi?.metadata?.kf_ready_by || null;
+    const inboundTracking  = pi?.metadata?.kf_inbound_tracking  || null;
+    const inboundLabelSent = pi?.metadata?.kf_inbound_label_sent ? parseInt(pi.metadata.kf_inbound_label_sent) : null;
 
     /* auto-send review email 14 days after verzonden */
     if (status === "verzonden" && shippedAt && !reviewSent && (now - shippedAt) >= fourteenDays) {
@@ -140,6 +142,8 @@ module.exports = async function handler(req, res) {
       status,
       ready_by:    readyBy,
       review_sent: reviewSent,
+      inbound_tracking:   inboundTracking,
+      inbound_label_sent: inboundLabelSent,
     });
   }
 
