@@ -278,6 +278,12 @@ td{padding:14px 16px;vertical-align:middle}
     <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;font-weight:500">tracking code (3S…)</label>
     <input id="sl-tracking" type="text" placeholder="3SOPKA844772776" class="modal-input" style="text-transform:uppercase"/>
 
+    <p id="sl-override-toggle" style="margin:4px 0 12px;font-size:12px;color:var(--accent);cursor:pointer;text-align:right" onclick="toggleSlOverride()">→ email anders dan bestelling?</p>
+    <div id="sl-override-wrap" style="display:none">
+      <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;font-weight:500">verstuur naar (vervangt opgeslagen email)</label>
+      <input id="sl-override-email" type="email" placeholder="nieuw@voorbeeld.com" class="modal-input"/>
+    </div>
+
     <button id="sl-send-btn" class="modal-btn" onclick="sendLabel()">verstuur label →</button>
     <p id="sl-msg" class="modal-msg"></p>
   </div>
@@ -405,7 +411,7 @@ function openPanel(ref){
   `;
   document.getElementById('panel-customer').innerHTML = `
     <div class="detail-row"><span class="detail-label">naam</span><span class="detail-val">${o.name}</span></div>
-    <div class="detail-row"><span class="detail-label">email</span><span class="detail-val">${o.email}</span></div>
+    <div class="detail-row"><span class="detail-label">email</span><span class="detail-val" style="cursor:pointer;border-bottom:1px dashed var(--line)" onclick="editEmail()" title="klik om te bewerken">${o.email} ✎</span></div>
     ${o.phone?`<div class="detail-row"><span class="detail-label">telefoon</span><span class="detail-val">${o.phone}</span></div>`:''}
     <div class="detail-row"><span class="detail-label">retouradres</span><span class="detail-val">${o.address}</span></div>
   `;
@@ -518,6 +524,33 @@ async function sendReview(){
   setTimeout(()=>btn.textContent='→ recensie vragen', 3000);
 }
 
+async function editEmail(){
+  if(!currentOrder) return;
+  const current = currentOrder.email || '';
+  const next = prompt('Nieuw email adres voor deze klant:', current);
+  if(!next || next === current) return;
+  const clean = next.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)){
+    alert('Email adres lijkt ongeldig');
+    return;
+  }
+  try {
+    const res = await fetch('/api/admin-update-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ref: currentOrder.ref, email: clean})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Bijwerken mislukt');
+    currentOrder.email = clean;
+    const o = allOrders.find(x=>x.ref===currentOrder.ref);
+    if(o) o.email = clean;
+    openPanel(currentOrder.ref);
+  } catch(err){
+    alert(err.message);
+  }
+}
+
 function openSendLabel(){
   if(!currentOrder) return;
   document.getElementById('sl-order-summary').innerHTML =
@@ -527,11 +560,19 @@ function openSendLabel(){
   document.getElementById('sl-file').value = '';
   document.getElementById('sl-file-name').textContent = 'kies PDF…';
   document.getElementById('sl-tracking').value = currentOrder.inbound_tracking || '';
+  document.getElementById('sl-override-email').value = '';
+  document.getElementById('sl-override-wrap').style.display = 'none';
+  document.getElementById('sl-override-toggle').style.display = 'block';
   document.getElementById('sl-msg').style.display = 'none';
   document.getElementById('send-label-panel').style.display = 'flex';
 }
 function closeSendLabel(){
   document.getElementById('send-label-panel').style.display = 'none';
+}
+function toggleSlOverride(){
+  document.getElementById('sl-override-wrap').style.display = 'block';
+  document.getElementById('sl-override-toggle').style.display = 'none';
+  document.getElementById('sl-override-email').focus();
 }
 function onSlFileChange(){
   const f = document.getElementById('sl-file').files[0];
@@ -541,6 +582,7 @@ async function sendLabel(){
   if(!currentOrder) return;
   const file = document.getElementById('sl-file').files[0];
   const tracking = document.getElementById('sl-tracking').value.trim().toUpperCase();
+  const override = document.getElementById('sl-override-email').value.trim();
   const msg = document.getElementById('sl-msg');
   const btn = document.getElementById('sl-send-btn');
   if(!file){ msg.textContent = 'kies eerst een PDF'; msg.style.display='block'; return; }
@@ -550,6 +592,7 @@ async function sendLabel(){
   form.append('ref', currentOrder.ref);
   form.append('tracking_code', tracking);
   form.append('label', file);
+  if(override) form.append('override_email', override);
   try {
     const res = await fetch('/api/admin-send-label', { method:'POST', body: form });
     const data = await res.json();
@@ -557,6 +600,10 @@ async function sendLabel(){
     currentOrder.inbound_tracking = tracking;
     const o = allOrders.find(x=>x.ref===currentOrder.ref);
     if(o) o.inbound_tracking = tracking;
+    if(override){
+      currentOrder.email = override;
+      if(o) o.email = override;
+    }
     btn.textContent = 'verzonden ✓';
     setTimeout(()=>{ closeSendLabel(); btn.textContent='verstuur label →'; btn.disabled=false; }, 1200);
   } catch(err){
