@@ -47,14 +47,28 @@ function labelEmailHtml(name, ref, trackingCode) {
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr><td style="padding:32px 40px 12px;">
-      <p style="margin:0 0 18px;font-family:${F};font-size:14px;color:${INK};line-height:1.7;">Hoi ${name}, je voorafbetaalde verzendlabel zit als PDF bij deze e-mail. Volg de drie stappen hieronder om je kledingstuk op te sturen.</p>
+      <p style="margin:0 0 18px;font-family:${F};font-size:14px;color:${INK};line-height:1.7;">Hoi ${name}, je verzending is geregeld. Hieronder vind je alles wat je nodig hebt om je kledingstuk op te sturen — zonder printer.</p>
 
-      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 20px;">
+      <p style="margin:22px 0 10px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${ACCENT_LT};">inpakken</p>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 4px;">
         <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
-          <span style="color:${ACCENT};font-weight:500;">01</span> &nbsp; print het label en plak het stevig op je pakket
+          &bull; &nbsp; een padded envelop of klein doosje is prima — breiwerk is zacht en heeft geen bubbeltjesplastic nodig
         </td></tr>
         <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
-          <span style="color:${ACCENT};font-weight:500;">02</span> &nbsp; lever het in bij een willekeurig PostNL-punt
+          &bull; &nbsp; was het stuk niet vooraf — ik wil het zien zoals jij het draagt
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
+          &bull; &nbsp; check zakken en voering op spullen die je niet kwijt wilt
+        </td></tr>
+      </table>
+
+      <p style="margin:22px 0 10px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${ACCENT_LT};">naar PostNL</p>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;">
+        <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
+          <span style="color:${ACCENT};font-weight:500;">01</span> &nbsp; neem je pakket mee naar een willekeurig PostNL-punt
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
+          <span style="color:${ACCENT};font-weight:500;">02</span> &nbsp; toon de PDF op je telefoon of noem trackingcode <strong style="color:${INK};">${trackingCode}</strong> — de medewerker print het label voor je
         </td></tr>
         <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
           <span style="color:${ACCENT};font-weight:500;">03</span> &nbsp; volg je pakket via <a href="${trackingUrl}" style="color:${ACCENT};text-decoration:none;font-weight:500;">${trackingCode}</a>
@@ -68,7 +82,7 @@ function labelEmailHtml(name, ref, trackingCode) {
         style="background-color:${NOTE_BG};border-radius:10px;border-left:3px solid ${ACCENT};">
         <tr><td style="padding:16px 20px;">
           <p style="margin:0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.65;">
-            Geen printer? Reageer op deze e-mail en ik stuur je een versie met QR-code — dan laat je hem op het PostNL-punt scannen.
+            Heb je een printer en plak je het label liever zelf? Print de bijgevoegde PDF op A4 en plak hem op het pakket.
           </p>
         </td></tr>
       </table>
