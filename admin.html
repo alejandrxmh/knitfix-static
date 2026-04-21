@@ -528,10 +528,10 @@ function openSendLabel(){
   document.getElementById('sl-file-name').textContent = 'kies PDF…';
   document.getElementById('sl-tracking').value = currentOrder.inbound_tracking || '';
   document.getElementById('sl-msg').style.display = 'none';
-  document.getElementById('send-label-panel').classList.add('active');
+  document.getElementById('send-label-panel').style.display = 'flex';
 }
 function closeSendLabel(){
-  document.getElementById('send-label-panel').classList.remove('active');
+  document.getElementById('send-label-panel').style.display = 'none';
 }
 function onSlFileChange(){
   const f = document.getElementById('sl-file').files[0];
