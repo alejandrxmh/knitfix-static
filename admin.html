@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -10,115 +10,191 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --ink:#1f1811;
-  --bg:#f7f2ed;
-  --white:#fff;
-  --accent:#b85c38;
-  --accent-lt:#c8714a;
-  --muted:#b0998a;
-  --soft:#7a5e50;
-  --line:#ede9e3;
+  /* KnitFix editorial tokens */
+  --ink:#1a1714;
+  --linen:#f5f2ee;
+  --parchment:#e8e3db;
+  --white:#ffffff;
+  --terracotta:#b85c38;
+  --clay:#d4795a;
+  --ember:#8a3e22;
+  --stone:#7a7269;
+  --dust:#c9c3b8;
   --note:#fdf8f5;
+  --success:#3b6d11;
+  --success-bg:#eaf3de;
   --font:'Jost',sans-serif
 }
-body{font-family:var(--font);background:var(--bg);color:var(--ink);min-height:100vh}
+body{font-family:var(--font);background:var(--linen);color:var(--ink);min-height:100vh;font-weight:400}
 
-/* ── LOGIN ── */
+/* ── LOGIN ───────────────────────────────────────────────────────────── */
 #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-.login-box{background:var(--white);border-radius:20px;box-shadow:0 4px 24px rgba(40,20,10,0.10);padding:48px 40px;max-width:360px;width:100%}
-.login-logo{font-size:11px;letter-spacing:0.16em;text-transform:lowercase;color:var(--muted);margin-bottom:6px}
-.login-logo span{color:var(--accent)}
-.login-title{font-size:22px;font-weight:300;margin-bottom:32px;color:var(--ink)}
-.login-box input{width:100%;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);padding:11px 14px;font:inherit;font-size:13px;margin-bottom:12px;outline:none;color:var(--ink);transition:border-color 0.15s}
-.login-box input:focus{border-color:var(--accent)}
-.login-box button{width:100%;padding:12px 24px;background:var(--accent);color:var(--white);border:none;border-radius:10px;font:inherit;font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:lowercase;cursor:pointer;transition:opacity 0.15s}
-.login-box button:hover{opacity:0.88}
-.login-error{font-size:12px;color:var(--accent);margin-top:8px;display:none}
+.login-box{background:var(--white);border:0.5px solid var(--dust);border-radius:14px;padding:48px 40px;max-width:360px;width:100%}
+.login-logo{font-size:11px;letter-spacing:0.16em;text-transform:lowercase;color:var(--stone);margin-bottom:6px}
+.login-logo span{color:var(--terracotta)}
+.login-title{font-size:22px;font-weight:400;margin-bottom:32px;color:var(--ink)}
+.login-box input{width:100%;border:1px solid var(--dust);border-radius:8px;background:var(--linen);padding:11px 14px;font:inherit;font-size:13px;margin-bottom:12px;outline:none;color:var(--ink);transition:border-color 0.15s}
+.login-box input:focus{border-color:var(--terracotta)}
+.login-box button{width:100%;padding:12px 24px;background:var(--ink);color:var(--white);border:none;border-radius:8px;font:inherit;font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:lowercase;cursor:pointer;transition:background 0.15s}
+.login-box button:hover{background:var(--terracotta)}
+.login-error{font-size:12px;color:var(--terracotta);margin-top:8px;display:none}
 
-/* ── DASHBOARD ── */
+/* ── DASHBOARD ──────────────────────────────────────────────────────── */
 #dashboard{display:none}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;box-shadow:0 1px 8px rgba(40,20,10,0.05)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--white);border-bottom:0.5px solid var(--dust);position:sticky;top:0;z-index:10}
 .logo{font-size:12px;letter-spacing:0.16em;text-transform:lowercase;font-weight:500}
-.logo span{color:var(--accent)}
-.logout-btn{font-size:11px;letter-spacing:0.08em;text-transform:lowercase;color:var(--muted);cursor:pointer;border:none;background:none;font:inherit;padding:4px 0;transition:color 0.15s}
+.logo span{color:var(--terracotta)}
+.topbar-actions{display:flex;gap:12px;align-items:center}
+.logout-btn{font-size:11px;letter-spacing:0.08em;text-transform:lowercase;color:var(--stone);cursor:pointer;border:none;background:none;font:inherit;padding:4px 0;transition:color 0.15s}
 .logout-btn:hover{color:var(--ink)}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:24px 28px}
-.stat{background:var(--white);border-radius:14px;box-shadow:0 2px 10px rgba(40,20,10,0.06);padding:22px 24px}
-.stat-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:500}
-.stat-val{font-size:28px;font-weight:300;color:var(--ink)}
-.stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px 28px 8px}
+.stat{background:var(--white);border:0.5px solid var(--dust);border-radius:12px;padding:18px 22px}
+.stat-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--stone);margin-bottom:8px;font-weight:500}
+.stat-val{font-size:26px;font-weight:400;color:var(--ink);line-height:1.1}
+.stat-sub{font-size:11px;color:var(--stone);margin-top:4px}
 
-.section{padding:0 28px 32px}
-.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.pill{font-size:11px;letter-spacing:0.08em;padding:6px 16px;border-radius:999px;border:1.5px solid var(--line);cursor:pointer;color:var(--muted);background:transparent;font:inherit;text-transform:lowercase;transition:all 0.15s}
-.pill.active{background:var(--accent);color:var(--white);border-color:var(--accent)}
-.pill:hover:not(.active){border-color:var(--accent);color:var(--accent)}
+.section{padding:20px 28px 32px}
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;letter-spacing:0.06em;padding:7px 14px;border-radius:999px;border:0.5px solid var(--dust);cursor:pointer;color:var(--stone);background:transparent;font:inherit;transition:all 0.15s}
+.pill.active{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.pill:hover:not(.active){border-color:var(--ink);color:var(--ink)}
+.pill .pill-count{display:inline-block;margin-left:6px;padding:1px 6px;background:var(--parchment);color:var(--stone);border-radius:999px;font-size:10px;font-weight:500}
+.pill.active .pill-count{background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8)}
+.filter-spacer{flex:1}
+.archive-toggle{font-size:11px;letter-spacing:0.06em;color:var(--stone);cursor:pointer;border:none;background:none;font:inherit;padding:6px 0;transition:color 0.15s;display:flex;align-items:center;gap:6px}
+.archive-toggle:hover{color:var(--ink)}
+.archive-toggle.on{color:var(--terracotta)}
+.archive-toggle-dot{width:6px;height:6px;border-radius:50%;background:var(--dust)}
+.archive-toggle.on .archive-toggle-dot{background:var(--terracotta)}
 
-.table-wrap{background:var(--white);border-radius:14px;box-shadow:0 2px 10px rgba(40,20,10,0.06);overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead tr{border-bottom:1px solid var(--line)}
-thead th{padding:12px 16px;text-align:left;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
-tbody tr{border-bottom:1px solid var(--line);cursor:pointer;transition:background 0.1s}
+.table-wrap{background:var(--white);border:0.5px solid var(--dust);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+thead tr{border-bottom:0.5px solid var(--dust);background:var(--linen)}
+thead th{padding:11px 14px;text-align:left;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--stone);font-weight:500}
+tbody tr{border-bottom:0.5px solid var(--parchment);cursor:pointer;transition:background 0.1s}
 tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:var(--bg)}
-td{padding:14px 16px;vertical-align:middle}
-.ref{font-family:monospace;font-size:12px;color:var(--accent);white-space:nowrap}
-.garment-name{font-weight:500;margin-bottom:2px}
-.garment-sub{font-size:11px;color:var(--muted)}
-.badge{font-size:10px;letter-spacing:0.07em;padding:4px 10px;border-radius:999px;display:inline-block;white-space:nowrap;font-weight:500}
-.b-ontvangen{background:#faeeda;color:#854f0b}
-.b-behandeling{background:#e6f1fb;color:#185fa5}
-.b-klaar{background:#eaf3de;color:#3b6d11}
-.b-verzonden{background:#e1f5ee;color:#0f6e56}
+tbody tr:hover{background:var(--linen)}
+tbody tr.archived-row{opacity:0.55}
+td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
+.ref{font-family:'SFMono-Regular',monospace;font-size:12px;color:var(--terracotta);white-space:nowrap}
+.garment-name{font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.garment-sub{font-size:11px;color:var(--stone);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ── DETAIL PANEL ── */
-#detail-panel{position:fixed;top:0;right:0;width:420px;height:100vh;background:var(--white);border-left:1px solid var(--line);box-shadow:-4px 0 24px rgba(40,20,10,0.08);transform:translateX(100%);transition:transform 0.25s ease;overflow-y:auto;z-index:20}
+/* Column widths */
+.col-ref{width:100px}
+.col-order{width:auto}
+.col-customer{width:20%}
+.col-next{width:180px}
+.col-amount{width:80px}
+.col-date{width:70px}
+
+/* Status + next-action combo in table */
+.next-action{display:flex;flex-direction:column;gap:3px}
+.next-action-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--stone);font-weight:500}
+.next-action-text{font-size:12px;color:var(--ink);font-weight:500;display:flex;align-items:center;gap:6px}
+.next-action-text.done{color:var(--success);font-weight:400}
+.next-action-text.todo::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--terracotta);flex-shrink:0}
+.next-action-text.done::before{content:'\2713';color:var(--success);font-size:11px;flex-shrink:0}
+
+/* ── DETAIL PANEL ───────────────────────────────────────────────────── */
+#detail-panel{position:fixed;top:0;right:0;width:440px;height:100vh;background:var(--white);border-left:0.5px solid var(--dust);box-shadow:-4px 0 24px rgba(26,23,20,0.06);transform:translateX(100%);transition:transform 0.25s ease;overflow-y:auto;z-index:20}
 #detail-panel.open{transform:translateX(0)}
-.panel-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white)}
-.panel-ref{font-family:monospace;font-size:14px;color:var(--accent)}
-.close-btn{border:none;background:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1;transition:color 0.15s}
+.panel-header{padding:18px 24px;border-bottom:0.5px solid var(--parchment);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:2}
+.panel-ref{font-family:'SFMono-Regular',monospace;font-size:13px;color:var(--terracotta)}
+.panel-header-right{display:flex;align-items:center;gap:12px}
+.archive-btn{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);border:0.5px solid var(--dust);background:transparent;padding:5px 10px;border-radius:6px;cursor:pointer;font:inherit;font-weight:500;transition:all 0.15s}
+.archive-btn:hover{color:var(--terracotta);border-color:var(--terracotta)}
+.archive-btn.is-archived{color:var(--terracotta);border-color:var(--terracotta)}
+.close-btn{border:none;background:none;font-size:22px;cursor:pointer;color:var(--stone);line-height:1;transition:color 0.15s;padding:0}
 .close-btn:hover{color:var(--ink)}
-.panel-body{padding:24px}
-.panel-section{margin-bottom:24px}
-.panel-section-title{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent-lt);margin-bottom:12px;font-weight:600}
-.detail-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.panel-body{padding:0 24px 32px}
+
+/* ── STEPPER ────────────────────────────────────────────────────────── */
+.stepper{padding:24px 0 20px;display:flex;align-items:flex-start;gap:0}
+.step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;min-width:0}
+.step-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;position:relative;z-index:2;flex-shrink:0;transition:all 0.2s}
+.step-dot.done{background:var(--ink);color:var(--linen)}
+.step-dot.current{background:var(--terracotta);color:var(--white);box-shadow:0 0 0 4px rgba(184,92,56,0.15)}
+.step-dot.future{background:var(--white);border:1px solid var(--dust);color:var(--stone)}
+.step-dot.skipped{background:var(--white);border:1px dashed var(--dust);color:var(--dust)}
+.step-line{position:absolute;top:12px;left:50%;right:-50%;height:1.5px;background:var(--dust);z-index:1}
+.step-line.done{background:var(--ink)}
+.step-line.skipped{background:var(--dust);opacity:0.5}
+.step:last-child .step-line{display:none}
+.step-label{font-size:10px;letter-spacing:0.04em;color:var(--ink);margin-top:8px;font-weight:500;text-align:center;line-height:1.3;max-width:68px}
+.step-label.faded{color:var(--stone);font-weight:400}
+.step-time{font-size:9px;color:var(--stone);margin-top:2px;text-align:center}
+
+/* Primary action CTA */
+.primary-action-wrap{background:var(--note);border:0.5px solid var(--parchment);border-radius:10px;padding:16px;margin:8px 0 24px}
+.primary-action-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--stone);margin-bottom:8px;font-weight:500}
+.primary-action-btn{width:100%;padding:13px;background:var(--terracotta);color:var(--white);border:none;border-radius:8px;font:inherit;font-size:13px;font-weight:500;letter-spacing:0.04em;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.primary-action-btn:hover{background:var(--ember)}
+.primary-action-btn:disabled{opacity:0.6;cursor:not-allowed}
+.primary-action-btn.completed{background:var(--success);cursor:default}
+.primary-action-btn.archived{background:var(--stone)}
+.primary-action-hint{font-size:11px;color:var(--stone);margin-top:8px;line-height:1.5}
+
+/* Secondary actions */
+.secondary-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+.secondary-btn{padding:10px 12px;background:var(--white);color:var(--ink);border:0.5px solid var(--dust);border-radius:8px;font:inherit;font-size:12px;cursor:pointer;transition:all 0.15s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center}
+.secondary-btn:hover{border-color:var(--ink);background:var(--linen)}
+.secondary-btn.full{grid-column:1 / -1}
+.secondary-btn .arrow{color:var(--stone);font-size:11px}
+
+/* Info sections */
+.panel-section{margin-bottom:20px}
+.panel-section-title{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--stone);margin-bottom:10px;font-weight:500}
+.detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--parchment);font-size:13px;gap:16px}
 .detail-row:last-child{border-bottom:none}
-.detail-label{color:var(--muted)}
-.detail-val{text-align:right;max-width:60%}
-.status-select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font:inherit;font-size:12px;background:var(--bg);margin-bottom:12px;cursor:pointer;text-transform:lowercase;letter-spacing:0.06em;color:var(--ink);outline:none;transition:border-color 0.15s}
-.status-select:focus{border-color:var(--accent)}
-.save-btn{width:100%;padding:11px;background:var(--accent);color:var(--white);border:none;border-radius:10px;font:inherit;font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:lowercase;cursor:pointer;transition:opacity 0.15s}
-.save-btn:hover{opacity:0.88}
-.wa-link{display:block;margin-top:10px;font-size:12px;color:var(--accent);text-decoration:none;letter-spacing:0.04em}
-.wa-link:hover{text-decoration:underline}
-.sc-link{display:block;margin-top:8px;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:0.04em}
-.sc-link:hover{color:var(--ink)}
+.detail-label{color:var(--stone);flex-shrink:0}
+.detail-val{text-align:right;word-break:break-word}
+.detail-val.editable{cursor:pointer;border-bottom:1px dashed var(--dust)}
+.detail-val.editable:hover{border-bottom-color:var(--terracotta);color:var(--terracotta)}
 
-.ready-by-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
-.ready-by-row input[type=date]{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:12px;background:var(--bg);color:var(--ink);outline:none;transition:border-color 0.15s}
-.ready-by-row input[type=date]:focus{border-color:var(--accent)}
-.loading{padding:48px;text-align:center;color:var(--muted);font-size:13px}
+/* Advanced / manual status override */
+.advanced-toggle{font-size:11px;color:var(--stone);cursor:pointer;padding:8px 0;display:flex;align-items:center;gap:6px;border:none;background:none;font:inherit}
+.advanced-toggle:hover{color:var(--ink)}
+.advanced-toggle-arrow{transition:transform 0.2s;display:inline-block;font-size:9px}
+.advanced-toggle.open .advanced-toggle-arrow{transform:rotate(90deg)}
+.advanced-panel{display:none;padding:12px 0;border-top:0.5px solid var(--parchment);margin-top:4px}
+.advanced-panel.open{display:block}
+.advanced-field{margin-bottom:10px}
+.advanced-field label{display:block;font-size:11px;color:var(--stone);margin-bottom:4px}
+.advanced-field select,.advanced-field input{width:100%;border:0.5px solid var(--dust);border-radius:6px;padding:8px 10px;font:inherit;font-size:12px;background:var(--white);color:var(--ink);outline:none}
+.advanced-field select:focus,.advanced-field input:focus{border-color:var(--terracotta)}
+.advanced-save{width:100%;padding:9px;background:var(--white);color:var(--ink);border:0.5px solid var(--ink);border-radius:6px;font:inherit;font-size:11px;font-weight:500;letter-spacing:0.06em;cursor:pointer;text-transform:uppercase;margin-top:4px}
+.advanced-save:hover{background:var(--ink);color:var(--white)}
 
-/* ── MODALS ── */
-.modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(31,24,17,0.45);display:none;align-items:center;justify-content:center;z-index:30}
-.modal-box{background:var(--white);border-radius:20px;box-shadow:0 8px 40px rgba(40,20,10,0.16);width:100%;padding:36px;position:relative}
-.modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
-.modal-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:500}
-.modal-title{font-size:20px;font-weight:300;margin:0;color:var(--ink)}
-.modal-close{border:none;background:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1;padding:0;transition:color 0.15s}
+.loading{padding:48px;text-align:center;color:var(--stone);font-size:13px}
+
+/* ── MODALS (same behavior, re-styled) ──────────────────────────────── */
+.modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(26,23,20,0.45);display:none;align-items:center;justify-content:center;z-index:30;padding:20px}
+.modal-box{background:var(--white);border-radius:14px;box-shadow:0 8px 40px rgba(26,23,20,0.18);width:100%;padding:32px;position:relative}
+.modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
+.modal-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--stone);margin:0 0 4px;font-weight:500}
+.modal-title{font-size:20px;font-weight:400;margin:0;color:var(--ink)}
+.modal-close{border:none;background:none;font-size:22px;cursor:pointer;color:var(--stone);line-height:1;padding:0;transition:color 0.15s}
 .modal-close:hover{color:var(--ink)}
-.modal-input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:13px;background:var(--bg);color:var(--ink);margin-bottom:10px;outline:none;transition:border-color 0.15s}
-.modal-input:focus{border-color:var(--accent)}
-.modal-summary{background:var(--note);border-radius:10px;border-left:3px solid var(--accent);padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--soft)}
-.modal-preview{background:var(--note);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;display:none}
+.modal-input{width:100%;border:0.5px solid var(--dust);border-radius:8px;padding:10px 12px;font:inherit;font-size:13px;background:var(--white);color:var(--ink);margin-bottom:10px;outline:none;transition:border-color 0.15s}
+.modal-input:focus{border-color:var(--terracotta)}
+.modal-field-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--stone);display:block;margin-bottom:6px;font-weight:500}
+.modal-summary{background:var(--note);border-radius:8px;border-left:3px solid var(--terracotta);padding:14px 16px;margin-bottom:16px;font-size:13px;color:var(--ink)}
+.modal-preview{background:var(--linen);border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:13px;display:none}
 .modal-preview-row{display:flex;justify-content:space-between;margin-bottom:4px}
-.modal-preview-total{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px;margin-top:6px;font-weight:500}
-.modal-btn{width:100%;padding:12px;background:var(--accent);color:var(--white);border:none;border-radius:10px;font:inherit;font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:lowercase;cursor:pointer;transition:opacity 0.15s}
-.modal-btn:hover{opacity:0.88}
-.modal-msg{font-size:12px;margin:10px 0 0;display:none}
-.new-quote-btn{border:1.5px solid var(--accent);color:var(--accent);padding:6px 16px;border-radius:999px;font:inherit;font-size:11px;letter-spacing:0.08em;text-transform:lowercase;cursor:pointer;background:transparent;transition:all 0.15s}
-.new-quote-btn:hover{background:var(--accent);color:var(--white)}
+.modal-preview-total{display:flex;justify-content:space-between;border-top:0.5px solid var(--dust);padding-top:8px;margin-top:6px;font-weight:500}
+.modal-btn{width:100%;padding:12px;background:var(--terracotta);color:var(--white);border:none;border-radius:8px;font:inherit;font-size:13px;font-weight:500;letter-spacing:0.04em;cursor:pointer;transition:background 0.15s}
+.modal-btn:hover{background:var(--ember)}
+.modal-msg{font-size:12px;margin:10px 0 0;display:none;text-align:center}
+.new-quote-btn{border:0.5px solid var(--ink);color:var(--ink);padding:7px 16px;border-radius:999px;font:inherit;font-size:11px;letter-spacing:0.06em;cursor:pointer;background:transparent;transition:all 0.15s}
+.new-quote-btn:hover{background:var(--ink);color:var(--white)}
+
+@media (max-width:860px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  #detail-panel{width:100%}
+  .col-next{display:none}
+}
 </style>
 </head>
 <body>
@@ -127,70 +203,77 @@ td{padding:14px 16px;vertical-align:middle}
 <div id="login-screen">
   <div class="login-box">
     <p class="login-logo"><span>knitfix</span> · studio</p>
-    <h1 class="login-title">inloggen</h1>
-    <input type="password" id="pw-input" placeholder="wachtwoord" onkeydown="if(event.key==='Enter')login()"/>
-    <button onclick="login()">inloggen →</button>
-    <p class="login-error" id="login-error">onjuist wachtwoord</p>
+    <h1 class="login-title">Sign in</h1>
+    <input type="password" id="pw-input" placeholder="password" onkeydown="if(event.key==='Enter')login()"/>
+    <button onclick="login()">Sign in &rarr;</button>
+    <p class="login-error" id="login-error">Incorrect password</p>
   </div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard">
   <div class="topbar">
-    <div class="logo"><span>knitfix</span> · bestellingen</div>
-    <div style="display:flex;gap:12px;align-items:center">
-      <button class="new-quote-btn" onclick="toggleQuotePanel()">+ nieuwe offerte</button>
-      <button class="logout-btn" onclick="logout()">uitloggen</button>
+    <div class="logo"><span>knitfix</span> · orders</div>
+    <div class="topbar-actions">
+      <button class="new-quote-btn" onclick="toggleQuotePanel()">+ new quote</button>
+      <button class="logout-btn" onclick="logout()">Sign out</button>
     </div>
   </div>
 
   <div class="stats">
     <div class="stat">
-      <div class="stat-label">totaal</div>
-      <div class="stat-val" id="s-total">—</div>
-      <div class="stat-sub">bestellingen</div>
+      <div class="stat-label">Total</div>
+      <div class="stat-val" id="s-total">&mdash;</div>
+      <div class="stat-sub">active orders</div>
     </div>
     <div class="stat">
-      <div class="stat-label">ontvangen</div>
-      <div class="stat-val" id="s-revenue">—</div>
-      <div class="stat-sub">aanbetaling</div>
+      <div class="stat-label">Needs action</div>
+      <div class="stat-val" id="s-action">&mdash;</div>
+      <div class="stat-sub">waiting on you</div>
     </div>
     <div class="stat">
-      <div class="stat-label">in behandeling</div>
-      <div class="stat-val" id="s-progress">—</div>
-      <div class="stat-sub">reparaties</div>
+      <div class="stat-label">In progress</div>
+      <div class="stat-val" id="s-progress">&mdash;</div>
+      <div class="stat-sub">repairs active</div>
     </div>
     <div class="stat">
-      <div class="stat-label">verzonden</div>
-      <div class="stat-val" id="s-shipped">—</div>
-      <div class="stat-sub">klaar</div>
+      <div class="stat-label">Revenue</div>
+      <div class="stat-val" id="s-revenue">&mdash;</div>
+      <div class="stat-sub">deposits received</div>
     </div>
   </div>
 
   <div class="section">
-    <div class="filters">
-      <button class="pill active" onclick="filter('all',this)">alle</button>
-      <button class="pill" onclick="filter('ontvangen',this)">ontvangen</button>
-      <button class="pill" onclick="filter('in behandeling',this)">in behandeling</button>
-      <button class="pill" onclick="filter('klaar',this)">klaar</button>
-      <button class="pill" onclick="filter('verzonden',this)">verzonden</button>
+    <div class="filter-bar">
+      <button class="pill active" data-filter="all" onclick="filter('all',this)">All <span class="pill-count" id="c-all">0</span></button>
+      <button class="pill" data-filter="action" onclick="filter('action',this)">Needs action <span class="pill-count" id="c-action">0</span></button>
+      <button class="pill" data-filter="ontvangen" onclick="filter('ontvangen',this)">Received <span class="pill-count" id="c-ontvangen">0</span></button>
+      <button class="pill" data-filter="in behandeling" onclick="filter('in behandeling',this)">In progress <span class="pill-count" id="c-behandeling">0</span></button>
+      <button class="pill" data-filter="klaar" onclick="filter('klaar',this)">Ready <span class="pill-count" id="c-klaar">0</span></button>
+      <button class="pill" data-filter="verzonden" onclick="filter('verzonden',this)">Shipped <span class="pill-count" id="c-verzonden">0</span></button>
+      <div class="filter-spacer"></div>
+      <button class="archive-toggle" id="archive-toggle" onclick="toggleArchived()">
+        <span class="archive-toggle-dot"></span>
+        <span id="archive-toggle-text">Show archived</span>
+      </button>
     </div>
+
     <div class="table-wrap">
-      <div class="loading" id="loading">bestellingen laden...</div>
+      <div class="loading" id="loading">Loading orders...</div>
       <table id="orders-table" style="display:none">
         <thead>
           <tr>
-            <th>referentie</th>
-            <th>bestelling</th>
-            <th>klant</th>
-            <th>status</th>
-            <th>bedrag</th>
-            <th>datum</th>
+            <th class="col-ref">Ref</th>
+            <th class="col-order">Order</th>
+            <th class="col-customer">Customer</th>
+            <th class="col-next">Next step</th>
+            <th class="col-amount">Deposit</th>
+            <th class="col-date">Date</th>
           </tr>
         </thead>
         <tbody id="orders-body"></tbody>
       </table>
-      <div class="empty" id="empty" style="display:none;padding:40px;text-align:center;color:var(--muted);font-size:13px">geen bestellingen gevonden</div>
+      <div class="empty" id="empty" style="display:none;padding:40px;text-align:center;color:var(--stone);font-size:13px">No orders found</div>
     </div>
   </div>
 </div>
@@ -198,38 +281,59 @@ td{padding:14px 16px;vertical-align:middle}
 <!-- DETAIL PANEL -->
 <div id="detail-panel">
   <div class="panel-header">
-    <span class="panel-ref" id="panel-ref">—</span>
-    <button class="close-btn" onclick="closePanel()">×</button>
-  </div>
-  <div class="panel-body">
-    <div class="panel-section">
-      <p class="panel-section-title">status bijwerken</p>
-      <select class="status-select" id="status-select">
-        <option value="ontvangen">ontvangen</option>
-        <option value="in behandeling">in behandeling</option>
-        <option value="klaar">klaar</option>
-        <option value="verzonden">verzonden</option>
-      </select>
-      <div class="ready-by-row">
-        <input type="date" id="ready-by-input"/>
-        <span style="font-size:11px;color:var(--muted)">klaar op</span>
-      </div>
-      <button class="save-btn" id="save-status-btn" onclick="saveStatus()">opslaan →</button>
+    <span class="panel-ref" id="panel-ref">&mdash;</span>
+    <div class="panel-header-right">
+      <button class="archive-btn" id="archive-btn" onclick="toggleArchive()">Archive</button>
+      <button class="close-btn" onclick="closePanel()">&times;</button>
     </div>
+  </div>
+
+  <div class="panel-body">
+    <!-- Stepper -->
+    <div class="stepper" id="stepper"></div>
+
+    <!-- Primary next action -->
+    <div class="primary-action-wrap">
+      <div class="primary-action-label" id="primary-action-label">Next step</div>
+      <button class="primary-action-btn" id="primary-action-btn" onclick="doPrimaryAction()">&mdash;</button>
+      <div class="primary-action-hint" id="primary-action-hint"></div>
+    </div>
+
+    <!-- Secondary actions (always-available tools) -->
+    <div class="secondary-actions" id="secondary-actions"></div>
+
+    <!-- Order info -->
     <div class="panel-section">
-      <p class="panel-section-title">bestelling</p>
+      <p class="panel-section-title">Order</p>
       <div id="panel-order"></div>
     </div>
+
+    <!-- Customer info -->
     <div class="panel-section">
-      <p class="panel-section-title">klant</p>
+      <p class="panel-section-title">Customer</p>
       <div id="panel-customer"></div>
     </div>
-    <div class="panel-section">
-      <p class="panel-section-title">acties</p>
-      <a id="wa-link" class="wa-link" href="#" target="_blank">→ whatsapp klant</a>
-      <button class="save-btn" id="send-label-btn" style="margin-top:0" onclick="openSendLabel()">→ verzendlabel sturen</button>
-      <button class="save-btn" id="review-btn" style="margin-top:12px;background:var(--muted)" onclick="sendReview()">→ recensie vragen</button>
-      <button class="save-btn" id="final-invoice-btn" style="margin-top:8px" onclick="openFinalInvoice()">→ stuur eindfactuur</button>
+
+    <!-- Advanced: manual status override -->
+    <button class="advanced-toggle" id="advanced-toggle" onclick="toggleAdvanced()">
+      <span class="advanced-toggle-arrow">&#9656;</span>
+      <span>Manual status override</span>
+    </button>
+    <div class="advanced-panel" id="advanced-panel">
+      <div class="advanced-field">
+        <label>Status</label>
+        <select id="status-select">
+          <option value="ontvangen">Received (paid, awaiting garment)</option>
+          <option value="in behandeling">In progress (repair started)</option>
+          <option value="klaar">Ready (repair complete)</option>
+          <option value="verzonden">Shipped (out for delivery)</option>
+        </select>
+      </div>
+      <div class="advanced-field">
+        <label>Ready-by date (optional)</label>
+        <input type="date" id="ready-by-input"/>
+      </div>
+      <button class="advanced-save" id="save-status-btn" onclick="saveStatus()">Save status &rarr;</button>
     </div>
   </div>
 </div>
@@ -239,20 +343,20 @@ td{padding:14px 16px;vertical-align:middle}
   <div class="modal-box" style="max-width:400px">
     <div class="modal-header">
       <div>
-        <p class="modal-label">knitfix</p>
-        <h2 class="modal-title">eindfactuur</h2>
+        <p class="modal-label">KnitFix</p>
+        <h2 class="modal-title">Send final invoice</h2>
       </div>
-      <button class="modal-close" onclick="closeFinalInvoice()">×</button>
+      <button class="modal-close" onclick="closeFinalInvoice()">&times;</button>
     </div>
     <div id="fi-order-summary" class="modal-summary"></div>
-    <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;font-weight:500">totale reparatiekosten (€)</label>
-    <input id="fi-total" type="number" min="31" step="0.01" placeholder="bijv. 120.00" class="modal-input" oninput="updateFiPreview()"/>
+    <label class="modal-field-label">Total repair cost (&euro;)</label>
+    <input id="fi-total" type="number" min="31" step="0.01" placeholder="e.g. 120.00" class="modal-input" oninput="updateFiPreview()"/>
     <div id="fi-preview" class="modal-preview">
-      <div class="modal-preview-row"><span style="color:var(--muted)">totaal</span><span id="fi-total-display"></span></div>
-      <div class="modal-preview-row"><span style="color:var(--muted)">aanbetaling</span><span style="color:#3b6d11">− €30.00</span></div>
-      <div class="modal-preview-total"><span>te betalen</span><span id="fi-remainder-display" style="color:var(--accent)"></span></div>
+      <div class="modal-preview-row"><span style="color:var(--stone)">Total</span><span id="fi-total-display"></span></div>
+      <div class="modal-preview-row"><span style="color:var(--stone)">Deposit paid</span><span style="color:var(--success)">&minus; &euro;30.00</span></div>
+      <div class="modal-preview-total"><span>Balance due</span><span id="fi-remainder-display" style="color:var(--terracotta)"></span></div>
     </div>
-    <button id="fi-send-btn" class="modal-btn" onclick="sendFinalInvoice()">verstuur eindfactuur →</button>
+    <button id="fi-send-btn" class="modal-btn" onclick="sendFinalInvoice()">Send final invoice &rarr;</button>
     <p id="fi-msg" class="modal-msg"></p>
   </div>
 </div>
@@ -262,29 +366,29 @@ td{padding:14px 16px;vertical-align:middle}
   <div class="modal-box" style="max-width:420px">
     <div class="modal-header">
       <div>
-        <p class="modal-label">knitfix</p>
-        <h2 class="modal-title">verzendlabel sturen</h2>
+        <p class="modal-label">KnitFix</p>
+        <h2 class="modal-title">Send shipping label</h2>
       </div>
-      <button class="modal-close" onclick="closeSendLabel()">×</button>
+      <button class="modal-close" onclick="closeSendLabel()">&times;</button>
     </div>
     <div id="sl-order-summary" class="modal-summary"></div>
 
-    <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;font-weight:500">PostNL label (PDF)</label>
-    <label for="sl-file" style="display:block;padding:14px;border:1.5px dashed var(--line);border-radius:10px;text-align:center;cursor:pointer;font-size:13px;color:var(--soft);margin-bottom:14px">
-      <span id="sl-file-name">kies PDF…</span>
+    <label class="modal-field-label">PostNL label (PDF)</label>
+    <label for="sl-file" style="display:block;padding:14px;border:1px dashed var(--dust);border-radius:8px;text-align:center;cursor:pointer;font-size:13px;color:var(--stone);margin-bottom:14px">
+      <span id="sl-file-name">Choose PDF&hellip;</span>
     </label>
     <input id="sl-file" type="file" accept="application/pdf" style="display:none" onchange="onSlFileChange()"/>
 
-    <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;font-weight:500">tracking code (3S…)</label>
+    <label class="modal-field-label">Tracking code (3S&hellip;)</label>
     <input id="sl-tracking" type="text" placeholder="3SOPKA844772776" class="modal-input" style="text-transform:uppercase"/>
 
-    <p id="sl-override-toggle" style="margin:4px 0 12px;font-size:12px;color:var(--accent);cursor:pointer;text-align:right" onclick="toggleSlOverride()">→ email anders dan bestelling?</p>
+    <p id="sl-override-toggle" style="margin:4px 0 12px;font-size:12px;color:var(--terracotta);cursor:pointer;text-align:right" onclick="toggleSlOverride()">&rarr; Different email than order?</p>
     <div id="sl-override-wrap" style="display:none">
-      <label style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;font-weight:500">verstuur naar (vervangt opgeslagen email)</label>
-      <input id="sl-override-email" type="email" placeholder="nieuw@voorbeeld.com" class="modal-input"/>
+      <label class="modal-field-label">Send to (overrides stored email)</label>
+      <input id="sl-override-email" type="email" placeholder="new@example.com" class="modal-input"/>
     </div>
 
-    <button id="sl-send-btn" class="modal-btn" onclick="sendLabel()">verstuur label →</button>
+    <button id="sl-send-btn" class="modal-btn" onclick="sendLabel()">Send label &rarr;</button>
     <p id="sl-msg" class="modal-msg"></p>
   </div>
 </div>
@@ -294,42 +398,138 @@ td{padding:14px 16px;vertical-align:middle}
   <div class="modal-box" style="max-width:480px;max-height:90vh;overflow-y:auto">
     <div class="modal-header">
       <div>
-        <p class="modal-label">knitfix</p>
-        <h2 class="modal-title">nieuwe offerte</h2>
+        <p class="modal-label">KnitFix</p>
+        <h2 class="modal-title">New quote</h2>
       </div>
-      <button class="modal-close" onclick="toggleQuotePanel()">×</button>
+      <button class="modal-close" onclick="toggleQuotePanel()">&times;</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <input id="q-name" placeholder="naam klant" class="modal-input" style="margin:0"/>
-      <input id="q-email" type="email" placeholder="email" class="modal-input" style="margin:0"/>
+      <input id="q-name" placeholder="Customer name" class="modal-input" style="margin:0"/>
+      <input id="q-email" type="email" placeholder="Email" class="modal-input" style="margin:0"/>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0">
-      <input id="q-garment" placeholder="kledingstuk" class="modal-input" style="margin:0"/>
-      <input id="q-material" placeholder="materiaal" class="modal-input" style="margin:0"/>
+      <input id="q-garment" placeholder="Garment" class="modal-input" style="margin:0"/>
+      <input id="q-material" placeholder="Material" class="modal-input" style="margin:0"/>
     </div>
-    <input id="q-damage" placeholder="schade / reparatie omschrijving" class="modal-input"/>
+    <input id="q-damage" placeholder="Damage / repair description" class="modal-input"/>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-      <input id="q-price" type="number" placeholder="totaalprijs (€)" class="modal-input" style="margin:0"/>
-      <input id="q-phone" placeholder="telefoon (optioneel)" class="modal-input" style="margin:0"/>
+      <input id="q-price" type="number" placeholder="Total price (&euro;)" class="modal-input" style="margin:0"/>
+      <input id="q-phone" placeholder="Phone (optional)" class="modal-input" style="margin:0"/>
     </div>
-    <button id="send-quote-btn" class="modal-btn" onclick="sendQuote()">verstuur offerte →</button>
-    <p id="quote-msg" class="modal-msg" style="color:var(--muted)"></p>
+    <button id="send-quote-btn" class="modal-btn" onclick="sendQuote()">Send quote &rarr;</button>
+    <p id="quote-msg" class="modal-msg" style="color:var(--stone)"></p>
   </div>
 </div>
 
 <script>
+// ─── STATE ─────────────────────────────────────────────────────────────
 let allOrders = [];
 let currentOrder = null;
 let activeFilter = 'all';
+let showArchived = false;
 
-function badgeClass(s){
-  if(s==='ontvangen') return 'b-ontvangen';
-  if(s==='in behandeling') return 'b-behandeling';
-  if(s==='klaar') return 'b-klaar';
-  if(s==='verzonden') return 'b-verzonden';
-  return 'b-ontvangen';
+// ─── STATE MACHINE ─────────────────────────────────────────────────────
+// 7-step flow. Steps 2 & 5 are OPTIONAL (labelSent, finalInvoice) —
+// the stepper marks them "skipped" (dashed outline) if the admin moved
+// past them without using them (e.g. customer drops off in person, or
+// repair cost is <= deposit so no final invoice needed).
+//
+// Status values in Stripe stay Dutch (ontvangen, in behandeling, klaar,
+// verzonden) — we translate at display time only.
+
+const STATUS_EN = {
+  'ontvangen':      'Received',
+  'in behandeling': 'In progress',
+  'klaar':          'Ready',
+  'verzonden':      'Shipped',
+};
+
+const STATUS_RANK = {
+  'ontvangen':      0,
+  'in behandeling': 1,
+  'klaar':          2,
+  'verzonden':      3,
+};
+
+function fmtShortDate(ts){
+  if(!ts) return '';
+  return new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 }
 
+/** Build stepper state for an order.
+ * Returns: [{ key, label, state: 'done'|'current'|'future'|'skipped', time? }, ...] */
+function buildSteps(o){
+  const rank = STATUS_RANK[o.status] ?? 0;
+  const hasLabelSent   = !!o.inbound_label_sent;
+  const hasFinalInv    = !!o.final_invoice_sent;
+  const isShipped      = o.status === 'verzonden';
+  const isReady        = rank >= 2;
+  const isInProgress   = rank >= 1;
+
+  const steps = [
+    { key:'paid',     label:'Paid',          state:'done', time: fmtShortDate(o.paid_at) },
+    { key:'label',    label:'Label sent',    state: hasLabelSent ? 'done' : (isInProgress ? 'skipped' : 'future'), time: hasLabelSent ? fmtShortDate(o.inbound_label_sent) : '' },
+    { key:'progress', label:'In progress',   state: isInProgress ? 'done' : 'future' },
+    { key:'ready',    label:'Ready',         state: isReady ? 'done' : 'future' },
+    { key:'invoice',  label:'Invoice sent',  state: hasFinalInv ? 'done' : (isShipped ? 'skipped' : 'future'), time: hasFinalInv ? fmtShortDate(o.final_invoice_sent) : '' },
+    { key:'shipped',  label:'Shipped',       state: isShipped ? 'done' : 'future', time: isShipped ? fmtShortDate(o.shipped_at) : '' },
+    { key:'done',     label:'Archived',      state: o.archived ? 'done' : 'future', time: o.archived ? fmtShortDate(o.archived_at) : '' },
+  ];
+
+  // First non-done step becomes the "current" one
+  for (let i = 0; i < steps.length; i++){
+    if (steps[i].state === 'future'){
+      steps[i].state = 'current';
+      break;
+    }
+  }
+  return steps;
+}
+
+/** Determine the single most-important next action for an order.
+ * Returns { key, label, hint, type } — type drives what happens on click. */
+function nextAction(o){
+  if (o.archived) {
+    return { key:'unarchive', label:'Restore from archive', type:'unarchive', hint:'This order is archived and hidden from the main view.' };
+  }
+  if (o.status === 'ontvangen' && !o.inbound_label_sent){
+    return { key:'send-label', label:'Send shipping label', type:'modal-label', hint:"Email the customer a PostNL label so they can send their garment to you. Or skip this if they're bringing it in person." };
+  }
+  if (o.status === 'ontvangen' && o.inbound_label_sent){
+    return { key:'start-repair', label:'Mark repair as started', type:'status', toStatus:'in behandeling', hint:'Sends the customer an email that their repair has begun.' };
+  }
+  if (o.status === 'in behandeling'){
+    return { key:'mark-ready', label:'Mark repair as ready', type:'status', toStatus:'klaar', hint:'Sends the customer an email that their garment is ready. Send the final invoice next.' };
+  }
+  if (o.status === 'klaar' && !o.final_invoice_sent){
+    return { key:'final-invoice', label:'Send final invoice', type:'modal-invoice', hint:'Sends an email with a Stripe checkout link for the balance (total minus \u20ac30 deposit).' };
+  }
+  if (o.status === 'klaar' && o.final_invoice_sent){
+    return { key:'mark-shipped', label:'Mark as shipped', type:'status', toStatus:'verzonden', hint:'After packing and handing off to PostNL, click this. Review email is sent automatically 14 days later.' };
+  }
+  if (o.status === 'verzonden'){
+    return { key:'archive', label:'Archive this order', type:'archive', hint:'Review email sends automatically 14 days after shipping. Archiving hides the order from the main view.' };
+  }
+  return { key:'noop', label:'No action needed', type:'noop', hint:'' };
+}
+
+// Short label for the table "Next step" column
+function nextActionShort(o){
+  const a = nextAction(o);
+  const SHORT = {
+    'send-label':    'Send label',
+    'start-repair':  'Start repair',
+    'mark-ready':    'Mark ready',
+    'final-invoice': 'Send invoice',
+    'mark-shipped':  'Mark shipped',
+    'archive':       'Archive',
+    'unarchive':     'Archived',
+    'noop':          'Done',
+  };
+  return { text: SHORT[a.key] || a.label, done: a.key === 'noop' || a.key === 'unarchive' };
+}
+
+// ─── AUTH ──────────────────────────────────────────────────────────────
 async function login(){
   const pw = document.getElementById('pw-input').value;
   const err = document.getElementById('login-error');
@@ -349,23 +549,56 @@ function logout(){
   location.reload();
 }
 
+// ─── LOAD + RENDER ─────────────────────────────────────────────────────
 async function loadOrders(){
-  const res = await fetch('/api/admin-orders');
+  const url = showArchived ? '/api/admin-orders?archived=1' : '/api/admin-orders';
+  const res = await fetch(url);
   if(res.status===401){location.reload();return;}
   const {orders} = await res.json();
   allOrders = orders || [];
   document.getElementById('loading').style.display='none';
   document.getElementById('orders-table').style.display='table';
   updateStats();
-  render(allOrders);
+  applyFilter();
 }
 
 function updateStats(){
-  document.getElementById('s-total').textContent = allOrders.length;
-  const rev = allOrders.reduce((a,o)=>a+parseFloat(o.amount),0);
-  document.getElementById('s-revenue').textContent = '€'+rev.toFixed(0);
-  document.getElementById('s-progress').textContent = allOrders.filter(o=>o.status==='in behandeling').length;
-  document.getElementById('s-shipped').textContent = allOrders.filter(o=>o.status==='verzonden').length;
+  const active = allOrders.filter(o=>!o.archived);
+  const needsAction = active.filter(o=>{
+    const a = nextAction(o);
+    return a.type !== 'noop' && a.type !== 'archive' && a.type !== 'unarchive';
+  });
+  const inProgress = active.filter(o=>o.status==='in behandeling');
+  const rev = active.reduce((a,o)=>a+parseFloat(o.amount),0);
+
+  document.getElementById('s-total').textContent = active.length;
+  document.getElementById('s-action').textContent = needsAction.length;
+  document.getElementById('s-progress').textContent = inProgress.length;
+  document.getElementById('s-revenue').textContent = '\u20ac'+rev.toFixed(0);
+
+  // Pill counts
+  document.getElementById('c-all').textContent = active.length;
+  document.getElementById('c-action').textContent = needsAction.length;
+  document.getElementById('c-ontvangen').textContent = active.filter(o=>o.status==='ontvangen').length;
+  document.getElementById('c-behandeling').textContent = active.filter(o=>o.status==='in behandeling').length;
+  document.getElementById('c-klaar').textContent = active.filter(o=>o.status==='klaar').length;
+  document.getElementById('c-verzonden').textContent = active.filter(o=>o.status==='verzonden').length;
+}
+
+function applyFilter(){
+  let list;
+  if (activeFilter === 'all') {
+    list = allOrders;
+  } else if (activeFilter === 'action') {
+    list = allOrders.filter(o => {
+      if (o.archived) return false;
+      const a = nextAction(o);
+      return a.type !== 'noop' && a.type !== 'archive' && a.type !== 'unarchive';
+    });
+  } else {
+    list = allOrders.filter(o => o.status === activeFilter);
+  }
+  render(list);
 }
 
 function render(list){
@@ -373,50 +606,72 @@ function render(list){
   const empty = document.getElementById('empty');
   if(!list.length){body.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
-  body.innerHTML = list.map(o=>`
-    <tr onclick="openPanel('${o.ref}')">
-      <td><span class="ref">${o.ref}</span></td>
-      <td><div class="garment-name">${o.garment}</div><div class="garment-sub">${o.material} · ${o.damage}</div></td>
-      <td><div class="garment-name">${o.name}</div><div class="garment-sub">${o.email}</div></td>
-      <td><span class="badge ${badgeClass(o.status)}">${o.status}</span></td>
-      <td>€${o.amount}</td>
-      <td style="color:var(--muted)">${o.date}</td>
-    </tr>
-  `).join('');
+  body.innerHTML = list.map(o=>{
+    const next = nextActionShort(o);
+    return `
+    <tr class="${o.archived?'archived-row':''}" onclick="openPanel('${o.ref}')">
+      <td class="col-ref"><span class="ref">${o.ref}</span></td>
+      <td class="col-order">
+        <div class="garment-name">${escapeHtml(o.garment)}</div>
+        <div class="garment-sub">${escapeHtml(o.material)} &middot; ${escapeHtml(o.damage)}</div>
+      </td>
+      <td class="col-customer">
+        <div class="garment-name">${escapeHtml(o.name)}</div>
+        <div class="garment-sub">${escapeHtml(o.email)}</div>
+      </td>
+      <td class="col-next">
+        <div class="next-action">
+          <div class="next-action-label">${STATUS_EN[o.status] || o.status}${o.archived?' &middot; archived':''}</div>
+          <div class="next-action-text ${next.done?'done':'todo'}">${next.text}</div>
+        </div>
+      </td>
+      <td class="col-amount">&euro;${o.amount}</td>
+      <td class="col-date" style="color:var(--stone)">${o.date}</td>
+    </tr>`;
+  }).join('');
+}
+
+function escapeHtml(s){
+  if(s==null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 function filter(status, btn){
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   activeFilter = status;
-  const list = status==='all' ? allOrders : allOrders.filter(o=>o.status===status);
-  render(list);
+  applyFilter();
 }
 
+function toggleArchived(){
+  showArchived = !showArchived;
+  const t = document.getElementById('archive-toggle');
+  t.classList.toggle('on', showArchived);
+  document.getElementById('archive-toggle-text').textContent = showArchived ? 'Hide archived' : 'Show archived';
+  loadOrders();
+}
+
+// ─── DETAIL PANEL ──────────────────────────────────────────────────────
 function openPanel(ref){
   const o = allOrders.find(x=>x.ref===ref);
   if(!o) return;
   currentOrder = o;
   document.getElementById('panel-ref').textContent = o.ref;
+  renderStepper(o);
+  renderPrimaryAction(o);
+  renderSecondaryActions(o);
+  renderOrderInfo(o);
+  renderCustomerInfo(o);
+  // Advanced panel
   document.getElementById('status-select').value = o.status;
   document.getElementById('ready-by-input').value = o.ready_by || '';
-  document.getElementById('panel-order').innerHTML = `
-    <div class="detail-row"><span class="detail-label">kledingstuk</span><span class="detail-val">${o.garment}</span></div>
-    <div class="detail-row"><span class="detail-label">materiaal</span><span class="detail-val">${o.material}</span></div>
-    <div class="detail-row"><span class="detail-label">schade</span><span class="detail-val">${o.damage}</span></div>
-    ${o.description?`<div class="detail-row"><span class="detail-label">omschrijving</span><span class="detail-val">${o.description}</span></div>`:''}
-    <div class="detail-row"><span class="detail-label">stijl</span><span class="detail-val">${o.style}</span></div>
-    <div class="detail-row"><span class="detail-label">aanbetaling</span><span class="detail-val">€${o.amount}</span></div>
-    ${o.inbound_tracking?`<div class="detail-row"><span class="detail-label">tracking</span><span class="detail-val">${o.inbound_tracking}</span></div>`:''}
-  `;
-  document.getElementById('panel-customer').innerHTML = `
-    <div class="detail-row"><span class="detail-label">naam</span><span class="detail-val">${o.name}</span></div>
-    <div class="detail-row"><span class="detail-label">email</span><span class="detail-val" style="cursor:pointer;border-bottom:1px dashed var(--line)" onclick="editEmail()" title="klik om te bewerken">${o.email} ✎</span></div>
-    ${o.phone?`<div class="detail-row"><span class="detail-label">telefoon</span><span class="detail-val">${o.phone}</span></div>`:''}
-    <div class="detail-row"><span class="detail-label">retouradres</span><span class="detail-val">${o.address}</span></div>
-  `;
-  const waNum = o.phone ? o.phone.replace(/\D/g,'') : '31616120895';
-  document.getElementById('wa-link').href = `https://wa.me/${waNum}?text=Hoi ${o.name.split(' ')[0]}, je bestelling ${o.ref} is klaar!`;
+  document.getElementById('advanced-panel').classList.remove('open');
+  document.getElementById('advanced-toggle').classList.remove('open');
+  // Archive button state
+  const archBtn = document.getElementById('archive-btn');
+  archBtn.textContent = o.archived ? 'Archived' : 'Archive';
+  archBtn.classList.toggle('is-archived', o.archived);
+
   document.getElementById('detail-panel').classList.add('open');
 }
 
@@ -425,113 +680,262 @@ function closePanel(){
   currentOrder = null;
 }
 
-function openFinalInvoice(){
-  if(!currentOrder) return;
-  document.getElementById('fi-order-summary').innerHTML =
-    `<strong>${currentOrder.ref}</strong> · ${currentOrder.garment} · ${currentOrder.name}`;
-  document.getElementById('fi-total').value = '';
-  document.getElementById('fi-preview').style.display = 'none';
-  document.getElementById('fi-msg').style.display = 'none';
-  document.getElementById('final-invoice-panel').style.display = 'flex';
+function renderStepper(o){
+  const steps = buildSteps(o);
+  const html = steps.map((s,i) => {
+    const dotContent = s.state === 'done' ? '&check;' : (s.state === 'skipped' ? '&ndash;' : (i+1));
+    const labelFaded = (s.state === 'future' || s.state === 'skipped') ? 'faded' : '';
+    const lineClass = (steps[i+1] && (s.state === 'done')) ? 'done' : (s.state === 'skipped' ? 'skipped' : '');
+    const lineHtml = i < steps.length - 1 ? `<div class="step-line ${lineClass}"></div>` : '';
+    return `
+      <div class="step">
+        <div class="step-dot ${s.state}">${dotContent}</div>
+        ${lineHtml}
+        <div class="step-label ${labelFaded}">${s.label}</div>
+        ${s.time ? `<div class="step-time">${s.time}</div>` : ''}
+      </div>`;
+  }).join('');
+  document.getElementById('stepper').innerHTML = html;
 }
 
-function closeFinalInvoice(){
-  document.getElementById('final-invoice-panel').style.display = 'none';
-}
+function renderPrimaryAction(o){
+  const a = nextAction(o);
+  const btn = document.getElementById('primary-action-btn');
+  const label = document.getElementById('primary-action-label');
+  const hint = document.getElementById('primary-action-hint');
 
-function updateFiPreview(){
-  const total = parseFloat(document.getElementById('fi-total').value);
-  const preview = document.getElementById('fi-preview');
-  if(!total || total <= 30){ preview.style.display='none'; return; }
-  const remainder = total - 30;
-  document.getElementById('fi-total-display').textContent = `€${total.toFixed(2)}`;
-  document.getElementById('fi-remainder-display').textContent = `€${remainder.toFixed(2)}`;
-  preview.style.display = 'block';
-}
+  btn.classList.remove('completed','archived');
+  btn.disabled = false;
 
-async function sendFinalInvoice(){
-  if(!currentOrder) return;
-  const total = parseFloat(document.getElementById('fi-total').value);
-  const msg = document.getElementById('fi-msg');
-  const btn = document.getElementById('fi-send-btn');
-  if(!total || total <= 30){ msg.textContent='Totaal moet meer dan €30 zijn.'; msg.style.display='block'; return; }
-  btn.textContent = 'versturen...'; btn.disabled = true;
-  const res = await fetch('/api/admin-final-invoice',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:currentOrder.ref,total_price:total})});
-  const data = await res.json();
-  if(data.ok){
-    msg.textContent = `Eindfactuur verstuurd. Restbedrag: €${data.remainder.toFixed(2)}`;
-    msg.style.color = '#3b6d11';
+  if (a.type === 'noop'){
+    label.textContent = 'Status';
+    btn.innerHTML = 'All done &check;';
+    btn.classList.add('completed');
+    btn.disabled = true;
+  } else if (a.type === 'unarchive') {
+    label.textContent = 'Archived';
+    btn.innerHTML = a.label + ' &rarr;';
+    btn.classList.add('archived');
   } else {
-    msg.textContent = data.error || 'Er ging iets mis.';
-    msg.style.color = 'var(--accent)';
+    label.textContent = 'Next step';
+    btn.innerHTML = a.label + ' &rarr;';
   }
-  msg.style.display = 'block';
-  btn.textContent = 'verstuur eindfactuur →'; btn.disabled = false;
+  hint.textContent = a.hint || '';
 }
 
-function toggleQuotePanel(){
-  const p = document.getElementById('quote-panel');
-  p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
-}
+function renderSecondaryActions(o){
+  const waNum = o.phone ? o.phone.replace(/\D/g,'') : '31616120895';
+  const firstName = (o.name || '').split(' ')[0];
+  const waMsg = encodeURIComponent(`Hi ${firstName}, regarding your KnitFix order ${o.ref}\u2026`);
+  const waHref = `https://wa.me/${waNum}?text=${waMsg}`;
 
-async function sendQuote(){
-  const btn = document.getElementById('send-quote-btn');
-  const msg = document.getElementById('quote-msg');
-  const body = {
-    name:    document.getElementById('q-name').value,
-    email:   document.getElementById('q-email').value,
-    garment: document.getElementById('q-garment').value,
-    material:document.getElementById('q-material').value,
-    damage:  document.getElementById('q-damage').value,
-    price:   document.getElementById('q-price').value,
-    phone:   document.getElementById('q-phone').value,
-  };
-  if(!body.name||!body.email||!body.garment||!body.price){msg.textContent='Vul naam, email, kledingstuk en prijs in.';msg.style.display='block';return;}
-  btn.textContent='versturen...';btn.disabled=true;
-  const res = await fetch('/api/admin-quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  const data = await res.json();
-  if(data.ok){
-    msg.textContent=`Offerte ${data.ref} verstuurd naar ${body.email}`;msg.style.color='#3b6d11';
-  } else {
-    msg.textContent='Er ging iets mis. Probeer opnieuw.';msg.style.color='var(--accent)';
+  const actions = [];
+  // WhatsApp — always available
+  actions.push(`<a class="secondary-btn" href="${waHref}" target="_blank" rel="noopener">WhatsApp customer <span class="arrow">&#8599;</span></a>`);
+
+  // Send label — if not already sent
+  if (!o.inbound_label_sent) {
+    actions.push(`<button class="secondary-btn" onclick="openSendLabel()">Send label <span class="arrow">&rarr;</span></button>`);
   }
-  msg.style.display='block';
-  btn.textContent='verstuur offerte →';btn.disabled=false;
+
+  // Final invoice — if ready/shipped and not yet sent
+  const rank = STATUS_RANK[o.status] ?? 0;
+  if (rank >= 2 && !o.final_invoice_sent) {
+    actions.push(`<button class="secondary-btn" onclick="openFinalInvoice()">Send invoice <span class="arrow">&rarr;</span></button>`);
+  }
+
+  // Review email — always available after shipped (in case auto-send failed)
+  if (o.status === 'verzonden') {
+    actions.push(`<button class="secondary-btn" onclick="sendReview()" id="review-btn">Request review <span class="arrow">&rarr;</span></button>`);
+  }
+
+  document.getElementById('secondary-actions').innerHTML = actions.join('');
 }
 
+function renderOrderInfo(o){
+  const html = `
+    <div class="detail-row"><span class="detail-label">Garment</span><span class="detail-val">${escapeHtml(o.garment)}</span></div>
+    <div class="detail-row"><span class="detail-label">Material</span><span class="detail-val">${escapeHtml(o.material)}</span></div>
+    <div class="detail-row"><span class="detail-label">Damage</span><span class="detail-val">${escapeHtml(o.damage)}</span></div>
+    ${o.description?`<div class="detail-row"><span class="detail-label">Notes</span><span class="detail-val">${escapeHtml(o.description)}</span></div>`:''}
+    <div class="detail-row"><span class="detail-label">Repair style</span><span class="detail-val">${escapeHtml(o.style)}</span></div>
+    <div class="detail-row"><span class="detail-label">Deposit</span><span class="detail-val">&euro;${o.amount}</span></div>
+    ${o.ready_by?`<div class="detail-row"><span class="detail-label">Ready by</span><span class="detail-val">${o.ready_by}</span></div>`:''}
+    ${o.inbound_tracking?`<div class="detail-row"><span class="detail-label">Inbound tracking</span><span class="detail-val">${escapeHtml(o.inbound_tracking)}</span></div>`:''}
+  `;
+  document.getElementById('panel-order').innerHTML = html;
+}
+
+function renderCustomerInfo(o){
+  const html = `
+    <div class="detail-row"><span class="detail-label">Name</span><span class="detail-val">${escapeHtml(o.name)}</span></div>
+    <div class="detail-row"><span class="detail-label">Email</span><span class="detail-val editable" onclick="editEmail()" title="Click to edit">${escapeHtml(o.email)} &#9998;</span></div>
+    ${o.phone?`<div class="detail-row"><span class="detail-label">Phone</span><span class="detail-val">${escapeHtml(o.phone)}</span></div>`:''}
+    <div class="detail-row"><span class="detail-label">Return address</span><span class="detail-val">${escapeHtml(o.address)}</span></div>
+  `;
+  document.getElementById('panel-customer').innerHTML = html;
+}
+
+// ─── PRIMARY ACTION DISPATCHER ─────────────────────────────────────────
+async function doPrimaryAction(){
+  if(!currentOrder) return;
+  const a = nextAction(currentOrder);
+  if (a.type === 'modal-label')   return openSendLabel();
+  if (a.type === 'modal-invoice') return openFinalInvoice();
+  if (a.type === 'status')        return advanceStatus(a.toStatus);
+  if (a.type === 'archive')       return toggleArchive();
+  if (a.type === 'unarchive')     return toggleArchive();
+}
+
+/** Status advance with confirmation on the big primary button.
+ * Uses the existing /api/admin-status endpoint which also sends the
+ * corresponding customer email automatically. */
+async function advanceStatus(newStatus){
+  if(!currentOrder) return;
+  const btn = document.getElementById('primary-action-btn');
+  const original = btn.innerHTML;
+  btn.textContent = 'Saving\u2026';
+  btn.disabled = true;
+
+  const readyBy = document.getElementById('ready-by-input').value;
+  const res = await fetch('/api/admin-status',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      ref: currentOrder.ref,
+      status: newStatus,
+      customer_email: currentOrder.email,
+      customer_name:  currentOrder.name,
+      ready_by: readyBy || null,
+    })
+  });
+
+  if(!res.ok){
+    btn.innerHTML = original;
+    btn.disabled = false;
+    alert('Could not update status. Try again.');
+    return;
+  }
+
+  // Update local state
+  currentOrder.status = newStatus;
+  if (newStatus === 'verzonden') currentOrder.shipped_at = Date.now();
+  const o = allOrders.find(x => x.ref === currentOrder.ref);
+  if(o){
+    o.status = newStatus;
+    if (newStatus === 'verzonden') o.shipped_at = Date.now();
+  }
+
+  btn.innerHTML = 'Done &check;';
+  setTimeout(() => {
+    openPanel(currentOrder.ref); // rerender everything
+    updateStats();
+    applyFilter();
+  }, 700);
+}
+
+/** Legacy manual status save (advanced panel). */
 async function saveStatus(){
   if(!currentOrder) return;
-  const status = document.getElementById('status-select').value;
+  const status  = document.getElementById('status-select').value;
   const readyBy = document.getElementById('ready-by-input').value;
   const btn = document.getElementById('save-status-btn');
-  btn.textContent = 'opslaan...';
-  await fetch('/api/admin-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:currentOrder.ref,status,customer_email:currentOrder.email,customer_name:currentOrder.name,ready_by:readyBy||null})});
+  btn.textContent = 'Saving\u2026';
+  await fetch('/api/admin-status',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ref:currentOrder.ref,status,customer_email:currentOrder.email,customer_name:currentOrder.name,ready_by:readyBy||null})
+  });
   currentOrder.status = status;
+  if (status === 'verzonden' && !currentOrder.shipped_at) currentOrder.shipped_at = Date.now();
   const o = allOrders.find(x=>x.ref===currentOrder.ref);
-  if(o) o.status = status;
-  updateStats();
-  filter(activeFilter, document.querySelector('.pill.active'));
-  btn.textContent = 'opgeslagen ✓';
-  setTimeout(()=>btn.textContent='opslaan →', 2000);
+  if(o) {
+    o.status = status;
+    if (status === 'verzonden' && !o.shipped_at) o.shipped_at = Date.now();
+  }
+  btn.innerHTML = 'Saved &check;';
+  setTimeout(() => {
+    btn.innerHTML = 'Save status &rarr;';
+    openPanel(currentOrder.ref);
+    updateStats();
+    applyFilter();
+  }, 900);
 }
 
+// ─── ARCHIVE ────────────────────────────────────────────────────────────
+async function toggleArchive(){
+  if(!currentOrder) return;
+  const newState = !currentOrder.archived;
+  const archBtn = document.getElementById('archive-btn');
+  const primaryBtn = document.getElementById('primary-action-btn');
+  const originalArch = archBtn.textContent;
+
+  archBtn.textContent = '\u2026';
+  primaryBtn.disabled = true;
+
+  try {
+    const res = await fetch('/api/admin-archive',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ref:currentOrder.ref, archived:newState})
+    });
+    if(!res.ok) throw new Error('archive failed');
+
+    currentOrder.archived = newState;
+    if (newState) currentOrder.archived_at = Date.now();
+    const o = allOrders.find(x=>x.ref===currentOrder.ref);
+    if(o) {
+      o.archived = newState;
+      if (newState) o.archived_at = Date.now();
+    }
+
+    // If we're not viewing archived orders and we just archived one, remove it from view
+    if (newState && !showArchived) {
+      closePanel();
+    } else {
+      openPanel(currentOrder.ref);
+    }
+    updateStats();
+    applyFilter();
+  } catch(err){
+    archBtn.textContent = originalArch;
+    primaryBtn.disabled = false;
+    alert('Could not update archive state. Try again.');
+  }
+}
+
+function toggleAdvanced(){
+  const t = document.getElementById('advanced-toggle');
+  const p = document.getElementById('advanced-panel');
+  t.classList.toggle('open');
+  p.classList.toggle('open');
+}
+
+// ─── REVIEW EMAIL ──────────────────────────────────────────────────────
 async function sendReview(){
   if(!currentOrder) return;
   const btn = document.getElementById('review-btn');
-  btn.textContent = 'verzenden...';
-  await fetch('/api/review-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentOrder.email,name:currentOrder.name,ref:currentOrder.ref})});
-  btn.textContent = 'verzonden ✓';
-  setTimeout(()=>btn.textContent='→ recensie vragen', 3000);
+  if(!btn) return;
+  const original = btn.innerHTML;
+  btn.innerHTML = 'Sending\u2026';
+  await fetch('/api/review-email',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({email:currentOrder.email,name:currentOrder.name,ref:currentOrder.ref})
+  });
+  btn.innerHTML = 'Sent &check;';
+  setTimeout(() => { btn.innerHTML = original; }, 2500);
 }
 
+// ─── EDIT EMAIL ────────────────────────────────────────────────────────
 async function editEmail(){
   if(!currentOrder) return;
   const current = currentOrder.email || '';
-  const next = prompt('Nieuw email adres voor deze klant:', current);
+  const next = prompt('New email address for this customer:', current);
   if(!next || next === current) return;
   const clean = next.trim();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)){
-    alert('Email adres lijkt ongeldig');
+    alert('That email address looks invalid.');
     return;
   }
   try {
@@ -541,7 +945,7 @@ async function editEmail(){
       body: JSON.stringify({ref: currentOrder.ref, email: clean})
     });
     const data = await res.json();
-    if(!res.ok) throw new Error(data.error || 'Bijwerken mislukt');
+    if(!res.ok) throw new Error(data.error || 'Update failed');
     currentOrder.email = clean;
     const o = allOrders.find(x=>x.ref===currentOrder.ref);
     if(o) o.email = clean;
@@ -551,14 +955,15 @@ async function editEmail(){
   }
 }
 
+// ─── SEND LABEL MODAL ──────────────────────────────────────────────────
 function openSendLabel(){
   if(!currentOrder) return;
   document.getElementById('sl-order-summary').innerHTML =
-    `<div class="modal-preview-row"><span style="color:var(--muted)">klant</span><span>${currentOrder.name}</span></div>
-     <div class="modal-preview-row"><span style="color:var(--muted)">email</span><span style="font-size:12px">${currentOrder.email}</span></div>
-     <div class="modal-preview-row"><span style="color:var(--muted)">ref</span><span>${currentOrder.ref}</span></div>`;
+    `<div class="modal-preview-row"><span style="color:var(--stone)">Customer</span><span>${escapeHtml(currentOrder.name)}</span></div>
+     <div class="modal-preview-row"><span style="color:var(--stone)">Email</span><span style="font-size:12px">${escapeHtml(currentOrder.email)}</span></div>
+     <div class="modal-preview-row"><span style="color:var(--stone)">Ref</span><span>${currentOrder.ref}</span></div>`;
   document.getElementById('sl-file').value = '';
-  document.getElementById('sl-file-name').textContent = 'kies PDF…';
+  document.getElementById('sl-file-name').textContent = 'Choose PDF\u2026';
   document.getElementById('sl-tracking').value = currentOrder.inbound_tracking || '';
   document.getElementById('sl-override-email').value = '';
   document.getElementById('sl-override-wrap').style.display = 'none';
@@ -576,7 +981,7 @@ function toggleSlOverride(){
 }
 function onSlFileChange(){
   const f = document.getElementById('sl-file').files[0];
-  document.getElementById('sl-file-name').textContent = f ? f.name : 'kies PDF…';
+  document.getElementById('sl-file-name').textContent = f ? f.name : 'Choose PDF\u2026';
 }
 async function sendLabel(){
   if(!currentOrder) return;
@@ -585,9 +990,9 @@ async function sendLabel(){
   const override = document.getElementById('sl-override-email').value.trim();
   const msg = document.getElementById('sl-msg');
   const btn = document.getElementById('sl-send-btn');
-  if(!file){ msg.textContent = 'kies eerst een PDF'; msg.style.display='block'; return; }
-  if(!tracking){ msg.textContent = 'tracking code is verplicht'; msg.style.display='block'; return; }
-  btn.textContent = 'verzenden...'; btn.disabled = true; msg.style.display = 'none';
+  if(!file){ msg.textContent = 'Choose a PDF first.'; msg.style.display='block'; msg.style.color='var(--terracotta)'; return; }
+  if(!tracking){ msg.textContent = 'Tracking code is required.'; msg.style.display='block'; msg.style.color='var(--terracotta)'; return; }
+  btn.textContent = 'Sending\u2026'; btn.disabled = true; msg.style.display = 'none';
   const form = new FormData();
   form.append('ref', currentOrder.ref);
   form.append('tracking_code', tracking);
@@ -596,30 +1001,158 @@ async function sendLabel(){
   try {
     const res = await fetch('/api/admin-send-label', { method:'POST', body: form });
     const data = await res.json();
-    if(!res.ok) throw new Error(data.error || 'Verzenden mislukt');
-    currentOrder.inbound_tracking = tracking;
+    if(!res.ok) throw new Error(data.error || 'Send failed');
+    currentOrder.inbound_tracking   = tracking;
+    currentOrder.inbound_label_sent = Date.now();
     const o = allOrders.find(x=>x.ref===currentOrder.ref);
-    if(o) o.inbound_tracking = tracking;
-    if(override){
-      currentOrder.email = override;
-      if(o) o.email = override;
+    if(o){
+      o.inbound_tracking   = tracking;
+      o.inbound_label_sent = Date.now();
+      if(override){
+        currentOrder.email = override;
+        o.email = override;
+      }
     }
-    btn.textContent = 'verzonden ✓';
-    setTimeout(()=>{ closeSendLabel(); btn.textContent='verstuur label →'; btn.disabled=false; }, 1200);
+    btn.innerHTML = 'Sent &check;';
+    setTimeout(()=>{
+      closeSendLabel();
+      btn.innerHTML='Send label &rarr;';
+      btn.disabled=false;
+      openPanel(currentOrder.ref);
+      applyFilter();
+    }, 900);
   } catch(err){
     msg.textContent = err.message;
     msg.style.display = 'block';
-    btn.textContent = 'verstuur label →';
+    msg.style.color = 'var(--terracotta)';
+    btn.innerHTML = 'Send label &rarr;';
     btn.disabled = false;
   }
 }
 
+// ─── FINAL INVOICE MODAL ───────────────────────────────────────────────
+function openFinalInvoice(){
+  if(!currentOrder) return;
+  document.getElementById('fi-order-summary').innerHTML =
+    `<strong>${currentOrder.ref}</strong> &middot; ${escapeHtml(currentOrder.garment)} &middot; ${escapeHtml(currentOrder.name)}`;
+  document.getElementById('fi-total').value = '';
+  document.getElementById('fi-preview').style.display = 'none';
+  document.getElementById('fi-msg').style.display = 'none';
+  document.getElementById('final-invoice-panel').style.display = 'flex';
+}
+
+function closeFinalInvoice(){
+  document.getElementById('final-invoice-panel').style.display = 'none';
+}
+
+function updateFiPreview(){
+  const total = parseFloat(document.getElementById('fi-total').value);
+  const preview = document.getElementById('fi-preview');
+  if(!total || total <= 30){ preview.style.display='none'; return; }
+  const remainder = total - 30;
+  document.getElementById('fi-total-display').textContent = `\u20ac${total.toFixed(2)}`;
+  document.getElementById('fi-remainder-display').textContent = `\u20ac${remainder.toFixed(2)}`;
+  preview.style.display = 'block';
+}
+
+async function sendFinalInvoice(){
+  if(!currentOrder) return;
+  const total = parseFloat(document.getElementById('fi-total').value);
+  const msg = document.getElementById('fi-msg');
+  const btn = document.getElementById('fi-send-btn');
+  if(!total || total <= 30){ msg.textContent='Total must be more than \u20ac30.'; msg.style.color='var(--terracotta)'; msg.style.display='block'; return; }
+  btn.textContent = 'Sending\u2026'; btn.disabled = true;
+  const res = await fetch('/api/admin-final-invoice',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ref:currentOrder.ref,total_price:total})
+  });
+  const data = await res.json();
+  if(data.ok){
+    msg.textContent = `Final invoice sent. Balance: \u20ac${data.remainder.toFixed(2)}`;
+    msg.style.color = 'var(--success)';
+    // Update local state
+    currentOrder.final_invoice_sent = Date.now();
+    const o = allOrders.find(x=>x.ref===currentOrder.ref);
+    if(o) o.final_invoice_sent = Date.now();
+    setTimeout(() => {
+      closeFinalInvoice();
+      btn.innerHTML='Send final invoice &rarr;';
+      btn.disabled=false;
+      openPanel(currentOrder.ref);
+      applyFilter();
+    }, 1500);
+  } else {
+    msg.textContent = data.error || 'Something went wrong.';
+    msg.style.color = 'var(--terracotta)';
+    btn.innerHTML = 'Send final invoice &rarr;';
+    btn.disabled = false;
+  }
+  msg.style.display = 'block';
+}
+
+// ─── QUOTE MODAL ───────────────────────────────────────────────────────
+function toggleQuotePanel(){
+  const p = document.getElementById('quote-panel');
+  p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+}
+
+async function sendQuote(){
+  const btn = document.getElementById('send-quote-btn');
+  const msg = document.getElementById('quote-msg');
+  const body = {
+    name:    document.getElementById('q-name').value,
+    email:   document.getElementById('q-email').value,
+    garment: document.getElementById('q-garment').value,
+    material:document.getElementById('q-material').value,
+    damage:  document.getElementById('q-damage').value,
+    price:   document.getElementById('q-price').value,
+    phone:   document.getElementById('q-phone').value,
+  };
+  if(!body.name||!body.email||!body.garment||!body.price){
+    msg.textContent='Fill in name, email, garment, and price.';
+    msg.style.color = 'var(--terracotta)';
+    msg.style.display='block';
+    return;
+  }
+  btn.textContent='Sending\u2026';btn.disabled=true;
+  const res = await fetch('/api/admin-quote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const data = await res.json();
+  if(data.ok){
+    msg.textContent=`Quote ${data.ref} sent to ${body.email}`;
+    msg.style.color='var(--success)';
+  } else {
+    msg.textContent='Something went wrong. Try again.';
+    msg.style.color='var(--terracotta)';
+  }
+  msg.style.display='block';
+  btn.innerHTML='Send quote &rarr;';btn.disabled=false;
+}
+
+// ─── BACKDROP CLICK HANDLERS ───────────────────────────────────────────
 document.getElementById('send-label-panel').addEventListener('click', e=>{
   if(e.target===document.getElementById('send-label-panel')) closeSendLabel();
 });
 
-document.getElementById('detail-panel').addEventListener('click', e=>{
-  if(e.target===document.getElementById('detail-panel')) closePanel();
+document.getElementById('final-invoice-panel').addEventListener('click', e=>{
+  if(e.target===document.getElementById('final-invoice-panel')) closeFinalInvoice();
+});
+
+document.getElementById('quote-panel').addEventListener('click', e=>{
+  if(e.target===document.getElementById('quote-panel')) toggleQuotePanel();
+});
+
+// Esc closes panel/modals
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    const sl = document.getElementById('send-label-panel');
+    const fi = document.getElementById('final-invoice-panel');
+    const qp = document.getElementById('quote-panel');
+    if(sl.style.display==='flex') return closeSendLabel();
+    if(fi.style.display==='flex') return closeFinalInvoice();
+    if(qp.style.display==='flex') return toggleQuotePanel();
+    if(document.getElementById('detail-panel').classList.contains('open')) return closePanel();
+  }
 });
 </script>
 </body>
