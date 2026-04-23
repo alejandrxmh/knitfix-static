@@ -189,5 +189,24 @@ module.exports = async function handler(req, res) {
     console.error("Moneybird final invoice failed:", err.message);
   }
 
+  // Mark final invoice as sent on the ORIGINAL payment intent so the admin UI
+  // can show it as a completed step in the stepper
+  try {
+    const piId = typeof original.payment_intent === "string"
+      ? original.payment_intent
+      : original.payment_intent?.id;
+    if (piId) {
+      await stripe.paymentIntents.update(piId, {
+        metadata: {
+          kf_final_invoice_sent: String(Date.now()),
+          kf_final_total:        String(totalPrice),
+          kf_final_remainder:    String(remainder),
+        }
+      });
+    }
+  } catch (err) {
+    console.error("Failed to mark final invoice sent:", err.message);
+  }
+
   return res.status(200).json({ ok: true, remainder, payment_url: session.url });
 };

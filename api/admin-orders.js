@@ -81,6 +81,8 @@ function reviewEmailHtml(name, ref) {
 module.exports = async function handler(req, res) {
   if (!authCheck(req)) return res.status(401).json({ error: "Unauthorized" });
 
+  const includeArchived = req.query?.archived === "1" || req.query?.archived === "true";
+
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const allSessions = await listAllSessions(stripe, {
     maxTotal: 1000,
@@ -103,6 +105,12 @@ module.exports = async function handler(req, res) {
     const readyBy    = pi?.metadata?.kf_ready_by || null;
     const inboundTracking  = pi?.metadata?.kf_inbound_tracking  || null;
     const inboundLabelSent = pi?.metadata?.kf_inbound_label_sent ? parseInt(pi.metadata.kf_inbound_label_sent) : null;
+    const finalInvoiceSent = pi?.metadata?.kf_final_invoice_sent ? parseInt(pi.metadata.kf_final_invoice_sent) : null;
+    const archived         = pi?.metadata?.kf_archived === "true";
+    const archivedAt       = pi?.metadata?.kf_archived_at ? parseInt(pi.metadata.kf_archived_at) : null;
+
+    // Skip archived orders unless explicitly requested
+    if (archived && !includeArchived) continue;
 
     /* auto-send review email 14 days after verzonden */
     if (REVIEW_URL && status === "verzonden" && shippedAt && !reviewSent && (now - shippedAt) >= fourteenDays) {
@@ -138,11 +146,16 @@ module.exports = async function handler(req, res) {
       address:     `${s.metadata.street} ${s.metadata.house_number}, ${s.metadata.postal_code} ${s.metadata.city}`,
       amount:      (s.amount_total / 100).toFixed(2),
       date:        new Date(s.created * 1000).toLocaleDateString("nl-NL", { day: "numeric", month: "short" }),
+      paid_at:     s.created * 1000,
       status,
       ready_by:    readyBy,
       review_sent: reviewSent,
-      inbound_tracking:   inboundTracking,
-      inbound_label_sent: inboundLabelSent,
+      inbound_tracking:    inboundTracking,
+      inbound_label_sent:  inboundLabelSent,
+      final_invoice_sent:  finalInvoiceSent,
+      shipped_at:          shippedAt,
+      archived,
+      archived_at:         archivedAt,
     });
   }
 
