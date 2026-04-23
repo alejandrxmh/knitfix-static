@@ -462,6 +462,7 @@ function buildSteps(o){
   const rank = STATUS_RANK[o.status] ?? 0;
   const hasLabelSent   = !!o.inbound_label_sent;
   const hasFinalInv    = !!o.final_invoice_sent;
+  const hasReviewSent  = !!o.review_sent;
   const isShipped      = o.status === 'verzonden';
   const isReady        = rank >= 2;
   const isInProgress   = rank >= 1;
@@ -473,6 +474,7 @@ function buildSteps(o){
     { key:'ready',    label:'Ready',         state: isReady ? 'done' : 'future' },
     { key:'invoice',  label:'Invoice sent',  state: hasFinalInv ? 'done' : (isShipped ? 'skipped' : 'future'), time: hasFinalInv ? fmtShortDate(o.final_invoice_sent) : '' },
     { key:'shipped',  label:'Shipped',       state: isShipped ? 'done' : 'future', time: isShipped ? fmtShortDate(o.shipped_at) : '' },
+    { key:'review',   label:'Review sent',   state: hasReviewSent ? 'done' : (o.archived ? 'skipped' : 'future'), time: hasReviewSent ? fmtShortDate(o.review_sent_at) : '' },
     { key:'done',     label:'Archived',      state: o.archived ? 'done' : 'future', time: o.archived ? fmtShortDate(o.archived_at) : '' },
   ];
 
@@ -507,8 +509,18 @@ function nextAction(o){
   if (o.status === 'klaar' && o.final_invoice_sent){
     return { key:'mark-shipped', label:'Mark as shipped', type:'status', toStatus:'verzonden', hint:'After packing and handing off to PostNL, click this. Review email is sent automatically 14 days later.' };
   }
-  if (o.status === 'verzonden'){
-    return { key:'archive', label:'Archive this order', type:'archive', hint:'Review email sends automatically 14 days after shipping. Archiving hides the order from the main view.' };
+  if (o.status === 'verzonden' && !o.review_sent){
+    const daysSinceShipped = o.shipped_at ? Math.floor((Date.now() - o.shipped_at) / 86400000) : null;
+    const daysLeft = daysSinceShipped !== null ? Math.max(0, 14 - daysSinceShipped) : null;
+    const hint = daysLeft === null
+      ? 'The review email will auto-send 14 days after shipping. Send now to request earlier.'
+      : daysLeft > 0
+        ? `Auto-sends in ${daysLeft} day${daysLeft===1?'':'s'}. Send now to request earlier.`
+        : 'Auto-send should have fired but didn\u2019t. Send manually to request the review.';
+    return { key:'request-review', label:'Request review', type:'review', hint };
+  }
+  if (o.status === 'verzonden' && o.review_sent){
+    return { key:'archive', label:'Archive this order', type:'archive', hint:'Review email has been sent. Archiving hides this order from the main view.' };
   }
   return { key:'noop', label:'No action needed', type:'noop', hint:'' };
 }
@@ -517,16 +529,27 @@ function nextAction(o){
 function nextActionShort(o){
   const a = nextAction(o);
   const SHORT = {
-    'send-label':    'Send label',
-    'start-repair':  'Start repair',
-    'mark-ready':    'Mark ready',
-    'final-invoice': 'Send invoice',
-    'mark-shipped':  'Mark shipped',
-    'archive':       'Archive',
-    'unarchive':     'Archived',
-    'noop':          'Done',
+    'send-label':     'Send label',
+    'start-repair':   'Start repair',
+    'mark-ready':     'Mark ready',
+    'final-invoice':  'Send invoice',
+    'mark-shipped':   'Mark shipped',
+    'request-review': 'Request review',
+    'archive':        'Archive',
+    'unarchive':      'Archived',
+    'noop':           'Done',
   };
-  return { text: SHORT[a.key] || a.label, done: a.key === 'noop' || a.key === 'unarchive' };
+  // Review within the 14-day auto-send window: show as passive wait, not "todo"
+  let done = a.key === 'noop' || a.key === 'unarchive';
+  let text = SHORT[a.key] || a.label;
+  if (a.key === 'request-review') {
+    const days = o.shipped_at ? Math.floor((Date.now() - o.shipped_at) / 86400000) : 0;
+    if (days < 14) {
+      text = 'Awaiting review';
+      done = true; // render in muted style (no red dot)
+    }
+  }
+  return { text, done };
 }
 
 // ─── AUTH ──────────────────────────────────────────────────────────────
@@ -566,7 +589,15 @@ function updateStats(){
   const active = allOrders.filter(o=>!o.archived);
   const needsAction = active.filter(o=>{
     const a = nextAction(o);
-    return a.type !== 'noop' && a.type !== 'archive' && a.type !== 'unarchive';
+    // 'archive' and 'unarchive' are end-states, not action-needed
+    if (a.type === 'noop' || a.type === 'archive' || a.type === 'unarchive') return false;
+    // Review request within the 14-day auto-send window isn't "needs action"
+    // — the cron will handle it. Only flag if past the window (auto-send stuck).
+    if (a.type === 'review') {
+      const daysSinceShipped = o.shipped_at ? Math.floor((Date.now() - o.shipped_at) / 86400000) : 0;
+      return daysSinceShipped >= 14;
+    }
+    return true;
   });
   const inProgress = active.filter(o=>o.status==='in behandeling');
   const rev = active.reduce((a,o)=>a+parseFloat(o.amount),0);
@@ -593,7 +624,12 @@ function applyFilter(){
     list = allOrders.filter(o => {
       if (o.archived) return false;
       const a = nextAction(o);
-      return a.type !== 'noop' && a.type !== 'archive' && a.type !== 'unarchive';
+      if (a.type === 'noop' || a.type === 'archive' || a.type === 'unarchive') return false;
+      if (a.type === 'review') {
+        const daysSinceShipped = o.shipped_at ? Math.floor((Date.now() - o.shipped_at) / 86400000) : 0;
+        return daysSinceShipped >= 14;
+      }
+      return true;
     });
   } else {
     list = allOrders.filter(o => o.status === activeFilter);
@@ -744,9 +780,13 @@ function renderSecondaryActions(o){
     actions.push(`<button class="secondary-btn" onclick="openFinalInvoice()">Send invoice <span class="arrow">&rarr;</span></button>`);
   }
 
-  // Review email — always available after shipped (in case auto-send failed)
+  // Review email — shown after shipped. Button is disabled (shows "Review sent") if already sent.
   if (o.status === 'verzonden') {
-    actions.push(`<button class="secondary-btn" onclick="sendReview()" id="review-btn">Request review <span class="arrow">&rarr;</span></button>`);
+    if (o.review_sent) {
+      actions.push(`<button class="secondary-btn" disabled style="opacity:0.6;cursor:default" title="Sent ${fmtShortDate(o.review_sent_at) || ''}">Review sent &check;</button>`);
+    } else {
+      actions.push(`<button class="secondary-btn" onclick="sendReviewPrimary()" id="review-btn">Request review <span class="arrow">&rarr;</span></button>`);
+    }
   }
 
   document.getElementById('secondary-actions').innerHTML = actions.join('');
@@ -783,6 +823,7 @@ async function doPrimaryAction(){
   if (a.type === 'modal-label')   return openSendLabel();
   if (a.type === 'modal-invoice') return openFinalInvoice();
   if (a.type === 'status')        return advanceStatus(a.toStatus);
+  if (a.type === 'review')        return sendReviewPrimary();
   if (a.type === 'archive')       return toggleArchive();
   if (a.type === 'unarchive')     return toggleArchive();
 }
@@ -912,19 +953,45 @@ function toggleAdvanced(){
 }
 
 // ─── REVIEW EMAIL ──────────────────────────────────────────────────────
-async function sendReview(){
+async function sendReviewPrimary(){
   if(!currentOrder) return;
-  const btn = document.getElementById('review-btn');
-  if(!btn) return;
-  const original = btn.innerHTML;
-  btn.innerHTML = 'Sending\u2026';
-  await fetch('/api/review-email',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({email:currentOrder.email,name:currentOrder.name,ref:currentOrder.ref})
-  });
-  btn.innerHTML = 'Sent &check;';
-  setTimeout(() => { btn.innerHTML = original; }, 2500);
+
+  // Confirm, because this is an email to the customer and we don't want accidental sends
+  if (!confirm(`Send review request email to ${currentOrder.email}?`)) return;
+
+  // Figure out which button was clicked (primary or secondary)
+  const a = nextAction(currentOrder);
+  const isPrimary = a.type === 'review';
+  const btn = isPrimary
+    ? document.getElementById('primary-action-btn')
+    : document.getElementById('review-btn');
+  const original = btn ? btn.innerHTML : '';
+  if (btn) { btn.innerHTML = 'Sending\u2026'; btn.disabled = true; }
+
+  try {
+    const res = await fetch('/api/review-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email:currentOrder.email,name:currentOrder.name,ref:currentOrder.ref})
+    });
+    if(!res.ok) throw new Error('Send failed');
+
+    // Update local state
+    const now = Date.now();
+    currentOrder.review_sent = true;
+    currentOrder.review_sent_at = now;
+    const o = allOrders.find(x=>x.ref===currentOrder.ref);
+    if(o){ o.review_sent = true; o.review_sent_at = now; }
+
+    if (btn) { btn.innerHTML = 'Sent &check;'; }
+    setTimeout(() => {
+      openPanel(currentOrder.ref); // rerender — primary button now says "Archive"
+      applyFilter();
+    }, 700);
+  } catch(err){
+    if (btn) { btn.innerHTML = original; btn.disabled = false; }
+    alert('Could not send review email. Try again.');
+  }
 }
 
 // ─── EDIT EMAIL ────────────────────────────────────────────────────────
