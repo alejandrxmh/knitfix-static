@@ -1,6 +1,6 @@
 const Stripe = require("stripe");
 const { Resend } = require("resend");
-const createMoneybirdInvoice = require("./moneybird-invoice");
+const createMoneybirdInvoice = require("./_moneybird-invoice");
 const { findSessionByRef } = require("./_stripe-helpers");
 const { authCheck } = require("./_auth");
 
