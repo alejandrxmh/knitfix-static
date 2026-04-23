@@ -102,6 +102,7 @@ module.exports = async function handler(req, res) {
     const status     = pi?.metadata?.kf_status || "ontvangen";
     const shippedAt  = pi?.metadata?.kf_shipped_at ? parseInt(pi.metadata.kf_shipped_at) : null;
     const reviewSent = pi?.metadata?.kf_review_sent === "true";
+    const reviewSentAt = pi?.metadata?.kf_review_sent_at ? parseInt(pi.metadata.kf_review_sent_at) : null;
     const readyBy    = pi?.metadata?.kf_ready_by || null;
     const inboundTracking  = pi?.metadata?.kf_inbound_tracking  || null;
     const inboundLabelSent = pi?.metadata?.kf_inbound_label_sent ? parseInt(pi.metadata.kf_inbound_label_sent) : null;
@@ -125,7 +126,12 @@ module.exports = async function handler(req, res) {
         });
         const piId = typeof pi === "string" ? pi : pi?.id;
         if (piId) {
-          await stripe.paymentIntents.update(piId, { metadata: { kf_review_sent: "true" } });
+          await stripe.paymentIntents.update(piId, {
+            metadata: {
+              kf_review_sent:    "true",
+              kf_review_sent_at: String(Date.now()),
+            }
+          });
         }
         console.log("Auto review email sent for", s.metadata.reference_code);
       } catch (err) {
@@ -150,6 +156,7 @@ module.exports = async function handler(req, res) {
       status,
       ready_by:    readyBy,
       review_sent: reviewSent,
+      review_sent_at:      reviewSentAt,
       inbound_tracking:    inboundTracking,
       inbound_label_sent:  inboundLabelSent,
       final_invoice_sent:  finalInvoiceSent,

@@ -1,5 +1,7 @@
 /* Sends a Google review request email to a customer. */
+const Stripe = require("stripe");
 const { Resend } = require("resend");
+const { findSessionByRef } = require("./_stripe-helpers");
 const { authCheck } = require("./_auth");
 
 const GOOGLE_REVIEW_URL = process.env.GOOGLE_REVIEW_URL;
@@ -99,6 +101,28 @@ module.exports = async function handler(req, res) {
     subject:  "Hoe was je KnitFix ervaring?",
     html:     reviewEmailHtml(name.split(" ")[0], ref),
   });
+
+  // Mark review as sent in Stripe metadata so (a) the auto-send cron in
+  // admin-orders.js doesn't fire a duplicate 14 days later, and (b) the
+  // admin UI stepper shows the step as completed with a timestamp.
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const session = await findSessionByRef(stripe, ref);
+    const piId = typeof session?.payment_intent === "string"
+      ? session.payment_intent
+      : session?.payment_intent?.id;
+    if (piId) {
+      await stripe.paymentIntents.update(piId, {
+        metadata: {
+          kf_review_sent:    "true",
+          kf_review_sent_at: String(Date.now()),
+        },
+      });
+    }
+  } catch (err) {
+    console.error("Could not mark review_sent in Stripe metadata:", err.message);
+    // Email was sent successfully, so we don't fail the request
+  }
 
   return res.status(200).json({ ok: true });
 };
