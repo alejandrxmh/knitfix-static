@@ -1,7 +1,11 @@
 /* Sends a Google review request email to a customer. */
 const { Resend } = require("resend");
+const { authCheck } = require("./_auth");
 
-const GOOGLE_REVIEW_URL = process.env.GOOGLE_REVIEW_URL || "https://g.page/r/knitfix/review";
+const GOOGLE_REVIEW_URL = process.env.GOOGLE_REVIEW_URL;
+if (!GOOGLE_REVIEW_URL) {
+  console.warn("GOOGLE_REVIEW_URL env var is not set — review emails will have a broken link");
+}
 
 const LOGO_URL  = "https://knitfix.nl/knitfix_logo.jpg";
 const F         = "'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif";
@@ -80,9 +84,7 @@ function reviewEmailHtml(name, ref) {
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
-  const cookie = req.headers.cookie || "";
-  const match = cookie.match(/kf_session=([^;]+)/);
-  if (!match || match[1] !== process.env.DASHBOARD_PASSWORD) {
+  if (!authCheck(req)) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
@@ -92,7 +94,7 @@ module.exports = async function handler(req, res) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
     from:     "KnitFix <hello@knitfix.nl>",
-    reply_to: "hello.knitfix@gmail.com",
+    reply_to: "hello@knitfix.nl",
     to:       email,
     subject:  "Hoe was je KnitFix ervaring?",
     html:     reviewEmailHtml(name.split(" ")[0], ref),

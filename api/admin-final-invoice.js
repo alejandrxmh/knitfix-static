@@ -1,12 +1,8 @@
 const Stripe = require("stripe");
 const { Resend } = require("resend");
 const createMoneybirdInvoice = require("./moneybird-invoice");
-
-function authCheck(req) {
-  const cookie = req.headers.cookie || "";
-  const match = cookie.match(/kf_session=([^;]+)/);
-  return match && match[1] === process.env.DASHBOARD_PASSWORD;
-}
+const { findSessionByRef } = require("./_stripe-helpers");
+const { authCheck } = require("./_auth");
 
 // ─── Shared design tokens (mirrored from webhook.js) ─────────────────────────
 const LOGO_URL  = "https://knitfix.nl/knitfix_logo.jpg";
@@ -133,8 +129,13 @@ module.exports = async function handler(req, res) {
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  const sessions = await stripe.checkout.sessions.list({ limit: 100 });
-  const original  = sessions.data.find(s => s.metadata?.reference_code === ref);
+  const baseUrl = process.env.BASE_URL;
+  if (!baseUrl) {
+    console.error("BASE_URL env var is not set");
+    return res.status(500).json({ error: "Serverconfiguratie-fout." });
+  }
+
+  const original = await findSessionByRef(stripe, ref);
   if (!original) return res.status(404).json({ error: "Bestelling niet gevonden." });
 
   const meta = original.metadata;
@@ -164,14 +165,14 @@ module.exports = async function handler(req, res) {
       remainder:        String(remainder),
       is_final_payment: "true",
     },
-    success_url: `${process.env.BASE_URL}/success.html?ref=${ref}`,
-    cancel_url:  `${process.env.BASE_URL}/`,
+    success_url: `${baseUrl}/success.html?ref=${ref}`,
+    cancel_url:  `${baseUrl}/`,
   });
 
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
     from:     "KnitFix <hello@knitfix.nl>",
-    reply_to: "hello.knitfix@gmail.com",
+    reply_to: "hello@knitfix.nl",
     to:       meta.customer_email,
     subject:  `KnitFix · restbedrag reparatie (${ref})`,
     html:     finalInvoiceEmail(name, ref, meta.garment_type, totalPrice, depositPaid, remainder, session.url),

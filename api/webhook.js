@@ -1,5 +1,6 @@
 const Stripe = require("stripe");
 const { Resend } = require("resend");
+const { listAllSessions } = require("./_stripe-helpers");
 
 async function getRawBody(req) {
   if (Buffer.isBuffer(req.body)) return req.body;
@@ -13,9 +14,10 @@ async function getRawBody(req) {
 }
 
 async function isRepeatCustomer(stripe, email, currentSessionId) {
+  if (!email) return false;
   try {
-    const sessions = await stripe.checkout.sessions.list({ limit: 100 });
-    return sessions.data.some(s =>
+    const sessions = await listAllSessions(stripe, { maxTotal: 500 });
+    return sessions.some(s =>
       s.id !== currentSessionId &&
       s.payment_status === "paid" &&
       s.metadata?.customer_email === email
@@ -261,7 +263,7 @@ module.exports = async function handler(req, res) {
   try {
     await resend.emails.send({
       from: "KnitFix <hello@knitfix.nl>",
-      reply_to: "hello.knitfix@gmail.com",
+      reply_to: "hello@knitfix.nl",
       to: meta.customer_email,
       subject: `KnitFix · boeking bevestigd (${meta.reference_code})`,
       html: customerEmail(meta, knitfixAddress, repeat),
@@ -274,8 +276,8 @@ module.exports = async function handler(req, res) {
   try {
     await resend.emails.send({
       from: "KnitFix Boekingen <hello@knitfix.nl>",
-      reply_to: "hello.knitfix@gmail.com",
-      to: process.env.KNITFIX_NOTIFY_EMAIL || "hello.knitfix@gmail.com",
+      reply_to: "hello@knitfix.nl",
+      to: process.env.KNITFIX_NOTIFY_EMAIL || "hello@knitfix.nl",
       subject: `${repeat ? "🔁 " : ""}Nieuwe boeking: ${meta.reference_code} · ${meta.garment_type}`,
       html: adminEmail(meta, repeat),
     });

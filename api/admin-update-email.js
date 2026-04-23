@@ -1,10 +1,6 @@
 const Stripe = require("stripe");
-
-function authCheck(req) {
-  const cookie = req.headers.cookie || "";
-  const match = cookie.match(/kf_session=([^;]+)/);
-  return match && match[1] === process.env.DASHBOARD_PASSWORD;
-}
+const { findSessionByRef } = require("./_stripe-helpers");
+const { authCheck } = require("./_auth");
 
 module.exports = async function handler(req, res) {
   if (!authCheck(req)) return res.status(401).json({ error: "Unauthorized" });
@@ -19,8 +15,7 @@ module.exports = async function handler(req, res) {
   }
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-  const sessions = await stripe.checkout.sessions.list({ limit: 100 });
-  const session = sessions.data.find((s) => s.metadata?.reference_code === ref);
+  const session = await findSessionByRef(stripe, ref);
   if (!session) return res.status(404).json({ error: "Order niet gevonden" });
 
   try {

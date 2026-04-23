@@ -1,13 +1,12 @@
 const Stripe = require("stripe");
 const { Resend } = require("resend");
+const { listAllSessions } = require("./_stripe-helpers");
+const { authCheck } = require("./_auth");
 
-function authCheck(req) {
-  const cookie = req.headers.cookie || "";
-  const match = cookie.match(/kf_session=([^;]+)/);
-  return match && match[1] === process.env.DASHBOARD_PASSWORD;
+const REVIEW_URL = process.env.GOOGLE_REVIEW_URL;
+if (!REVIEW_URL) {
+  console.warn("GOOGLE_REVIEW_URL env var is not set — auto review emails will have a broken link");
 }
-
-const REVIEW_URL = process.env.GOOGLE_REVIEW_URL || "https://g.page/r/knitfix/review";
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const LOGO_URL  = "https://knitfix.nl/knitfix_logo.jpg";
@@ -83,9 +82,9 @@ module.exports = async function handler(req, res) {
   if (!authCheck(req)) return res.status(401).json({ error: "Unauthorized" });
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-  const sessions = await stripe.checkout.sessions.list({
-    limit: 100,
-    expand: ["data.payment_intent"],
+  const allSessions = await listAllSessions(stripe, {
+    maxTotal: 1000,
+    extraParams: { expand: ["data.payment_intent"] },
   });
 
   const now = Date.now();
@@ -94,7 +93,7 @@ module.exports = async function handler(req, res) {
 
   const orders = [];
 
-  for (const s of sessions.data) {
+  for (const s of allSessions) {
     if (s.payment_status !== "paid" || !s.metadata?.reference_code) continue;
 
     const pi = s.payment_intent;
@@ -106,12 +105,12 @@ module.exports = async function handler(req, res) {
     const inboundLabelSent = pi?.metadata?.kf_inbound_label_sent ? parseInt(pi.metadata.kf_inbound_label_sent) : null;
 
     /* auto-send review email 14 days after verzonden */
-    if (status === "verzonden" && shippedAt && !reviewSent && (now - shippedAt) >= fourteenDays) {
+    if (REVIEW_URL && status === "verzonden" && shippedAt && !reviewSent && (now - shippedAt) >= fourteenDays) {
       try {
         const name = (s.metadata.customer_name || "").split(" ")[0];
         await resend.emails.send({
           from:     "KnitFix <hello@knitfix.nl>",
-          reply_to: "hello.knitfix@gmail.com",
+          reply_to: "hello@knitfix.nl",
           to:       s.metadata.customer_email,
           subject:  "Hoe was je KnitFix ervaring?",
           html:     reviewEmailHtml(name, s.metadata.reference_code),

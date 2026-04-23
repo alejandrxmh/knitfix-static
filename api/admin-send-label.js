@@ -1,11 +1,7 @@
 const Stripe = require("stripe");
 const { Resend } = require("resend");
-
-function authCheck(req) {
-  const cookie = req.headers.cookie || "";
-  const match = cookie.match(/kf_session=([^;]+)/);
-  return match && match[1] === process.env.DASHBOARD_PASSWORD;
-}
+const { findSessionByRef } = require("./_stripe-helpers");
+const { authCheck } = require("./_auth");
 
 // ─── Design tokens (mirrored from admin-status.js) ───────────────────────────
 const LOGO_URL  = "https://knitfix.nl/knitfix_logo.png";
@@ -194,8 +190,7 @@ module.exports = async function handler(req, res) {
   }
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-  const sessions = await stripe.checkout.sessions.list({ limit: 100 });
-  const session = sessions.data.find((s) => s.metadata?.reference_code === ref);
+  const session = await findSessionByRef(stripe, ref);
   if (!session) return res.status(404).json({ error: "Order not found" });
 
   const fullName = session.metadata?.customer_name || "";
@@ -214,7 +209,7 @@ module.exports = async function handler(req, res) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from:     "KnitFix <hello@knitfix.nl>",
-      reply_to: "hello.knitfix@gmail.com",
+      reply_to: "hello@knitfix.nl",
       to:       email,
       subject:  `KnitFix · je verzendlabel (${ref})`,
       html:     labelEmailHtml(name, ref, trackingCode),

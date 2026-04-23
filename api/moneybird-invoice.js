@@ -23,8 +23,12 @@ module.exports = async function createMoneybirdInvoice(meta) {
       `${base}/contacts?query=${encodeURIComponent(meta.customer_email)}`,
       { headers }
     );
+    if (!searchRes.ok) {
+      console.error("Moneybird contact search non-ok:", searchRes.status);
+      return null;
+    }
     const contacts = await searchRes.json();
-    if (contacts.length > 0) {
+    if (Array.isArray(contacts) && contacts.length > 0) {
       contactId = contacts[0].id;
     } else {
       const createRes = await fetch(`${base}/contacts`, {
@@ -43,6 +47,11 @@ module.exports = async function createMoneybirdInvoice(meta) {
           }
         }),
       });
+      if (!createRes.ok) {
+        const errText = await createRes.text();
+        console.error("Moneybird contact create non-ok:", createRes.status, errText);
+        return null;
+      }
       const newContact = await createRes.json();
       contactId = newContact.id;
     }
@@ -75,8 +84,15 @@ module.exports = async function createMoneybirdInvoice(meta) {
         }
       }),
     });
+
+    if (!invoiceRes.ok) {
+      const errText = await invoiceRes.text();
+      console.error("Moneybird invoice non-ok:", invoiceRes.status, errText);
+      return null;
+    }
+
     const invoice = await invoiceRes.json();
-    console.log("Moneybird invoice created:", invoice.invoice_id);
+    console.log("Moneybird invoice created:", invoice.id || invoice.invoice_id);
     return invoice.id;
   } catch (err) {
     console.error("Moneybird invoice error:", err.message);

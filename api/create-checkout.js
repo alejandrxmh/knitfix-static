@@ -52,6 +52,12 @@ module.exports = async function handler(req, res) {
   const referenceCode = generateRef();
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+  const baseUrl = process.env.BASE_URL;
+  if (!baseUrl) {
+    console.error("BASE_URL env var is not set");
+    return res.status(500).json({ error: "Serverconfiguratie-fout. Probeer later opnieuw." });
+  }
+
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card", "ideal"],
@@ -86,8 +92,8 @@ module.exports = async function handler(req, res) {
         postal_code:        postal_code,
         city:               city,
       },
-      success_url: `${process.env.BASE_URL}/success.html?ref=${referenceCode}`,
-      cancel_url:  `${process.env.BASE_URL}/#book`,
+      success_url: `${baseUrl}/success.html?ref=${referenceCode}`,
+      cancel_url:  `${baseUrl}/#book`,
     });
 
     return res.status(200).json({ url: session.url });
