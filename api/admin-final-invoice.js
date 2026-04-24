@@ -48,22 +48,37 @@ function shell(inner) {
 </body></html>`;
 }
 
-function finalInvoiceEmail(name, ref, garment, totalPrice, depositPaid, remainder, paymentUrl) {
+function finalQuoteEmail(name, ref, garment, totalPrice, depositPaid, remainder, paymentUrl, readyByFormatted) {
+  const readyBlock = readyByFormatted ? `
+    <!-- ready by -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:0 40px 24px;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${NOTE_BG};border-radius:10px;border-left:3px solid ${ACCENT};">
+        <tr><td style="padding:16px 20px;">
+          <p style="margin:0 0 4px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:${ACCENT_LT};">klaar op</p>
+          <p style="margin:0;font-family:${F};font-size:15px;color:${INK};line-height:1.5;">${readyByFormatted}</p>
+        </td></tr>
+      </table>
+    </td></tr></table>
+  ` : '';
+
   const inner = `
     <!-- header -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr><td style="padding:36px 40px 28px;border-bottom:1px solid ${RULE};">
-      <p style="margin:0 0 12px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${ACCENT_LT};">reparatie voltooid</p>
-      <h1 style="margin:0 0 12px;font-family:${F};font-size:30px;font-weight:300;color:${INK};line-height:1.2;">je reparatie<br>is klaar.</h1>
+      <p style="margin:0 0 12px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${ACCENT_LT};">je offerte</p>
+      <h1 style="margin:0 0 12px;font-family:${F};font-size:30px;font-weight:300;color:${INK};line-height:1.2;">je offerte<br>&amp; planning.</h1>
       <p style="margin:0;font-family:${F};font-size:14px;color:${SOFT};line-height:1.7;">
-        Hoi ${name}, je ${garment} is gerepareerd en klaar om terug te sturen. Betaal het restbedrag om de verzending te starten.
+        Hoi ${name}, we hebben je ${garment} bekeken en hieronder vind je de definitieve offerte voor de reparatie. Betaal het restbedrag om de reparatie te laten starten.
       </p>
     </td></tr></table>
 
+    ${readyBlock}
+
     <!-- eindafrekening -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr><td style="padding:28px 40px 0;">
-      <p style="margin:0 0 16px;font-family:${F};font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:${LABEL_CLR};">eindafrekening</p>
+    <tr><td style="padding:4px 40px 0;">
+      <p style="margin:0 0 16px;font-family:${F};font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:${LABEL_CLR};">offerte</p>
     </td></tr>
     <tr><td style="padding:0 40px 28px;">
       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${NOTE_BG};border-radius:10px;overflow:hidden;">
@@ -92,7 +107,7 @@ function finalInvoiceEmail(name, ref, garment, totalPrice, depositPaid, remainde
     <tr><td style="padding:0 40px 32px;text-align:center;">
       <table cellpadding="0" cellspacing="0" border="0" align="center">
       <tr><td style="background-color:${ACCENT};border-radius:10px;">
-        <a href="${paymentUrl}" style="display:inline-block;padding:15px 36px;font-family:${F};font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#fff;text-decoration:none;">betaal restbedrag &rarr;</a>
+        <a href="${paymentUrl}" style="display:inline-block;padding:15px 36px;font-family:${F};font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#fff;text-decoration:none;">betaal &amp; start reparatie &rarr;</a>
       </td></tr>
       </table>
     </td></tr></table>
@@ -102,7 +117,7 @@ function finalInvoiceEmail(name, ref, garment, totalPrice, depositPaid, remainde
     <tr><td style="padding:0 40px;border-top:1px solid ${RULE};"></td></tr>
     <tr><td style="padding:20px 40px 32px;">
       <p style="margin:0 0 4px;font-family:${F};font-size:12px;color:${MUTED};line-height:1.6;">
-        Referentie: <span style="color:${SOFT};">${ref}</span> &nbsp;·&nbsp; Na betaling sturen we je kledingstuk terug via koerier.
+        Referentie: <span style="color:${SOFT};">${ref}</span> &nbsp;·&nbsp; Na betaling starten we je reparatie${readyByFormatted ? ` en sturen je kledingstuk terug zodra ${readyByFormatted.toLowerCase().startsWith('klaar') ? 'klaar' : 'gereed'}` : ''}.
       </p>
       <p style="margin:0;font-family:${F};font-size:12px;color:${MUTED};line-height:1.6;">
         Vragen? WhatsApp <a href="https://wa.me/31616120895" style="color:${ACCENT};text-decoration:none;font-weight:500;">+31 6 16120895</a>
@@ -116,7 +131,7 @@ module.exports = async function handler(req, res) {
   if (!authCheck(req)) return res.status(401).json({ error: "Unauthorized" });
   if (req.method !== "POST") return res.status(405).end();
 
-  const { ref, total_price } = req.body || {};
+  const { ref, total_price, ready_by } = req.body || {};
   if (!ref || !total_price) return res.status(400).json({ error: "Missing ref or total_price" });
 
   const totalPrice  = parseFloat(total_price);
@@ -124,7 +139,25 @@ module.exports = async function handler(req, res) {
   const remainder   = totalPrice - depositPaid;
 
   if (remainder <= 0) {
-    return res.status(400).json({ error: "Restbedrag moet groter zijn dan €0. Totaal moet meer dan €30 zijn." });
+    return res.status(400).json({ error: "Remainder must be greater than €0. Total must exceed €30." });
+  }
+
+  // Format ready_by (YYYY-MM-DD) to Dutch-locale readable string
+  let readyByFormatted = "";
+  if (ready_by) {
+    try {
+      const d = new Date(ready_by + "T12:00:00");
+      if (!isNaN(d.getTime())) {
+        readyByFormatted = d.toLocaleDateString("nl-NL", {
+          weekday: "long",
+          day:     "numeric",
+          month:   "long",
+          year:    "numeric",
+        });
+        // Capitalize first letter (nl-NL locale returns lowercase weekday)
+        readyByFormatted = readyByFormatted.charAt(0).toUpperCase() + readyByFormatted.slice(1);
+      }
+    } catch (_) { /* leave empty */ }
   }
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -132,11 +165,11 @@ module.exports = async function handler(req, res) {
   const baseUrl = process.env.BASE_URL;
   if (!baseUrl) {
     console.error("BASE_URL env var is not set");
-    return res.status(500).json({ error: "Serverconfiguratie-fout." });
+    return res.status(500).json({ error: "Server configuration error." });
   }
 
   const original = await findSessionByRef(stripe, ref);
-  if (!original) return res.status(404).json({ error: "Bestelling niet gevonden." });
+  if (!original) return res.status(404).json({ error: "Order not found." });
 
   const meta = original.metadata;
   const name = meta.customer_name.split(" ")[0];
@@ -147,7 +180,7 @@ module.exports = async function handler(req, res) {
       price_data: {
         currency: "eur",
         product_data: {
-          name: "KnitFix — Restbedrag reparatie",
+          name: "KnitFix — Final quote for repair",
           description: `${meta.garment_type} (${meta.material}) · ref: ${ref}`,
         },
         unit_amount: Math.round(remainder * 100),
@@ -174,39 +207,43 @@ module.exports = async function handler(req, res) {
     from:     "KnitFix <hello@knitfix.nl>",
     reply_to: "hello@knitfix.nl",
     to:       meta.customer_email,
-    subject:  `KnitFix · restbedrag reparatie (${ref})`,
-    html:     finalInvoiceEmail(name, ref, meta.garment_type, totalPrice, depositPaid, remainder, session.url),
+    subject:  `KnitFix · je offerte & planning (${ref})`,
+    html:     finalQuoteEmail(name, ref, meta.garment_type, totalPrice, depositPaid, remainder, session.url, readyByFormatted),
   });
 
   try {
     await createMoneybirdInvoice({
       ...meta,
       reference_code: ref + "-FINAL",
-      _override_description: `KnitFix reparatie restbedrag — ${meta.garment_type} (${meta.material})\nReferentie: ${ref} · Totaal: €${totalPrice.toFixed(2)} · Aanbetaling: −€${depositPaid.toFixed(2)}`,
+      _override_description: `KnitFix — final quote for repair — ${meta.garment_type} (${meta.material})\nRef: ${ref} · Total: €${totalPrice.toFixed(2)} · Deposit: −€${depositPaid.toFixed(2)}${readyByFormatted ? ` · Ready by: ${readyByFormatted}` : ''}`,
       _override_price: remainder.toFixed(2),
     });
   } catch (err) {
-    console.error("Moneybird final invoice failed:", err.message);
+    console.error("Moneybird final quote invoice failed:", err.message);
   }
 
-  // Mark final invoice as sent on the ORIGINAL payment intent so the admin UI
-  // can show it as a completed step in the stepper
+  // Mark final quote as sent on the ORIGINAL payment intent, set status to
+  // 'in behandeling' (quote sent = repair starting), and save ready_by.
+  // The stepper no longer distinguishes between in-progress/ready — the
+  // final quote IS the commitment, and the next step is shipping.
   try {
     const piId = typeof original.payment_intent === "string"
       ? original.payment_intent
       : original.payment_intent?.id;
     if (piId) {
-      await stripe.paymentIntents.update(piId, {
-        metadata: {
-          kf_final_invoice_sent: String(Date.now()),
-          kf_final_total:        String(totalPrice),
-          kf_final_remainder:    String(remainder),
-        }
-      });
+      const metadataUpdate = {
+        kf_final_invoice_sent: String(Date.now()),
+        kf_final_total:        String(totalPrice),
+        kf_final_remainder:    String(remainder),
+        kf_status:             "in behandeling",
+      };
+      if (ready_by)          metadataUpdate.kf_ready_by = ready_by;
+      if (readyByFormatted)  metadataUpdate.kf_ready_by_formatted = readyByFormatted;
+      await stripe.paymentIntents.update(piId, { metadata: metadataUpdate });
     }
   } catch (err) {
-    console.error("Failed to mark final invoice sent:", err.message);
+    console.error("Failed to mark final quote sent:", err.message);
   }
 
-  return res.status(200).json({ ok: true, remainder, payment_url: session.url });
+  return res.status(200).json({ ok: true, remainder, payment_url: session.url, ready_by_formatted: readyByFormatted });
 };

@@ -109,6 +109,87 @@ function labelEmailHtml(name, ref, trackingCode) {
 </body></html>`;
 }
 
+/** Outbound shipment email — sent to the customer when we ship their repaired
+ * garment back. Structurally similar to the inbound label email but with
+ * different copy: "your repair is on its way" instead of "send it to us". */
+function shippedEmailHtml(name, ref, trackingCode) {
+  const trackingUrl = `https://jouw.postnl.nl/track-and-trace/${trackingCode}-NL-NL`;
+  return `<!DOCTYPE html>
+<html lang="nl">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${GF_LINK}</head>
+<body style="margin:0;padding:0;background-color:${BG};font-family:${F};">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${BG};padding:48px 16px 56px;">
+<tr><td align="center">
+<table width="540" cellpadding="0" cellspacing="0" border="0" style="max-width:540px;width:100%;">
+
+  <tr><td style="padding-bottom:28px;text-align:center;">
+    <img src="${LOGO_URL}" width="120" alt="KnitFix" style="display:block;margin:0 auto;">
+  </td></tr>
+
+  <tr><td style="background-color:${WHITE};border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(40,20,10,0.08);">
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:36px 40px 28px;border-bottom:1px solid ${RULE};">
+      <p style="margin:0 0 12px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${ACCENT_LT};">onderweg</p>
+      <h1 style="margin:0;font-family:${F};font-size:30px;font-weight:300;color:${INK};line-height:1.2;">je reparatie<br>komt eraan.</h1>
+    </td></tr></table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:32px 40px 20px;">
+      <p style="margin:0 0 18px;font-family:${F};font-size:14px;color:${INK};line-height:1.7;">Hoi ${name}, je kledingstuk is gerepareerd en zojuist de deur uit. Het zou binnen een paar dagen bij je moeten zijn.</p>
+
+      <p style="margin:22px 0 10px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${ACCENT_LT};">volg je pakket</p>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0"
+        style="background-color:${NOTE_BG};border-radius:10px;border-left:3px solid ${ACCENT};margin-bottom:8px;">
+        <tr><td style="padding:16px 20px;">
+          <p style="margin:0 0 6px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:${ACCENT_LT};">trackingcode</p>
+          <p style="margin:0 0 10px;font-family:'SFMono-Regular',monospace,${F};font-size:15px;color:${INK};letter-spacing:0.04em;">${trackingCode}</p>
+          <a href="${trackingUrl}" style="font-family:${F};font-size:13px;color:${ACCENT};text-decoration:none;font-weight:500;">Volg je pakket bij PostNL &rarr;</a>
+        </td></tr>
+      </table>
+    </td></tr></table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:0 40px 28px;">
+      <p style="margin:0 0 10px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${ACCENT_LT};">bij ontvangst</p>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
+          &bull; &nbsp; pak het stuk voorzichtig uit; breiwerk kan wat kreuken onderweg
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
+          &bull; &nbsp; laat het eventueel een dag plat liggen voordat je het draagt
+        </td></tr>
+        <tr><td style="padding:6px 0;font-family:${F};font-size:13px;color:${SOFT};line-height:1.7;">
+          &bull; &nbsp; vragen of iets niet goed? reply direct op deze email of WhatsApp me
+        </td></tr>
+      </table>
+    </td></tr></table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr><td style="padding:0 40px;border-top:1px solid ${RULE};"></td></tr>
+    <tr><td style="padding:20px 40px 32px;">
+      <p style="margin:0;font-family:${F};font-size:12px;color:${LABEL_CLR};line-height:1.6;">
+        Referentie: <span style="color:${SOFT};">${ref}</span> &nbsp;·&nbsp;
+        WhatsApp: <a href="https://wa.me/31616120895" style="color:${LABEL_CLR};text-decoration:none;">+31 6 16120895</a>
+      </p>
+    </td></tr></table>
+
+  </td></tr>
+
+  <tr><td style="padding:24px 8px 0;text-align:center;">
+    <p style="margin:0;font-family:${F};font-size:11px;color:${LABEL_CLR};letter-spacing:0.04em;line-height:1.8;">
+      knitfix &nbsp;·&nbsp; amsterdam &nbsp;·&nbsp;
+      <a href="https://knitfix.nl" style="color:${LABEL_CLR};text-decoration:none;">knitfix.nl</a><br>
+      kvk 42013270 &nbsp;·&nbsp; btw NL005433323B97 &nbsp;·&nbsp; eenmanszaak
+    </p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>`;
+}
+
 // ─── Multipart parser (no formidable dep needed) ─────────────────────────────
 // Vercel/Node expose req as a readable stream; we parse the multipart body
 // ourselves to avoid adding dependencies to package.json.
@@ -183,10 +264,15 @@ module.exports = async function handler(req, res) {
   const ref = fields.ref;
   const trackingCode = fields.tracking_code;
   const overrideEmail = (fields.override_email || "").trim();
+  const direction = (fields.direction || "inbound").toLowerCase();
   const pdf = files.label;
 
   if (!ref || !trackingCode || !pdf) {
     return res.status(400).json({ error: "Missing ref, tracking_code, or label PDF" });
+  }
+
+  if (direction !== "inbound" && direction !== "outbound") {
+    return res.status(400).json({ error: "direction must be 'inbound' or 'outbound'" });
   }
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -204,6 +290,18 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "Email address looks invalid" });
   }
 
+  // Pick email template + subject + attachment filename based on direction
+  const isOutbound = direction === "outbound";
+  const subject   = isOutbound
+    ? `KnitFix \u00b7 je reparatie is onderweg (${ref})`
+    : `KnitFix \u00b7 je verzendlabel (${ref})`;
+  const html      = isOutbound
+    ? shippedEmailHtml(name, ref, trackingCode)
+    : labelEmailHtml(name, ref, trackingCode);
+  const filename  = isOutbound
+    ? `knitfix-reparatie-${ref}.pdf`
+    : `knitfix-verzendlabel-${ref}.pdf`;
+
   // Send the email with PDF attached
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
@@ -211,32 +309,37 @@ module.exports = async function handler(req, res) {
       from:     "KnitFix <hello@knitfix.nl>",
       reply_to: "hello@knitfix.nl",
       to:       email,
-      subject:  `KnitFix · je verzendlabel (${ref})`,
-      html:     labelEmailHtml(name, ref, trackingCode),
+      subject,
+      html,
       attachments: [
-        {
-          filename: `knitfix-verzendlabel-${ref}.pdf`,
-          content:  pdf.content.toString("base64"),
-        },
+        { filename, content: pdf.content.toString("base64") },
       ],
     });
   } catch (err) {
-    console.error("Label email failed:", err.message);
+    console.error(`${direction} email failed:`, err.message);
     return res.status(500).json({ error: "Email failed to send" });
   }
 
-  // Store tracking info on the PaymentIntent so it shows up in the dashboard
+  // Store tracking info on the PaymentIntent so it shows up in the dashboard.
+  // Inbound writes kf_inbound_*; outbound writes kf_outbound_* AND advances
+  // status to 'verzonden' (shipped) with a timestamp so the auto-review cron
+  // can fire 14 days later.
   const piId = typeof session.payment_intent === "string"
     ? session.payment_intent
     : session.payment_intent?.id;
 
   if (piId) {
-    await stripe.paymentIntents.update(piId, {
-      metadata: {
-        kf_inbound_tracking:    trackingCode,
-        kf_inbound_label_sent:  String(Date.now()),
-      },
-    });
+    const metadata = isOutbound
+      ? {
+          kf_outbound_tracking: trackingCode,
+          kf_status:            "verzonden",
+          kf_shipped_at:        String(Date.now()),
+        }
+      : {
+          kf_inbound_tracking:   trackingCode,
+          kf_inbound_label_sent: String(Date.now()),
+        };
+    await stripe.paymentIntents.update(piId, { metadata });
   }
 
   // If an override email was used, persist it to the checkout session metadata
@@ -251,9 +354,9 @@ module.exports = async function handler(req, res) {
       });
     } catch (err) {
       console.error("Could not persist override email to session metadata:", err.message);
-      // non-fatal — the label was sent successfully
+      // non-fatal — the label/shipment email was sent successfully
     }
   }
 
-  return res.status(200).json({ ok: true, sent_to: email });
+  return res.status(200).json({ ok: true, sent_to: email, direction });
 };
