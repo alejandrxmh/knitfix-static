@@ -125,6 +125,7 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
 .step-label{font-size:10px;letter-spacing:0.04em;color:var(--ink);margin-top:8px;font-weight:500;text-align:center;line-height:1.3;max-width:68px}
 .step-label.faded{color:var(--stone);font-weight:400}
 .step-time{font-size:9px;color:var(--stone);margin-top:2px;text-align:center}
+.step-extra{font-size:9px;color:var(--terracotta);margin-top:1px;text-align:center;font-weight:500;letter-spacing:0.02em}
 
 /* Primary action CTA */
 .primary-action-wrap{background:var(--note);border:0.5px solid var(--parchment);border-radius:10px;padding:16px;margin:8px 0 24px}
@@ -232,9 +233,9 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
       <div class="stat-sub">waiting on you</div>
     </div>
     <div class="stat">
-      <div class="stat-label">In progress</div>
-      <div class="stat-val" id="s-progress">&mdash;</div>
-      <div class="stat-sub">repairs active</div>
+      <div class="stat-label">Awaiting quote</div>
+      <div class="stat-val" id="s-quote-pending">&mdash;</div>
+      <div class="stat-sub">paid, no quote sent</div>
     </div>
     <div class="stat">
       <div class="stat-label">Revenue</div>
@@ -248,8 +249,7 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
       <button class="pill active" data-filter="all" onclick="filter('all',this)">All <span class="pill-count" id="c-all">0</span></button>
       <button class="pill" data-filter="action" onclick="filter('action',this)">Needs action <span class="pill-count" id="c-action">0</span></button>
       <button class="pill" data-filter="ontvangen" onclick="filter('ontvangen',this)">Received <span class="pill-count" id="c-ontvangen">0</span></button>
-      <button class="pill" data-filter="in behandeling" onclick="filter('in behandeling',this)">In progress <span class="pill-count" id="c-behandeling">0</span></button>
-      <button class="pill" data-filter="klaar" onclick="filter('klaar',this)">Ready <span class="pill-count" id="c-klaar">0</span></button>
+      <button class="pill" data-filter="quoted" onclick="filter('quoted',this)">Quoted <span class="pill-count" id="c-quoted">0</span></button>
       <button class="pill" data-filter="verzonden" onclick="filter('verzonden',this)">Shipped <span class="pill-count" id="c-verzonden">0</span></button>
       <div class="filter-spacer"></div>
       <button class="archive-toggle" id="archive-toggle" onclick="toggleArchived()">
@@ -324,8 +324,8 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
         <label>Status</label>
         <select id="status-select">
           <option value="ontvangen">Received (paid, awaiting garment)</option>
-          <option value="in behandeling">In progress (repair started)</option>
-          <option value="klaar">Ready (repair complete)</option>
+          <option value="in behandeling">Quoted (final quote sent, repair in progress)</option>
+          <option value="klaar">Ready (rarely used — prefer Quoted)</option>
           <option value="verzonden">Shipped (out for delivery)</option>
         </select>
       </div>
@@ -338,25 +338,30 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
   </div>
 </div>
 
-<!-- FINAL INVOICE MODAL -->
+<!-- FINAL QUOTE MODAL -->
 <div id="final-invoice-panel" class="modal-overlay">
-  <div class="modal-box" style="max-width:400px">
+  <div class="modal-box" style="max-width:420px">
     <div class="modal-header">
       <div>
         <p class="modal-label">KnitFix</p>
-        <h2 class="modal-title">Send final invoice</h2>
+        <h2 class="modal-title">Send final quote</h2>
       </div>
       <button class="modal-close" onclick="closeFinalInvoice()">&times;</button>
     </div>
     <div id="fi-order-summary" class="modal-summary"></div>
-    <label class="modal-field-label">Total repair cost (&euro;)</label>
+
+    <label class="modal-field-label">Total repair cost (&euro;) <span style="color:var(--terracotta)">*</span></label>
     <input id="fi-total" type="number" min="31" step="0.01" placeholder="e.g. 120.00" class="modal-input" oninput="updateFiPreview()"/>
+
+    <label class="modal-field-label" style="margin-top:6px">Ready by <span style="color:var(--terracotta)">*</span></label>
+    <input id="fi-ready-by" type="date" class="modal-input" required/>
+
     <div id="fi-preview" class="modal-preview">
       <div class="modal-preview-row"><span style="color:var(--stone)">Total</span><span id="fi-total-display"></span></div>
       <div class="modal-preview-row"><span style="color:var(--stone)">Deposit paid</span><span style="color:var(--success)">&minus; &euro;30.00</span></div>
       <div class="modal-preview-total"><span>Balance due</span><span id="fi-remainder-display" style="color:var(--terracotta)"></span></div>
     </div>
-    <button id="fi-send-btn" class="modal-btn" onclick="sendFinalInvoice()">Send final invoice &rarr;</button>
+    <button id="fi-send-btn" class="modal-btn" onclick="sendFinalQuote()">Send final quote &rarr;</button>
     <p id="fi-msg" class="modal-msg"></p>
   </div>
 </div>
@@ -390,6 +395,34 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
 
     <button id="sl-send-btn" class="modal-btn" onclick="sendLabel()">Send label &rarr;</button>
     <p id="sl-msg" class="modal-msg"></p>
+  </div>
+</div>
+
+<!-- SHIP TO CUSTOMER MODAL (mirrors Send Label but for outbound shipping) -->
+<div id="ship-panel" class="modal-overlay">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header">
+      <div>
+        <p class="modal-label">KnitFix</p>
+        <h2 class="modal-title">Ship to customer</h2>
+      </div>
+      <button class="modal-close" onclick="closeShip()">&times;</button>
+    </div>
+    <div id="sh-order-summary" class="modal-summary"></div>
+
+    <label class="modal-field-label">PostNL label (PDF) <span style="color:var(--terracotta)">*</span></label>
+    <label for="sh-file" style="display:block;padding:14px;border:1px dashed var(--dust);border-radius:8px;text-align:center;cursor:pointer;font-size:13px;color:var(--stone);margin-bottom:14px">
+      <span id="sh-file-name">Choose PDF&hellip;</span>
+    </label>
+    <input id="sh-file" type="file" accept="application/pdf" style="display:none" onchange="onShFileChange()"/>
+
+    <label class="modal-field-label">Tracking code (3S&hellip;) <span style="color:var(--terracotta)">*</span></label>
+    <input id="sh-tracking" type="text" placeholder="3SOPKA844772776" class="modal-input" style="text-transform:uppercase"/>
+
+    <p style="margin:4px 0 14px;font-size:11px;color:var(--stone);line-height:1.5">Sends the customer an email with the tracking code and PDF attached, and marks this order as shipped. Review email auto-sends 14 days later.</p>
+
+    <button id="sh-send-btn" class="modal-btn" onclick="shipOrder()">Ship &amp; mark sent &rarr;</button>
+    <p id="sh-msg" class="modal-msg"></p>
   </div>
 </div>
 
@@ -436,11 +469,16 @@ let showArchived = false;
 //
 // Status values in Stripe stay Dutch (ontvangen, in behandeling, klaar,
 // verzonden) — we translate at display time only.
+//
+// Under the new 6-step flow, 'in behandeling' is the status after the final
+// quote is sent (repair in progress). 'klaar' is vestigial (only reachable
+// via manual override). Both display as "Quoted" to the admin — the specific
+// internal status doesn't matter once a quote has been sent.
 
 const STATUS_EN = {
   'ontvangen':      'Received',
-  'in behandeling': 'In progress',
-  'klaar':          'Ready',
+  'in behandeling': 'Quoted',
+  'klaar':          'Quoted',
   'verzonden':      'Shipped',
 };
 
@@ -457,25 +495,43 @@ function fmtShortDate(ts){
 }
 
 /** Build stepper state for an order.
- * Returns: [{ key, label, state: 'done'|'current'|'future'|'skipped', time? }, ...] */
+ * Returns: [{ key, label, state: 'done'|'current'|'future'|'skipped', time?, extra? }, ...]
+ *
+ * Flow (6 steps):
+ *   Paid -> Label sent -> Final quote -> Shipped -> Review sent -> Archived
+ *
+ * The "Final quote" step is the big one: it combines pricing + ready-by date
+ * commitment + the balance payment link. Sending it auto-advances Stripe
+ * status to 'in behandeling' (i.e. "repair starting now"). The stepper no
+ * longer shows in-progress / ready as separate states — the quote IS the
+ * commitment, and the next visible step is shipping.
+ */
 function buildSteps(o){
-  const rank = STATUS_RANK[o.status] ?? 0;
   const hasLabelSent   = !!o.inbound_label_sent;
-  const hasFinalInv    = !!o.final_invoice_sent;
+  const hasFinalQuote  = !!o.final_invoice_sent;
   const hasReviewSent  = !!o.review_sent;
   const isShipped      = o.status === 'verzonden';
-  const isReady        = rank >= 2;
-  const isInProgress   = rank >= 1;
+  // If status has advanced past 'ontvangen' the label step is either done or skipped
+  const isPastLabel    = STATUS_RANK[o.status] >= 1;
+
+  // Ready-by promise — displayed under the Final quote step as a second timestamp
+  let readyByExtra = '';
+  if (hasFinalQuote && o.ready_by) {
+    try {
+      const d = new Date(o.ready_by + 'T12:00:00');
+      if (!isNaN(d.getTime())) {
+        readyByExtra = 'ready ' + d.toLocaleDateString('en-GB', {day:'numeric',month:'short'});
+      }
+    } catch(_) {}
+  }
 
   const steps = [
-    { key:'paid',     label:'Paid',          state:'done', time: fmtShortDate(o.paid_at) },
-    { key:'label',    label:'Label sent',    state: hasLabelSent ? 'done' : (isInProgress ? 'skipped' : 'future'), time: hasLabelSent ? fmtShortDate(o.inbound_label_sent) : '' },
-    { key:'progress', label:'In progress',   state: isInProgress ? 'done' : 'future' },
-    { key:'ready',    label:'Ready',         state: isReady ? 'done' : 'future' },
-    { key:'invoice',  label:'Invoice sent',  state: hasFinalInv ? 'done' : (isShipped ? 'skipped' : 'future'), time: hasFinalInv ? fmtShortDate(o.final_invoice_sent) : '' },
-    { key:'shipped',  label:'Shipped',       state: isShipped ? 'done' : 'future', time: isShipped ? fmtShortDate(o.shipped_at) : '' },
-    { key:'review',   label:'Review sent',   state: hasReviewSent ? 'done' : (o.archived ? 'skipped' : 'future'), time: hasReviewSent ? fmtShortDate(o.review_sent_at) : '' },
-    { key:'done',     label:'Archived',      state: o.archived ? 'done' : 'future', time: o.archived ? fmtShortDate(o.archived_at) : '' },
+    { key:'paid',     label:'Paid',        state:'done', time: fmtShortDate(o.paid_at) },
+    { key:'label',    label:'Label sent',  state: hasLabelSent ? 'done' : (isPastLabel ? 'skipped' : 'future'), time: hasLabelSent ? fmtShortDate(o.inbound_label_sent) : '' },
+    { key:'quote',    label:'Final quote', state: hasFinalQuote ? 'done' : 'future', time: hasFinalQuote ? fmtShortDate(o.final_invoice_sent) : '', extra: readyByExtra },
+    { key:'shipped',  label:'Shipped',     state: isShipped ? 'done' : 'future', time: isShipped ? fmtShortDate(o.shipped_at) : '' },
+    { key:'review',   label:'Review sent', state: hasReviewSent ? 'done' : (o.archived ? 'skipped' : 'future'), time: hasReviewSent ? fmtShortDate(o.review_sent_at) : '' },
+    { key:'done',     label:'Archived',    state: o.archived ? 'done' : 'future', time: o.archived ? fmtShortDate(o.archived_at) : '' },
   ];
 
   // First non-done step becomes the "current" one
@@ -489,7 +545,20 @@ function buildSteps(o){
 }
 
 /** Determine the single most-important next action for an order.
- * Returns { key, label, hint, type } — type drives what happens on click. */
+ * Returns { key, label, hint, type } — type drives what happens on click.
+ *
+ * Happy-path flow (6 steps, no separate in-progress/ready UI):
+ *   ontvangen, no label      -> Send shipping label
+ *   ontvangen+label OR       -> Send final quote  [opens modal: price + required ready-by date]
+ *     in behandeling (no quote yet)
+ *   in behandeling (quote sent) -> Mark as shipped
+ *   klaar (always rare now)  -> treated as quote-sent-but-not-shipped (edge case after manual status override)
+ *   verzonden (no review)    -> Request review
+ *   verzonden (review sent)  -> Archive this order
+ *
+ * Sending the final quote auto-advances status from ontvangen -> in behandeling
+ * (quote = repair starting). There's no separate "mark as in progress" action.
+ */
 function nextAction(o){
   if (o.archived) {
     return { key:'unarchive', label:'Restore from archive', type:'unarchive', hint:'This order is archived and hidden from the main view.' };
@@ -497,17 +566,13 @@ function nextAction(o){
   if (o.status === 'ontvangen' && !o.inbound_label_sent){
     return { key:'send-label', label:'Send shipping label', type:'modal-label', hint:"Email the customer a PostNL label so they can send their garment to you. Or skip this if they're bringing it in person." };
   }
-  if (o.status === 'ontvangen' && o.inbound_label_sent){
-    return { key:'start-repair', label:'Mark repair as started', type:'status', toStatus:'in behandeling', hint:'Sends the customer an email that their repair has begun.' };
+  // Ready for final quote — garment is here (label sent or in-person), quote not yet sent
+  if (!o.final_invoice_sent && (o.status === 'ontvangen' || o.status === 'in behandeling' || o.status === 'klaar')){
+    return { key:'final-quote', label:'Send final quote', type:'modal-invoice', hint:'Inspect the garment, then send the customer a quote with the total price and the date it will be ready by. Repair starts once they pay the balance.' };
   }
-  if (o.status === 'in behandeling'){
-    return { key:'mark-ready', label:'Mark repair as ready', type:'status', toStatus:'klaar', hint:'Sends the customer an email that their garment is ready. Send the final invoice next.' };
-  }
-  if (o.status === 'klaar' && !o.final_invoice_sent){
-    return { key:'final-invoice', label:'Send final invoice', type:'modal-invoice', hint:'Sends an email with a Stripe checkout link for the balance (total minus \u20ac30 deposit).' };
-  }
-  if (o.status === 'klaar' && o.final_invoice_sent){
-    return { key:'mark-shipped', label:'Mark as shipped', type:'status', toStatus:'verzonden', hint:'After packing and handing off to PostNL, click this. Review email is sent automatically 14 days later.' };
+  // Quote sent, waiting to ship
+  if (o.final_invoice_sent && (o.status === 'in behandeling' || o.status === 'klaar')){
+    return { key:'ship', label:'Ship to customer', type:'modal-ship', hint:'Upload the outbound PostNL label PDF and tracking code. Sends the customer an email with tracking + marks the order as shipped.' };
   }
   if (o.status === 'verzonden' && !o.review_sent){
     const daysSinceShipped = o.shipped_at ? Math.floor((Date.now() - o.shipped_at) / 86400000) : null;
@@ -530,10 +595,8 @@ function nextActionShort(o){
   const a = nextAction(o);
   const SHORT = {
     'send-label':     'Send label',
-    'start-repair':   'Start repair',
-    'mark-ready':     'Mark ready',
-    'final-invoice':  'Send invoice',
-    'mark-shipped':   'Mark shipped',
+    'final-quote':    'Send quote',
+    'ship':           'Ship to customer',
     'request-review': 'Request review',
     'archive':        'Archive',
     'unarchive':      'Archived',
@@ -600,20 +663,20 @@ function updateStats(){
     return true;
   });
   const inProgress = active.filter(o=>o.status==='in behandeling');
+  const quotePending = active.filter(o => !o.final_invoice_sent && (o.status === 'ontvangen' || o.status === 'in behandeling'));
   const rev = active.reduce((a,o)=>a+parseFloat(o.amount),0);
 
   document.getElementById('s-total').textContent = active.length;
   document.getElementById('s-action').textContent = needsAction.length;
-  document.getElementById('s-progress').textContent = inProgress.length;
+  document.getElementById('s-quote-pending').textContent = quotePending.length;
   document.getElementById('s-revenue').textContent = '\u20ac'+rev.toFixed(0);
 
-  // Pill counts
+  // Pill counts — "Quoted" = quote has been sent, order not yet shipped
   document.getElementById('c-all').textContent = active.length;
   document.getElementById('c-action').textContent = needsAction.length;
-  document.getElementById('c-ontvangen').textContent = active.filter(o=>o.status==='ontvangen').length;
-  document.getElementById('c-behandeling').textContent = active.filter(o=>o.status==='in behandeling').length;
-  document.getElementById('c-klaar').textContent = active.filter(o=>o.status==='klaar').length;
-  document.getElementById('c-verzonden').textContent = active.filter(o=>o.status==='verzonden').length;
+  document.getElementById('c-ontvangen').textContent = active.filter(o => o.status === 'ontvangen').length;
+  document.getElementById('c-quoted').textContent = active.filter(o => o.final_invoice_sent && o.status !== 'verzonden').length;
+  document.getElementById('c-verzonden').textContent = active.filter(o => o.status === 'verzonden').length;
 }
 
 function applyFilter(){
@@ -631,6 +694,8 @@ function applyFilter(){
       }
       return true;
     });
+  } else if (activeFilter === 'quoted') {
+    list = allOrders.filter(o => o.final_invoice_sent && o.status !== 'verzonden' && !o.archived);
   } else {
     list = allOrders.filter(o => o.status === activeFilter);
   }
@@ -728,7 +793,8 @@ function renderStepper(o){
         <div class="step-dot ${s.state}">${dotContent}</div>
         ${lineHtml}
         <div class="step-label ${labelFaded}">${s.label}</div>
-        ${s.time ? `<div class="step-time">${s.time}</div>` : ''}
+        ${s.time  ? `<div class="step-time">${s.time}</div>`  : ''}
+        ${s.extra ? `<div class="step-extra">${s.extra}</div>` : ''}
       </div>`;
   }).join('');
   document.getElementById('stepper').innerHTML = html;
@@ -793,6 +859,19 @@ function renderSecondaryActions(o){
 }
 
 function renderOrderInfo(o){
+  // Pretty-format ready_by (YYYY-MM-DD -> "15 May 2026") for display
+  let readyByPretty = '';
+  if (o.ready_by) {
+    try {
+      const d = new Date(o.ready_by + 'T12:00:00');
+      if (!isNaN(d.getTime())) {
+        readyByPretty = d.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+      } else {
+        readyByPretty = o.ready_by;
+      }
+    } catch(_) { readyByPretty = o.ready_by; }
+  }
+
   const html = `
     <div class="detail-row"><span class="detail-label">Garment</span><span class="detail-val">${escapeHtml(o.garment)}</span></div>
     <div class="detail-row"><span class="detail-label">Material</span><span class="detail-val">${escapeHtml(o.material)}</span></div>
@@ -800,8 +879,9 @@ function renderOrderInfo(o){
     ${o.description?`<div class="detail-row"><span class="detail-label">Notes</span><span class="detail-val">${escapeHtml(o.description)}</span></div>`:''}
     <div class="detail-row"><span class="detail-label">Repair style</span><span class="detail-val">${escapeHtml(o.style)}</span></div>
     <div class="detail-row"><span class="detail-label">Deposit</span><span class="detail-val">&euro;${o.amount}</span></div>
-    ${o.ready_by?`<div class="detail-row"><span class="detail-label">Ready by</span><span class="detail-val">${o.ready_by}</span></div>`:''}
+    ${readyByPretty?`<div class="detail-row"><span class="detail-label">Ready by</span><span class="detail-val">${readyByPretty}</span></div>`:''}
     ${o.inbound_tracking?`<div class="detail-row"><span class="detail-label">Inbound tracking</span><span class="detail-val">${escapeHtml(o.inbound_tracking)}</span></div>`:''}
+    ${o.outbound_tracking?`<div class="detail-row"><span class="detail-label">Outbound tracking</span><span class="detail-val">${escapeHtml(o.outbound_tracking)}</span></div>`:''}
   `;
   document.getElementById('panel-order').innerHTML = html;
 }
@@ -822,6 +902,7 @@ async function doPrimaryAction(){
   const a = nextAction(currentOrder);
   if (a.type === 'modal-label')   return openSendLabel();
   if (a.type === 'modal-invoice') return openFinalInvoice();
+  if (a.type === 'modal-ship')    return openShip();
   if (a.type === 'status')        return advanceStatus(a.toStatus);
   if (a.type === 'review')        return sendReviewPrimary();
   if (a.type === 'archive')       return toggleArchive();
@@ -1097,12 +1178,95 @@ async function sendLabel(){
   }
 }
 
-// ─── FINAL INVOICE MODAL ───────────────────────────────────────────────
+// ─── SHIP TO CUSTOMER MODAL ────────────────────────────────────────────
+// Mirrors Send Label but hits the same endpoint with direction=outbound.
+// Emails the customer the PDF + tracking code and marks the order as shipped.
+function openShip(){
+  if(!currentOrder) return;
+  document.getElementById('sh-order-summary').innerHTML =
+    `<div class="modal-preview-row"><span style="color:var(--stone)">Customer</span><span>${escapeHtml(currentOrder.name)}</span></div>
+     <div class="modal-preview-row"><span style="color:var(--stone)">Email</span><span style="font-size:12px">${escapeHtml(currentOrder.email)}</span></div>
+     <div class="modal-preview-row"><span style="color:var(--stone)">Ref</span><span>${currentOrder.ref}</span></div>`;
+  document.getElementById('sh-file').value = '';
+  document.getElementById('sh-file-name').textContent = 'Choose PDF\u2026';
+  document.getElementById('sh-tracking').value = currentOrder.outbound_tracking || '';
+  document.getElementById('sh-msg').style.display = 'none';
+  document.getElementById('ship-panel').style.display = 'flex';
+}
+
+function closeShip(){
+  document.getElementById('ship-panel').style.display = 'none';
+}
+
+function onShFileChange(){
+  const f = document.getElementById('sh-file').files[0];
+  document.getElementById('sh-file-name').textContent = f ? f.name : 'Choose PDF\u2026';
+}
+
+async function shipOrder(){
+  if(!currentOrder) return;
+  const file = document.getElementById('sh-file').files[0];
+  const tracking = document.getElementById('sh-tracking').value.trim().toUpperCase();
+  const msg = document.getElementById('sh-msg');
+  const btn = document.getElementById('sh-send-btn');
+
+  if(!file){ msg.textContent='Choose a PDF first.'; msg.style.display='block'; msg.style.color='var(--terracotta)'; return; }
+  if(!tracking){ msg.textContent='Tracking code is required.'; msg.style.display='block'; msg.style.color='var(--terracotta)'; return; }
+
+  btn.textContent = 'Sending\u2026'; btn.disabled = true; msg.style.display = 'none';
+
+  const form = new FormData();
+  form.append('ref', currentOrder.ref);
+  form.append('tracking_code', tracking);
+  form.append('label', file);
+  form.append('direction', 'outbound');
+
+  try {
+    const res = await fetch('/api/admin-send-label', { method:'POST', body: form });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Send failed');
+
+    // Local state: order is now shipped
+    const now = Date.now();
+    currentOrder.outbound_tracking = tracking;
+    currentOrder.status     = 'verzonden';
+    currentOrder.shipped_at = now;
+    const o = allOrders.find(x=>x.ref===currentOrder.ref);
+    if(o){
+      o.outbound_tracking = tracking;
+      o.status     = 'verzonden';
+      o.shipped_at = now;
+    }
+
+    btn.innerHTML = 'Shipped &check;';
+    setTimeout(() => {
+      closeShip();
+      btn.innerHTML = 'Ship &amp; mark sent &rarr;';
+      btn.disabled = false;
+      openPanel(currentOrder.ref);
+      updateStats();
+      applyFilter();
+    }, 900);
+  } catch(err){
+    msg.textContent = err.message;
+    msg.style.display = 'block';
+    msg.style.color = 'var(--terracotta)';
+    btn.innerHTML = 'Ship &amp; mark sent &rarr;';
+    btn.disabled = false;
+  }
+}
+
+// ─── FINAL QUOTE MODAL ─────────────────────────────────────────────────
 function openFinalInvoice(){
   if(!currentOrder) return;
   document.getElementById('fi-order-summary').innerHTML =
     `<strong>${currentOrder.ref}</strong> &middot; ${escapeHtml(currentOrder.garment)} &middot; ${escapeHtml(currentOrder.name)}`;
   document.getElementById('fi-total').value = '';
+  // Set min to today so admin can't accidentally pick a past date
+  const readyInput = document.getElementById('fi-ready-by');
+  const today = new Date().toISOString().split('T')[0];
+  readyInput.min   = today;
+  readyInput.value = '';
   document.getElementById('fi-preview').style.display = 'none';
   document.getElementById('fi-msg').style.display = 'none';
   document.getElementById('final-invoice-panel').style.display = 'flex';
@@ -1122,37 +1286,59 @@ function updateFiPreview(){
   preview.style.display = 'block';
 }
 
-async function sendFinalInvoice(){
+async function sendFinalQuote(){
   if(!currentOrder) return;
-  const total = parseFloat(document.getElementById('fi-total').value);
+  const total   = parseFloat(document.getElementById('fi-total').value);
+  const readyBy = document.getElementById('fi-ready-by').value;
   const msg = document.getElementById('fi-msg');
   const btn = document.getElementById('fi-send-btn');
-  if(!total || total <= 30){ msg.textContent='Total must be more than \u20ac30.'; msg.style.color='var(--terracotta)'; msg.style.display='block'; return; }
+
+  if(!total || total <= 30){
+    msg.textContent='Total must be more than \u20ac30.';
+    msg.style.color='var(--terracotta)';
+    msg.style.display='block';
+    return;
+  }
+  if(!readyBy){
+    msg.textContent='Choose a ready-by date.';
+    msg.style.color='var(--terracotta)';
+    msg.style.display='block';
+    return;
+  }
+
   btn.textContent = 'Sending\u2026'; btn.disabled = true;
   const res = await fetch('/api/admin-final-invoice',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ref:currentOrder.ref,total_price:total})
+    body: JSON.stringify({ref:currentOrder.ref, total_price:total, ready_by: readyBy})
   });
   const data = await res.json();
   if(data.ok){
-    msg.textContent = `Final invoice sent. Balance: \u20ac${data.remainder.toFixed(2)}`;
+    msg.textContent = `Quote sent. Balance due: \u20ac${data.remainder.toFixed(2)}`;
     msg.style.color = 'var(--success)';
-    // Update local state
-    currentOrder.final_invoice_sent = Date.now();
+    // Update local state — server flipped status to 'in behandeling' and saved ready_by
+    const now = Date.now();
+    currentOrder.final_invoice_sent = now;
+    currentOrder.status = 'in behandeling';
+    currentOrder.ready_by = readyBy;
     const o = allOrders.find(x=>x.ref===currentOrder.ref);
-    if(o) o.final_invoice_sent = Date.now();
+    if(o){
+      o.final_invoice_sent = now;
+      o.status = 'in behandeling';
+      o.ready_by = readyBy;
+    }
     setTimeout(() => {
       closeFinalInvoice();
-      btn.innerHTML='Send final invoice &rarr;';
+      btn.innerHTML='Send final quote &rarr;';
       btn.disabled=false;
       openPanel(currentOrder.ref);
+      updateStats();
       applyFilter();
     }, 1500);
   } else {
     msg.textContent = data.error || 'Something went wrong.';
     msg.style.color = 'var(--terracotta)';
-    btn.innerHTML = 'Send final invoice &rarr;';
+    btn.innerHTML = 'Send final quote &rarr;';
     btn.disabled = false;
   }
   msg.style.display = 'block';
@@ -1201,6 +1387,10 @@ document.getElementById('send-label-panel').addEventListener('click', e=>{
   if(e.target===document.getElementById('send-label-panel')) closeSendLabel();
 });
 
+document.getElementById('ship-panel').addEventListener('click', e=>{
+  if(e.target===document.getElementById('ship-panel')) closeShip();
+});
+
 document.getElementById('final-invoice-panel').addEventListener('click', e=>{
   if(e.target===document.getElementById('final-invoice-panel')) closeFinalInvoice();
 });
@@ -1213,9 +1403,11 @@ document.getElementById('quote-panel').addEventListener('click', e=>{
 document.addEventListener('keydown', e=>{
   if(e.key==='Escape'){
     const sl = document.getElementById('send-label-panel');
+    const sh = document.getElementById('ship-panel');
     const fi = document.getElementById('final-invoice-panel');
     const qp = document.getElementById('quote-panel');
     if(sl.style.display==='flex') return closeSendLabel();
+    if(sh.style.display==='flex') return closeShip();
     if(fi.style.display==='flex') return closeFinalInvoice();
     if(qp.style.display==='flex') return toggleQuotePanel();
     if(document.getElementById('detail-panel').classList.contains('open')) return closePanel();
