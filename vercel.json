@@ -8,7 +8,7 @@
     "api/webhook.js":              { "maxDuration": 30 },
     "api/label.js":                { "maxDuration": 15 },
     "api/admin-orders.js":         { "maxDuration": 15 },
-    "api/admin-status.js":         { "maxDuration": 15 },
+    "api/admin-workflow.js":         { "maxDuration": 15 },
     "api/admin-auth.js":           { "maxDuration": 10 },
     "api/review-email.js":         { "maxDuration": 10 },
     "api/admin-quote.js":          { "maxDuration": 15 },
