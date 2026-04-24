@@ -167,6 +167,11 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
 .advanced-field select:focus,.advanced-field input:focus{border-color:var(--terracotta)}
 .advanced-save{width:100%;padding:9px;background:var(--white);color:var(--ink);border:0.5px solid var(--ink);border-radius:6px;font:inherit;font-size:11px;font-weight:500;letter-spacing:0.06em;cursor:pointer;text-transform:uppercase;margin-top:4px}
 .advanced-save:hover{background:var(--ink);color:var(--white)}
+/* Workflow editor sections */
+.ws-section-title{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--terracotta);margin:14px 0 8px;font-weight:500;padding-bottom:4px;border-bottom:0.5px solid var(--parchment)}
+.ws-section-title:first-child{margin-top:0}
+.ws-flag-field label{font-size:12px!important;color:var(--ink)!important;margin-bottom:0!important}
+.ws-flag-field input[type=checkbox]{accent-color:var(--terracotta);cursor:pointer;width:14px;height:14px}
 
 .loading{padding:48px;text-align:center;color:var(--stone);font-size:13px}
 
@@ -314,26 +319,84 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
       <div id="panel-customer"></div>
     </div>
 
-    <!-- Advanced: manual status override -->
+    <!-- Edit workflow state — full metadata editor -->
     <button class="advanced-toggle" id="advanced-toggle" onclick="toggleAdvanced()">
       <span class="advanced-toggle-arrow">&#9656;</span>
-      <span>Manual status override</span>
+      <span>Edit workflow state</span>
     </button>
     <div class="advanced-panel" id="advanced-panel">
+      <p style="font-size:11px;color:var(--stone);line-height:1.55;margin:0 0 14px">Fix mistakes or correct missing data. <strong>No emails are sent from this panel</strong> &mdash; for customer-facing events, use the main action button instead (Send quote, Ship, Request review).</p>
+
+      <!-- SECTION: Status -->
+      <div class="ws-section-title">Status</div>
       <div class="advanced-field">
-        <label>Status</label>
-        <select id="status-select">
+        <label>Current status</label>
+        <select id="ws-status">
           <option value="ontvangen">Received (paid, awaiting garment)</option>
-          <option value="in behandeling">Quoted (final quote sent, repair in progress)</option>
-          <option value="klaar">Ready (rarely used — prefer Quoted)</option>
-          <option value="verzonden">Shipped (out for delivery)</option>
+          <option value="in behandeling">Quoted / in progress</option>
+          <option value="klaar">Ready</option>
+          <option value="verzonden">Shipped</option>
         </select>
       </div>
       <div class="advanced-field">
-        <label>Ready-by date (optional)</label>
-        <input type="date" id="ready-by-input"/>
+        <label>Ready-by date</label>
+        <input type="date" id="ws-ready-by"/>
       </div>
-      <button class="advanced-save" id="save-status-btn" onclick="saveStatus()">Save status &rarr;</button>
+
+      <!-- SECTION: Inbound (customer -> you) -->
+      <div class="ws-section-title">Inbound shipment</div>
+      <div class="advanced-field">
+        <label>Inbound tracking code</label>
+        <input type="text" id="ws-inbound-tracking" placeholder="3SOPKA&hellip;" style="text-transform:uppercase"/>
+      </div>
+      <div class="advanced-field">
+        <label>Inbound label sent date</label>
+        <input type="date" id="ws-inbound-label-sent"/>
+      </div>
+
+      <!-- SECTION: Final quote -->
+      <div class="ws-section-title">Final quote</div>
+      <div class="advanced-field ws-flag-field">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="ws-quote-sent-flag" onchange="onWsQuoteFlagChange()"/>
+          <span>Final quote has been sent</span>
+        </label>
+      </div>
+      <div class="advanced-field">
+        <label>Final quote sent date</label>
+        <input type="date" id="ws-quote-sent-date"/>
+      </div>
+      <div class="advanced-field">
+        <label>Total quote price (&euro;)</label>
+        <input type="number" id="ws-quote-total" step="0.01" min="0" placeholder="e.g. 120.00"/>
+      </div>
+
+      <!-- SECTION: Outbound (you -> customer) -->
+      <div class="ws-section-title">Outbound shipment</div>
+      <div class="advanced-field">
+        <label>Outbound tracking code</label>
+        <input type="text" id="ws-outbound-tracking" placeholder="3SOPKA&hellip;" style="text-transform:uppercase"/>
+      </div>
+      <div class="advanced-field">
+        <label>Shipped date</label>
+        <input type="date" id="ws-shipped-date"/>
+      </div>
+
+      <!-- SECTION: Review -->
+      <div class="ws-section-title">Review</div>
+      <div class="advanced-field ws-flag-field">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="ws-review-sent-flag" onchange="onWsReviewFlagChange()"/>
+          <span>Review request has been sent</span>
+        </label>
+      </div>
+      <div class="advanced-field">
+        <label>Review sent date</label>
+        <input type="date" id="ws-review-sent-date"/>
+      </div>
+
+      <button class="advanced-save" id="save-workflow-btn" onclick="saveWorkflow()">Save changes &rarr;</button>
+      <p id="ws-msg" style="font-size:11px;margin:10px 0 0;display:none;text-align:center"></p>
     </div>
   </div>
 </div>
@@ -763,17 +826,177 @@ function openPanel(ref){
   renderSecondaryActions(o);
   renderOrderInfo(o);
   renderCustomerInfo(o);
-  // Advanced panel
-  document.getElementById('status-select').value = o.status;
-  document.getElementById('ready-by-input').value = o.ready_by || '';
+  // Edit workflow state panel — pre-fill all 11 fields from current order
+  fillEditPanel(o);
   document.getElementById('advanced-panel').classList.remove('open');
   document.getElementById('advanced-toggle').classList.remove('open');
+  const wsMsg = document.getElementById('ws-msg');
+  if (wsMsg) wsMsg.style.display = 'none';
   // Archive button state
   const archBtn = document.getElementById('archive-btn');
   archBtn.textContent = o.archived ? 'Archived' : 'Archive';
   archBtn.classList.toggle('is-archived', o.archived);
 
   document.getElementById('detail-panel').classList.add('open');
+}
+
+/** Convert ms timestamp -> YYYY-MM-DD for <input type="date"> (empty if null). */
+function tsToDateInput(ts){
+  if(!ts) return '';
+  const d = new Date(ts);
+  if(isNaN(d.getTime())) return '';
+  return d.toISOString().split('T')[0];
+}
+
+/** Pre-fill all 11 fields of the edit-workflow panel from the order object. */
+function fillEditPanel(o){
+  document.getElementById('ws-status').value             = o.status || 'ontvangen';
+  document.getElementById('ws-ready-by').value           = o.ready_by || '';
+  document.getElementById('ws-inbound-tracking').value   = o.inbound_tracking || '';
+  document.getElementById('ws-inbound-label-sent').value = tsToDateInput(o.inbound_label_sent);
+  document.getElementById('ws-quote-sent-flag').checked  = !!o.final_invoice_sent;
+  document.getElementById('ws-quote-sent-date').value    = tsToDateInput(o.final_invoice_sent);
+  document.getElementById('ws-quote-total').value        = (o.final_total != null && o.final_total !== '') ? o.final_total : '';
+  document.getElementById('ws-outbound-tracking').value  = o.outbound_tracking || '';
+  document.getElementById('ws-shipped-date').value       = tsToDateInput(o.shipped_at);
+  document.getElementById('ws-review-sent-flag').checked = !!o.review_sent;
+  document.getElementById('ws-review-sent-date').value   = tsToDateInput(o.review_sent_at);
+}
+
+/** Flag convenience: when the user checks "quote has been sent" but no
+ * date is present, auto-fill today's date. When they uncheck, clear it. */
+function onWsQuoteFlagChange(){
+  const flag = document.getElementById('ws-quote-sent-flag').checked;
+  const dateField = document.getElementById('ws-quote-sent-date');
+  if (flag && !dateField.value) {
+    dateField.value = new Date().toISOString().split('T')[0];
+  } else if (!flag) {
+    dateField.value = '';
+  }
+}
+
+function onWsReviewFlagChange(){
+  const flag = document.getElementById('ws-review-sent-flag').checked;
+  const dateField = document.getElementById('ws-review-sent-date');
+  if (flag && !dateField.value) {
+    dateField.value = new Date().toISOString().split('T')[0];
+  } else if (!flag) {
+    dateField.value = '';
+  }
+}
+
+/** Collect all 11 edit-panel fields, confirm risky changes, POST to /api/admin-workflow.
+ *
+ * Risky changes (require confirmation): flipping final_invoice_sent or
+ * review_sent in either direction. These flags represent whether a real
+ * customer email was sent; flipping them manually from this panel only
+ * changes the UI — it does NOT send or un-send any email. The user needs
+ * to know they're only editing the record, not triggering a real action.
+ */
+async function saveWorkflow(){
+  if(!currentOrder) return;
+
+  // Read all fields
+  const status           = document.getElementById('ws-status').value;
+  const readyBy          = document.getElementById('ws-ready-by').value;
+  const inboundTracking  = document.getElementById('ws-inbound-tracking').value.trim().toUpperCase();
+  const inboundSentDate  = document.getElementById('ws-inbound-label-sent').value;
+  const quoteSentFlag    = document.getElementById('ws-quote-sent-flag').checked;
+  const quoteSentDate    = document.getElementById('ws-quote-sent-date').value;
+  const quoteTotalRaw    = document.getElementById('ws-quote-total').value.trim();
+  const outboundTracking = document.getElementById('ws-outbound-tracking').value.trim().toUpperCase();
+  const shippedDate      = document.getElementById('ws-shipped-date').value;
+  const reviewSentFlag   = document.getElementById('ws-review-sent-flag').checked;
+  const reviewSentDate   = document.getElementById('ws-review-sent-date').value;
+
+  // Detect risky flag changes (different from current state)
+  const quoteFlagChanged  = (!!currentOrder.final_invoice_sent) !== quoteSentFlag;
+  const reviewFlagChanged = (!!currentOrder.review_sent)        !== reviewSentFlag;
+
+  if (quoteFlagChanged) {
+    const dir = quoteSentFlag ? 'mark the final quote as sent' : 'un-mark the final quote as sent';
+    if (!confirm(`You're about to ${dir}.\n\nThis only changes the order record \u2014 it does NOT actually send (or un-send) any email to the customer.\n\nContinue?`)) return;
+  }
+  if (reviewFlagChanged) {
+    const dir = reviewSentFlag ? 'mark the review request as sent' : 'un-mark the review request as sent';
+    if (!confirm(`You're about to ${dir}.\n\nThis only changes the order record \u2014 it does NOT actually send (or un-send) any email to the customer.\n\nContinue?`)) return;
+  }
+
+  // Build payload. Convert date inputs (YYYY-MM-DD) to ms timestamps at noon
+  // local time. Empty strings mean "clear this field" (Stripe interprets
+  // empty-string metadata values as deletions).
+  const dateToMs = (s) => {
+    if (!s) return 0; // 0 => server clears the key
+    const d = new Date(s + 'T12:00:00');
+    return isNaN(d.getTime()) ? 0 : d.getTime();
+  };
+
+  const payload = {
+    ref: currentOrder.ref,
+    status,
+    ready_by:                readyBy || '',
+    inbound_tracking:        inboundTracking,
+    inbound_label_sent_at:   dateToMs(inboundSentDate),
+    final_invoice_sent_at:   quoteSentFlag ? (dateToMs(quoteSentDate) || Date.now()) : 0,
+    final_total:             quoteTotalRaw === '' ? '' : parseFloat(quoteTotalRaw),
+    outbound_tracking:       outboundTracking,
+    shipped_at:              dateToMs(shippedDate),
+    review_sent:             reviewSentFlag,
+    review_sent_at:          reviewSentFlag ? (dateToMs(reviewSentDate) || Date.now()) : 0,
+  };
+
+  const btn = document.getElementById('save-workflow-btn');
+  const msg = document.getElementById('ws-msg');
+  btn.textContent = 'Saving\u2026';
+  btn.disabled = true;
+  msg.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/admin-workflow', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Save failed');
+
+    // Update local state to match everything we just wrote
+    const updateOrder = (o) => {
+      o.status              = status;
+      o.ready_by            = readyBy || null;
+      o.inbound_tracking    = inboundTracking || null;
+      o.inbound_label_sent  = dateToMs(inboundSentDate) || null;
+      o.final_invoice_sent  = quoteSentFlag ? (dateToMs(quoteSentDate) || Date.now()) : null;
+      o.final_total         = quoteTotalRaw === '' ? null : parseFloat(quoteTotalRaw);
+      o.outbound_tracking   = outboundTracking || null;
+      o.shipped_at          = dateToMs(shippedDate) || null;
+      o.review_sent         = reviewSentFlag;
+      o.review_sent_at      = reviewSentFlag ? (dateToMs(reviewSentDate) || Date.now()) : null;
+    };
+    updateOrder(currentOrder);
+    const o = allOrders.find(x => x.ref === currentOrder.ref);
+    if (o) updateOrder(o);
+
+    msg.textContent = 'Saved \u2713';
+    msg.style.color = 'var(--success)';
+    msg.style.display = 'block';
+    btn.innerHTML = 'Save changes &rarr;';
+    btn.disabled = false;
+
+    setTimeout(() => {
+      msg.style.display = 'none';
+      // Rerender the panel (stepper, primary action, etc. all refresh)
+      openPanel(currentOrder.ref);
+      updateStats();
+      applyFilter();
+    }, 1000);
+  } catch (err) {
+    msg.textContent = err.message || 'Save failed \u2014 try again';
+    msg.style.color = 'var(--terracotta)';
+    msg.style.display = 'block';
+    btn.innerHTML = 'Save changes &rarr;';
+    btn.disabled = false;
+  }
 }
 
 function closePanel(){
@@ -903,85 +1126,9 @@ async function doPrimaryAction(){
   if (a.type === 'modal-label')   return openSendLabel();
   if (a.type === 'modal-invoice') return openFinalInvoice();
   if (a.type === 'modal-ship')    return openShip();
-  if (a.type === 'status')        return advanceStatus(a.toStatus);
   if (a.type === 'review')        return sendReviewPrimary();
   if (a.type === 'archive')       return toggleArchive();
   if (a.type === 'unarchive')     return toggleArchive();
-}
-
-/** Status advance with confirmation on the big primary button.
- * Uses the existing /api/admin-status endpoint which also sends the
- * corresponding customer email automatically. */
-async function advanceStatus(newStatus){
-  if(!currentOrder) return;
-  const btn = document.getElementById('primary-action-btn');
-  const original = btn.innerHTML;
-  btn.textContent = 'Saving\u2026';
-  btn.disabled = true;
-
-  const readyBy = document.getElementById('ready-by-input').value;
-  const res = await fetch('/api/admin-status',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({
-      ref: currentOrder.ref,
-      status: newStatus,
-      customer_email: currentOrder.email,
-      customer_name:  currentOrder.name,
-      ready_by: readyBy || null,
-    })
-  });
-
-  if(!res.ok){
-    btn.innerHTML = original;
-    btn.disabled = false;
-    alert('Could not update status. Try again.');
-    return;
-  }
-
-  // Update local state
-  currentOrder.status = newStatus;
-  if (newStatus === 'verzonden') currentOrder.shipped_at = Date.now();
-  const o = allOrders.find(x => x.ref === currentOrder.ref);
-  if(o){
-    o.status = newStatus;
-    if (newStatus === 'verzonden') o.shipped_at = Date.now();
-  }
-
-  btn.innerHTML = 'Done &check;';
-  setTimeout(() => {
-    openPanel(currentOrder.ref); // rerender everything
-    updateStats();
-    applyFilter();
-  }, 700);
-}
-
-/** Legacy manual status save (advanced panel). */
-async function saveStatus(){
-  if(!currentOrder) return;
-  const status  = document.getElementById('status-select').value;
-  const readyBy = document.getElementById('ready-by-input').value;
-  const btn = document.getElementById('save-status-btn');
-  btn.textContent = 'Saving\u2026';
-  await fetch('/api/admin-status',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ref:currentOrder.ref,status,customer_email:currentOrder.email,customer_name:currentOrder.name,ready_by:readyBy||null})
-  });
-  currentOrder.status = status;
-  if (status === 'verzonden' && !currentOrder.shipped_at) currentOrder.shipped_at = Date.now();
-  const o = allOrders.find(x=>x.ref===currentOrder.ref);
-  if(o) {
-    o.status = status;
-    if (status === 'verzonden' && !o.shipped_at) o.shipped_at = Date.now();
-  }
-  btn.innerHTML = 'Saved &check;';
-  setTimeout(() => {
-    btn.innerHTML = 'Save status &rarr;';
-    openPanel(currentOrder.ref);
-    updateStats();
-    applyFilter();
-  }, 900);
 }
 
 // ─── ARCHIVE ────────────────────────────────────────────────────────────
