@@ -108,6 +108,7 @@ module.exports = async function handler(req, res) {
     const inboundLabelSent = pi?.metadata?.kf_inbound_label_sent ? parseInt(pi.metadata.kf_inbound_label_sent) : null;
     const outboundTracking = pi?.metadata?.kf_outbound_tracking || null;
     const finalInvoiceSent = pi?.metadata?.kf_final_invoice_sent ? parseInt(pi.metadata.kf_final_invoice_sent) : null;
+    const finalTotal       = pi?.metadata?.kf_final_total ? parseFloat(pi.metadata.kf_final_total) : null;
     const archived         = pi?.metadata?.kf_archived === "true";
     const archivedAt       = pi?.metadata?.kf_archived_at ? parseInt(pi.metadata.kf_archived_at) : null;
 
@@ -162,6 +163,7 @@ module.exports = async function handler(req, res) {
       inbound_label_sent:  inboundLabelSent,
       outbound_tracking:   outboundTracking,
       final_invoice_sent:  finalInvoiceSent,
+      final_total:         finalTotal,
       shipped_at:          shippedAt,
       archived,
       archived_at:         archivedAt,

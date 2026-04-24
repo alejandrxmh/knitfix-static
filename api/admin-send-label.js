@@ -3,7 +3,7 @@ const { Resend } = require("resend");
 const { findSessionByRef } = require("./_stripe-helpers");
 const { authCheck } = require("./_auth");
 
-// ─── Design tokens (mirrored from admin-status.js) ───────────────────────────
+// ─── Design tokens (mirrored from admin-workflow.js) ─────────────────────────
 const LOGO_URL  = "https://knitfix.nl/knitfix_logo.png";
 const F         = "'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif";
 const BG        = "#f7f2ed";
