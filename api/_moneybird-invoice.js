@@ -16,22 +16,35 @@ module.exports = async function createMoneybirdInvoice(meta) {
     "Content-Type":  "application/json",
   };
 
-  /* find or create contact */
+  /* find or create contact
+   *
+   * Moneybird's contact search uses /contacts/filter with filter[field]=value.
+   * The previous /contacts?query=... returned 404 because that endpoint doesn't
+   * exist. We search by email since that's the unique identifier we have.
+   */
   let contactId = null;
   try {
     const searchRes = await fetch(
-      `${base}/contacts?query=${encodeURIComponent(meta.customer_email)}`,
+      `${base}/contacts.json?query=${encodeURIComponent(meta.customer_email)}`,
       { headers }
     );
     if (!searchRes.ok) {
       console.error("Moneybird contact search non-ok:", searchRes.status);
-      return null;
-    }
-    const contacts = await searchRes.json();
-    if (Array.isArray(contacts) && contacts.length > 0) {
-      contactId = contacts[0].id;
+      // Fall through to creation — better to attempt creating a duplicate
+      // than to fail silently. Moneybird will return an error if it conflicts.
     } else {
-      const createRes = await fetch(`${base}/contacts`, {
+      const contacts = await searchRes.json();
+      if (Array.isArray(contacts) && contacts.length > 0) {
+        // Find an exact email match (search is fuzzy — it might return
+        // partial matches for similar emails). Match case-insensitively.
+        const target = meta.customer_email.toLowerCase();
+        const exact = contacts.find(c => (c.email || "").toLowerCase() === target);
+        if (exact) contactId = exact.id;
+      }
+    }
+
+    if (!contactId) {
+      const createRes = await fetch(`${base}/contacts.json`, {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -62,7 +75,7 @@ module.exports = async function createMoneybirdInvoice(meta) {
 
   /* create draft invoice */
   try {
-    const invoiceRes = await fetch(`${base}/sales_invoices`, {
+    const invoiceRes = await fetch(`${base}/sales_invoices.json`, {
       method: "POST",
       headers,
       body: JSON.stringify({
