@@ -211,21 +211,9 @@ module.exports = async function handler(req, res) {
     html:     finalQuoteEmail(name, ref, meta.garment_type, totalPrice, depositPaid, remainder, session.url, readyByFormatted),
   });
 
-  try {
-    await createMoneybirdInvoice({
-      ...meta,
-      reference_code: ref + "-FINAL",
-      _override_description: `KnitFix — final quote for repair — ${meta.garment_type} (${meta.material})\nRef: ${ref} · Total: €${totalPrice.toFixed(2)} · Deposit: −€${depositPaid.toFixed(2)}${readyByFormatted ? ` · Ready by: ${readyByFormatted}` : ''}`,
-      _override_price: remainder.toFixed(2),
-    });
-  } catch (err) {
-    console.error("Moneybird final quote invoice failed:", err.message);
-  }
-
-  // Mark final quote as sent on the ORIGINAL payment intent, set status to
-  // 'in behandeling' (quote sent = repair starting), and save ready_by.
-  // The stepper no longer distinguishes between in-progress/ready — the
-  // final quote IS the commitment, and the next step is shipping.
+  // Mark final quote as sent on the ORIGINAL payment intent FIRST. This is
+  // the source of truth for the admin dashboard, so if anything else after
+  // this hangs/fails, the dashboard still reflects the correct state.
   try {
     const piId = typeof original.payment_intent === "string"
       ? original.payment_intent
@@ -243,6 +231,24 @@ module.exports = async function handler(req, res) {
     }
   } catch (err) {
     console.error("Failed to mark final quote sent:", err.message);
+  }
+
+  // Moneybird invoice creation is a "nice to have" — file it but don't let it
+  // block the response. We race it against a 4s deadline; if it doesn't finish
+  // in time, log and move on. The customer email + Stripe metadata + checkout
+  // URL are the things that actually matter for the user.
+  try {
+    await Promise.race([
+      createMoneybirdInvoice({
+        ...meta,
+        reference_code: ref + "-FINAL",
+        _override_description: `KnitFix — final quote for repair — ${meta.garment_type} (${meta.material})\nRef: ${ref} · Total: €${totalPrice.toFixed(2)} · Deposit: −€${depositPaid.toFixed(2)}${readyByFormatted ? ` · Ready by: ${readyByFormatted}` : ''}`,
+        _override_price: remainder.toFixed(2),
+      }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("moneybird timeout (4s)")), 4000)),
+    ]);
+  } catch (err) {
+    console.error("Moneybird final quote invoice failed (non-fatal):", err.message);
   }
 
   return res.status(200).json({ ok: true, remainder, payment_url: session.url, ready_by_formatted: readyByFormatted });
