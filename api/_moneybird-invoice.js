@@ -18,14 +18,15 @@ module.exports = async function createMoneybirdInvoice(meta) {
 
   /* find or create contact
    *
-   * Moneybird's contact search uses /contacts/filter with filter[field]=value.
-   * The previous /contacts?query=... returned 404 because that endpoint doesn't
-   * exist. We search by email since that's the unique identifier we have.
+   * Moneybird's /contacts/filter endpoint accepts a `query` param for free-text
+   * search across name/email/etc. We search by email since that's our unique
+   * identifier. Note: the search is case-insensitive and fuzzy, so we still
+   * filter results by exact email match before using one.
    */
   let contactId = null;
   try {
     const searchRes = await fetch(
-      `${base}/contacts.json?query=${encodeURIComponent(meta.customer_email)}`,
+      `${base}/contacts/filter?query=${encodeURIComponent(meta.customer_email)}`,
       { headers }
     );
     if (!searchRes.ok) {
@@ -35,8 +36,6 @@ module.exports = async function createMoneybirdInvoice(meta) {
     } else {
       const contacts = await searchRes.json();
       if (Array.isArray(contacts) && contacts.length > 0) {
-        // Find an exact email match (search is fuzzy — it might return
-        // partial matches for similar emails). Match case-insensitively.
         const target = meta.customer_email.toLowerCase();
         const exact = contacts.find(c => (c.email || "").toLowerCase() === target);
         if (exact) contactId = exact.id;
