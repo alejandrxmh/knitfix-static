@@ -1454,40 +1454,74 @@ async function sendFinalQuote(){
   }
 
   btn.textContent = 'Sending\u2026'; btn.disabled = true;
-  const res = await fetch('/api/admin-final-invoice',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ref:currentOrder.ref, total_price:total, ready_by: readyBy})
-  });
-  const data = await res.json();
-  if(data.ok){
-    msg.textContent = `Quote sent. Balance due: \u20ac${data.remainder.toFixed(2)}`;
-    msg.style.color = 'var(--success)';
-    // Update local state — server flipped status to 'in behandeling' and saved ready_by
-    const now = Date.now();
-    currentOrder.final_invoice_sent = now;
-    currentOrder.status = 'in behandeling';
-    currentOrder.ready_by = readyBy;
-    const o = allOrders.find(x=>x.ref===currentOrder.ref);
-    if(o){
-      o.final_invoice_sent = now;
-      o.status = 'in behandeling';
-      o.ready_by = readyBy;
+  msg.style.display = 'none';
+
+  // The endpoint creates a Stripe checkout, sends a Resend email, AND files a
+  // Moneybird invoice — three sequential network calls. On Hobby plan Vercel
+  // kills serverless functions at 10s, so we wait up to 25s before giving up
+  // (the function may have completed even if our request was already aborted).
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 25000);
+
+  try {
+    const res = await fetch('/api/admin-final-invoice', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ ref: currentOrder.ref, total_price: total, ready_by: readyBy }),
+      signal:  controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    // Robust against non-JSON error pages (Vercel timeout HTML, etc.)
+    let data = {};
+    const ct = res.headers.get('content-type') || '';
+    if (ct.includes('application/json')) {
+      data = await res.json().catch(() => ({}));
+    } else {
+      const text = await res.text().catch(() => '');
+      data = { ok: false, error: text.slice(0, 200) || `Server returned ${res.status}` };
     }
-    setTimeout(() => {
-      closeFinalInvoice();
-      btn.innerHTML='Send final quote &rarr;';
-      btn.disabled=false;
-      openPanel(currentOrder.ref);
-      updateStats();
-      applyFilter();
-    }, 1500);
-  } else {
-    msg.textContent = data.error || 'Something went wrong.';
+
+    if (res.ok && data.ok) {
+      msg.textContent = `Quote sent. Balance due: \u20ac${data.remainder.toFixed(2)}`;
+      msg.style.color = 'var(--success)';
+      // Update local state — server flipped status to 'in behandeling' and saved ready_by
+      const now = Date.now();
+      currentOrder.final_invoice_sent = now;
+      currentOrder.status = 'in behandeling';
+      currentOrder.ready_by = readyBy;
+      const o = allOrders.find(x => x.ref === currentOrder.ref);
+      if (o) {
+        o.final_invoice_sent = now;
+        o.status = 'in behandeling';
+        o.ready_by = readyBy;
+      }
+      setTimeout(() => {
+        closeFinalInvoice();
+        btn.innerHTML = 'Send final quote &rarr;';
+        btn.disabled = false;
+        openPanel(currentOrder.ref);
+        updateStats();
+        applyFilter();
+      }, 1500);
+    } else {
+      msg.textContent = data.error || `Something went wrong (status ${res.status}).`;
+      msg.style.color = 'var(--terracotta)';
+      btn.innerHTML = 'Send final quote &rarr;';
+      btn.disabled = false;
+    }
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      msg.textContent = 'Request timed out. The quote may still have been sent \u2014 check Resend before retrying.';
+    } else {
+      msg.textContent = 'Network error: ' + (err.message || 'unknown');
+    }
     msg.style.color = 'var(--terracotta)';
     btn.innerHTML = 'Send final quote &rarr;';
     btn.disabled = false;
   }
+
   msg.style.display = 'block';
 }
 
