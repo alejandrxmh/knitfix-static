@@ -168,48 +168,68 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: "Server configuration error." });
   }
 
-  const original = await findSessionByRef(stripe, ref);
+  let original;
+  try {
+    original = await findSessionByRef(stripe, ref);
+  } catch (err) {
+    console.error("Stripe lookup failed:", err.message, err);
+    return res.status(502).json({ error: "Could not look up the order in Stripe: " + err.message });
+  }
   if (!original) return res.status(404).json({ error: "Order not found." });
 
-  const meta = original.metadata;
+  const meta = original.metadata || {};
+  if (!meta.customer_name || !meta.customer_email) {
+    return res.status(400).json({ error: "Order is missing customer info — cannot send quote." });
+  }
   const name = meta.customer_name.split(" ")[0];
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card", "ideal"],
-    line_items: [{
-      price_data: {
-        currency: "eur",
-        product_data: {
-          name: "KnitFix — Final quote for repair",
-          description: `${meta.garment_type} (${meta.material}) · ref: ${ref}`,
+  let session;
+  try {
+    session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card", "ideal"],
+      line_items: [{
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: "KnitFix — Final quote for repair",
+            description: `${meta.garment_type || "garment"} (${meta.material || "—"}) · ref: ${ref}`,
+          },
+          unit_amount: Math.round(remainder * 100),
         },
-        unit_amount: Math.round(remainder * 100),
+        quantity: 1,
+      }],
+      mode:           "payment",
+      customer_email: meta.customer_email,
+      locale:         "nl",
+      metadata: {
+        ...meta,
+        reference_code:   ref + "-FINAL",
+        total_price:      String(totalPrice),
+        deposit_paid:     String(depositPaid),
+        remainder:        String(remainder),
+        is_final_payment: "true",
       },
-      quantity: 1,
-    }],
-    mode:           "payment",
-    customer_email: meta.customer_email,
-    locale:         "nl",
-    metadata: {
-      ...meta,
-      reference_code:   ref + "-FINAL",
-      total_price:      String(totalPrice),
-      deposit_paid:     String(depositPaid),
-      remainder:        String(remainder),
-      is_final_payment: "true",
-    },
-    success_url: `${baseUrl}/success.html?ref=${ref}`,
-    cancel_url:  `${baseUrl}/`,
-  });
+      success_url: `${baseUrl}/success.html?ref=${ref}`,
+      cancel_url:  `${baseUrl}/`,
+    });
+  } catch (err) {
+    console.error("Stripe checkout creation failed:", err.message, err);
+    return res.status(502).json({ error: "Could not create payment link: " + err.message });
+  }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  await resend.emails.send({
-    from:     "KnitFix <hello@knitfix.nl>",
-    reply_to: "hello@knitfix.nl",
-    to:       meta.customer_email,
-    subject:  `KnitFix · je offerte & planning (${ref})`,
-    html:     finalQuoteEmail(name, ref, meta.garment_type, totalPrice, depositPaid, remainder, session.url, readyByFormatted),
-  });
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from:     "KnitFix <hello@knitfix.nl>",
+      reply_to: "hello@knitfix.nl",
+      to:       meta.customer_email,
+      subject:  `KnitFix · je offerte & planning (${ref})`,
+      html:     finalQuoteEmail(name, ref, meta.garment_type, totalPrice, depositPaid, remainder, session.url, readyByFormatted),
+    });
+  } catch (err) {
+    console.error("Resend email send failed:", err.message, err);
+    return res.status(502).json({ error: "Quote could not be emailed: " + err.message });
+  }
 
   // Mark final quote as sent on the ORIGINAL payment intent FIRST. This is
   // the source of truth for the admin dashboard, so if anything else after
