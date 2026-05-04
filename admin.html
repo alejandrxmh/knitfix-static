@@ -257,6 +257,10 @@ td{padding:12px 14px;vertical-align:middle;overflow:hidden;text-overflow:ellipsi
       <button class="pill" data-filter="quoted" onclick="filter('quoted',this)">Quoted <span class="pill-count" id="c-quoted">0</span></button>
       <button class="pill" data-filter="verzonden" onclick="filter('verzonden',this)">Shipped <span class="pill-count" id="c-verzonden">0</span></button>
       <div class="filter-spacer"></div>
+      <button class="archive-toggle" id="export-csv-btn" onclick="exportOrdersCsv()" title="Download visible orders as CSV" style="margin-right:14px">
+        <span class="archive-toggle-dot" style="background:var(--terracotta)"></span>
+        <span>Export CSV</span>
+      </button>
       <button class="archive-toggle" id="archive-toggle" onclick="toggleArchived()">
         <span class="archive-toggle-dot"></span>
         <span id="archive-toggle-text">Show archived</span>
@@ -1069,6 +1073,12 @@ function renderSecondaryActions(o){
     actions.push(`<button class="secondary-btn" onclick="openFinalInvoice()">Send invoice <span class="arrow">&rarr;</span></button>`);
   }
 
+  // Print internal summary — once the final quote has been sent we have
+  // the full financial picture (deposit + total + remainder).
+  if (o.final_invoice_sent) {
+    actions.push(`<button class="secondary-btn" onclick="printOrderSummary()">Print summary <span class="arrow">&rarr;</span></button>`);
+  }
+
   // Review email — shown after shipped. Button is disabled (shows "Review sent") if already sent.
   if (o.status === 'verzonden') {
     if (o.review_sent) {
@@ -1401,6 +1411,255 @@ async function shipOrder(){
     btn.innerHTML = 'Ship &amp; mark sent &rarr;';
     btn.disabled = false;
   }
+}
+
+// ─── INTERNAL RECORDS: PRINT SUMMARY + CSV EXPORT ──────────────────────
+//
+// These are bookkeeping helpers — they don't send anything to the customer
+// or to the Belastingdienst. Moneybird already creates the real BTW invoices
+// for tax purposes; these are for your own internal reconciliation against
+// Bunq + Moneybird.
+
+/** Open a printable summary of the current order in a new window.
+ * Shows deposit, final total, balance, and key timestamps. The new window
+ * triggers print() so you can save as PDF straight to your KnitFix folder.
+ */
+function printOrderSummary(){
+  if(!currentOrder) return;
+  const o = currentOrder;
+
+  const deposit   = parseFloat(o.amount) || 30;
+  const finalTotal = o.final_total != null ? parseFloat(o.final_total) : null;
+  const balance   = finalTotal != null ? (finalTotal - deposit) : null;
+
+  const fmtEur = v => v == null ? '\u2014' : '\u20ac' + v.toFixed(2);
+  const fmtFull = ts => {
+    if(!ts) return '\u2014';
+    return new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  };
+  const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+
+  let readyByPretty = '\u2014';
+  if (o.ready_by) {
+    try {
+      const d = new Date(o.ready_by + 'T12:00:00');
+      if (!isNaN(d.getTime())) {
+        readyByPretty = d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+      }
+    } catch(_) {}
+  }
+
+  // All inline styles so the print window has no external dependencies
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KnitFix \u00b7 ${escapeHtml(o.ref)}</title>
+<style>
+  @page { size: A4; margin: 24mm 20mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1a1714; background: #fff; margin: 0; padding: 32px; font-size: 13px; line-height: 1.6; }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 24px; border-bottom: 1px solid #e8e3db; margin-bottom: 28px; }
+  .brand { font-size: 20px; font-weight: 500; letter-spacing: 0.04em; color: #1a1714; margin: 0 0 4px; }
+  .brand-sub { font-size: 11px; color: #7a7269; margin: 0; letter-spacing: 0.06em; }
+  .doc-meta { text-align: right; font-size: 11px; color: #7a7269; }
+  .doc-title { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #b85c38; font-weight: 500; margin: 0 0 4px; }
+  .ref { font-family: 'SFMono-Regular', Menlo, monospace; font-size: 14px; color: #1a1714; }
+  h2 { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #7a7269; font-weight: 500; margin: 28px 0 10px; }
+  .row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 0.5px solid #f0ebe4; }
+  .row:last-child { border-bottom: none; }
+  .label { color: #7a7269; }
+  .val { color: #1a1714; text-align: right; max-width: 60%; word-break: break-word; }
+  .totals { background: #f5f2ee; border-radius: 8px; padding: 18px 22px; margin-top: 10px; }
+  .totals .row { border-bottom-color: #e8e3db; }
+  .totals .row.grand { border-top: 1px solid #b85c38; border-bottom: none; padding-top: 12px; margin-top: 4px; }
+  .totals .row.grand .label { color: #1a1714; font-weight: 500; font-size: 14px; }
+  .totals .val.amount { font-variant-numeric: tabular-nums; }
+  .totals .val.balance { color: #b85c38; font-weight: 500; font-size: 16px; }
+  .footer { margin-top: 36px; padding-top: 20px; border-top: 0.5px solid #e8e3db; font-size: 10px; color: #7a7269; line-height: 1.7; }
+  .note { background: #fdf8f5; border-left: 2px solid #b85c38; padding: 10px 14px; font-size: 11px; color: #7a7269; margin-top: 18px; border-radius: 4px; }
+  @media print { body { padding: 0; } .no-print { display: none; } }
+  .no-print { position: fixed; top: 16px; right: 16px; }
+  .no-print button { font: inherit; font-size: 12px; padding: 8px 16px; background: #b85c38; color: #fff; border: none; border-radius: 6px; cursor: pointer; letter-spacing: 0.04em; }
+  .no-print button:hover { background: #8a3e22; }
+</style>
+</head>
+<body>
+<div class="no-print"><button onclick="window.print()">Print / Save as PDF</button></div>
+<div class="wrap">
+
+  <div class="header">
+    <div>
+      <p class="brand">KnitFix</p>
+      <p class="brand-sub">amsterdam \u00b7 knitfix.nl</p>
+    </div>
+    <div class="doc-meta">
+      <p class="doc-title">internal record</p>
+      <p class="ref">${escapeHtml(o.ref)}</p>
+      <p style="margin:8px 0 0">Generated ${today}</p>
+    </div>
+  </div>
+
+  <h2>Order</h2>
+  <div class="row"><span class="label">Garment</span><span class="val">${escapeHtml(o.garment || '')}</span></div>
+  <div class="row"><span class="label">Material</span><span class="val">${escapeHtml(o.material || '')}</span></div>
+  <div class="row"><span class="label">Damage</span><span class="val">${escapeHtml(o.damage || '')}</span></div>
+  <div class="row"><span class="label">Repair style</span><span class="val">${escapeHtml(o.style || '')}</span></div>
+  ${o.description ? `<div class="row"><span class="label">Notes</span><span class="val">${escapeHtml(o.description)}</span></div>` : ''}
+  <div class="row"><span class="label">Status</span><span class="val">${escapeHtml(o.status || '')}</span></div>
+  <div class="row"><span class="label">Ready by</span><span class="val">${readyByPretty}</span></div>
+
+  <h2>Customer</h2>
+  <div class="row"><span class="label">Name</span><span class="val">${escapeHtml(o.name || '')}</span></div>
+  <div class="row"><span class="label">Email</span><span class="val">${escapeHtml(o.email || '')}</span></div>
+  ${o.phone ? `<div class="row"><span class="label">Phone</span><span class="val">${escapeHtml(o.phone)}</span></div>` : ''}
+  <div class="row"><span class="label">Return address</span><span class="val">${escapeHtml(o.address || '')}</span></div>
+
+  <h2>Timeline</h2>
+  <div class="row"><span class="label">Deposit paid</span><span class="val">${fmtFull(o.paid_at)}</span></div>
+  <div class="row"><span class="label">Inbound label sent</span><span class="val">${fmtFull(o.inbound_label_sent)}</span></div>
+  <div class="row"><span class="label">Final quote sent</span><span class="val">${fmtFull(o.final_invoice_sent)}</span></div>
+  <div class="row"><span class="label">Shipped to customer</span><span class="val">${fmtFull(o.shipped_at)}</span></div>
+  ${o.inbound_tracking ? `<div class="row"><span class="label">Inbound tracking</span><span class="val">${escapeHtml(o.inbound_tracking)}</span></div>` : ''}
+  ${o.outbound_tracking ? `<div class="row"><span class="label">Outbound tracking</span><span class="val">${escapeHtml(o.outbound_tracking)}</span></div>` : ''}
+
+  <h2>Payment</h2>
+  <div class="totals">
+    <div class="row"><span class="label">Total repair cost</span><span class="val amount">${fmtEur(finalTotal)}</span></div>
+    <div class="row"><span class="label">Deposit (paid ${fmtFull(o.paid_at)})</span><span class="val amount">\u2212 ${fmtEur(deposit)}</span></div>
+    <div class="row grand"><span class="label">Balance due / paid</span><span class="val balance">${fmtEur(balance)}</span></div>
+  </div>
+
+  <div class="note">
+    Internal record only \u2014 not a tax invoice. Official BTW invoices are issued automatically via Moneybird. Use this document for your own bookkeeping and reconciliation against Bunq business transactions.
+  </div>
+
+  <div class="footer">
+    KnitFix \u00b7 Amsterdam \u00b7 knitfix.nl &nbsp;\u00b7&nbsp; KvK 42013270 &nbsp;\u00b7&nbsp; BTW NL005433323B97 &nbsp;\u00b7&nbsp; eenmanszaak
+  </div>
+</div>
+</body>
+</html>`;
+
+  const w = window.open('', '_blank');
+  if (!w) { alert('Pop-up blocked. Please allow pop-ups for this site to print summaries.'); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+}
+
+/** Export currently-visible orders to a CSV file. Reuses the same filtering
+ * logic the table uses, so what you see is what you export.
+ */
+function exportOrdersCsv(){
+  // Mirror the filtering used by applyFilter()
+  let list;
+  if (activeFilter === 'all') {
+    list = allOrders;
+  } else if (activeFilter === 'action') {
+    list = allOrders.filter(o => {
+      const a = nextAction(o);
+      return a && a.priority && !o.archived;
+    });
+  } else if (activeFilter === 'quoted') {
+    list = allOrders.filter(o => o.final_invoice_sent && o.status !== 'verzonden' && !o.archived);
+  } else {
+    list = allOrders.filter(o => o.status === activeFilter);
+  }
+
+  if (!list || !list.length) {
+    alert('No orders to export with the current filter.');
+    return;
+  }
+
+  const headers = [
+    'Ref',
+    'Date paid',
+    'Customer name',
+    'Email',
+    'Phone',
+    'Garment',
+    'Material',
+    'Damage',
+    'Repair style',
+    'Notes',
+    'Status',
+    'Ready by',
+    'Deposit (EUR)',
+    'Final total (EUR)',
+    'Balance (EUR)',
+    'Total received (EUR)',
+    'Inbound label sent',
+    'Inbound tracking',
+    'Final quote sent',
+    'Shipped',
+    'Outbound tracking',
+    'Review sent',
+    'Archived',
+    'Return address',
+  ];
+
+  const isoDate = ts => ts ? new Date(ts).toISOString().slice(0,10) : '';
+  // CSV escape: wrap in quotes, double any internal quotes
+  const esc = v => {
+    if (v == null) return '';
+    const s = String(v);
+    if (/[",\n\r;]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+    return s;
+  };
+
+  const rows = list.map(o => {
+    const deposit    = parseFloat(o.amount) || 0;
+    const finalTotal = o.final_total != null ? parseFloat(o.final_total) : null;
+    const balance    = finalTotal != null ? (finalTotal - deposit) : null;
+    const totalReceived = finalTotal != null ? finalTotal : deposit;
+    return [
+      o.ref,
+      isoDate(o.paid_at),
+      o.name,
+      o.email,
+      o.phone || '',
+      o.garment,
+      o.material,
+      o.damage,
+      o.style,
+      o.description || '',
+      o.status,
+      o.ready_by || '',
+      deposit.toFixed(2),
+      finalTotal != null ? finalTotal.toFixed(2) : '',
+      balance != null ? balance.toFixed(2) : '',
+      totalReceived.toFixed(2),
+      isoDate(o.inbound_label_sent),
+      o.inbound_tracking || '',
+      isoDate(o.final_invoice_sent),
+      isoDate(o.shipped_at),
+      o.outbound_tracking || '',
+      o.review_sent ? 'yes' : 'no',
+      o.archived ? 'yes' : 'no',
+      o.address || '',
+    ].map(esc).join(',');
+  });
+
+  // BOM + CRLF for clean Excel/Numbers compatibility
+  const csv = '\uFEFF' + headers.map(esc).join(',') + '\r\n' + rows.join('\r\n') + '\r\n';
+
+  const today = new Date().toISOString().slice(0,10);
+  const filterTag = activeFilter && activeFilter !== 'all' ? '-' + activeFilter : '';
+  const filename = `knitfix-orders-${today}${filterTag}.csv`;
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 0);
 }
 
 // ─── FINAL QUOTE MODAL ─────────────────────────────────────────────────
