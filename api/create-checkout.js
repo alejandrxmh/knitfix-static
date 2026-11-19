@@ -1,4 +1,5 @@
 const Stripe = require("stripe");
+const payHandler = require("./_pay-handler");
 
 /* ── collect raw body from stream ── */
 async function parseBody(req) {
@@ -27,6 +28,9 @@ function generateRef() {
 }
 
 module.exports = async function handler(req, res) {
+  // GET = long-lived emailed payment link (/api/pay is rewritten here)
+  if (req.method === "GET") return payHandler(req, res);
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
