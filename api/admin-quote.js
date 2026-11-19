@@ -1,6 +1,7 @@
 const Stripe = require("stripe");
 const { Resend } = require("resend");
 const { authCheck } = require("./_auth");
+const { payLinkUrl } = require("./_pay-link");
 
 const LOGO_URL  = "https://knitfix.nl/knitfix_logo.jpg";
 const F         = "'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif";
@@ -168,14 +169,17 @@ module.exports = async function handler(req, res) {
     cancel_url:  `${baseUrl}/#book`,
   });
 
+  // long-lived link: creates a fresh checkout session on click (sessions expire after 24h)
+  const payUrl = payLinkUrl(baseUrl, ref);
+
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
     from: "KnitFix <hello@knitfix.nl>",
     reply_to: "hello@knitfix.nl",
     to: email,
     subject: `KnitFix · je offerte (${ref})`,
-    html: quoteEmail(name.split(" ")[0], ref, garment, material || "—", damage || "—", price, session.url),
+    html: quoteEmail(name.split(" ")[0], ref, garment, material || "—", damage || "—", price, payUrl),
   });
 
-  return res.status(200).json({ ok: true, ref, quote_url: session.url });
+  return res.status(200).json({ ok: true, ref, quote_url: payUrl });
 };

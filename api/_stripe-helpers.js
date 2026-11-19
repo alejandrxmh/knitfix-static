@@ -32,11 +32,45 @@ async function listAllSessions(stripe, { maxTotal = 500, extraParams = {} } = {}
 
 /**
  * Find a single checkout session by its metadata.reference_code.
- * Paginates through history in chunks of 100, short-circuits as soon
- * as a match is found. Much cheaper than listAllSessions for lookups.
+ * Paginates through history in chunks of 100.
+ *
+ * Since /api/pay can create several sessions for one ref (a fresh one each
+ * time an old link is clicked after expiry), this prefers the PAID session:
+ * it short-circuits on the first paid match, otherwise returns the newest
+ * match of any status.
  */
 async function findSessionByRef(stripe, ref, { maxSearched = 500, extraParams = {} } = {}) {
   if (!ref) return null;
+  let startingAfter = undefined;
+  let searched = 0;
+  let fallback = null;
+
+  while (searched < maxSearched) {
+    const page = await stripe.checkout.sessions.list({
+      limit: 100,
+      ...(startingAfter ? { starting_after: startingAfter } : {}),
+      ...extraParams,
+    });
+    for (const s of page.data) {
+      if (s.metadata?.reference_code !== ref) continue;
+      if (s.payment_status === "paid") return s;
+      if (!fallback) fallback = s;
+    }
+
+    searched += page.data.length;
+    if (!page.has_more || page.data.length === 0) break;
+    startingAfter = page.data[page.data.length - 1].id;
+  }
+
+  return fallback;
+}
+
+/**
+ * All checkout sessions with this metadata.reference_code, newest first.
+ */
+async function findSessionsByRef(stripe, ref, { maxSearched = 500, extraParams = {} } = {}) {
+  if (!ref) return [];
+  const matches = [];
   let startingAfter = undefined;
   let searched = 0;
 
@@ -46,15 +80,14 @@ async function findSessionByRef(stripe, ref, { maxSearched = 500, extraParams = 
       ...(startingAfter ? { starting_after: startingAfter } : {}),
       ...extraParams,
     });
-    const match = page.data.find((s) => s.metadata?.reference_code === ref);
-    if (match) return match;
+    matches.push(...page.data.filter((s) => s.metadata?.reference_code === ref));
 
     searched += page.data.length;
     if (!page.has_more || page.data.length === 0) break;
     startingAfter = page.data[page.data.length - 1].id;
   }
 
-  return null;
+  return matches;
 }
 
-module.exports = { listAllSessions, findSessionByRef };
+module.exports = { listAllSessions, findSessionByRef, findSessionsByRef };

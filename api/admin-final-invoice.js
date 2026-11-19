@@ -3,6 +3,7 @@ const { Resend } = require("resend");
 const createMoneybirdInvoice = require("./_moneybird-invoice");
 const { findSessionByRef } = require("./_stripe-helpers");
 const { authCheck } = require("./_auth");
+const { payLinkUrl } = require("./_pay-link");
 
 // ─── Shared design tokens (mirrored from webhook.js) ─────────────────────────
 const LOGO_URL  = "https://knitfix.nl/knitfix_logo.jpg";
@@ -217,6 +218,9 @@ module.exports = async function handler(req, res) {
     return res.status(502).json({ error: "Could not create payment link: " + err.message });
   }
 
+  // long-lived link: creates a fresh checkout session on click (sessions expire after 24h)
+  const payUrl = payLinkUrl(baseUrl, ref + "-FINAL");
+
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
@@ -224,7 +228,7 @@ module.exports = async function handler(req, res) {
       reply_to: "hello@knitfix.nl",
       to:       meta.customer_email,
       subject:  `KnitFix · je offerte & planning (${ref})`,
-      html:     finalQuoteEmail(name, ref, meta.garment_type, totalPrice, depositPaid, remainder, session.url, readyByFormatted),
+      html:     finalQuoteEmail(name, ref, meta.garment_type, totalPrice, depositPaid, remainder, payUrl, readyByFormatted),
     });
   } catch (err) {
     console.error("Resend email send failed:", err.message, err);
@@ -271,5 +275,5 @@ module.exports = async function handler(req, res) {
     console.error("Moneybird final quote invoice failed (non-fatal):", err.message);
   }
 
-  return res.status(200).json({ ok: true, remainder, payment_url: session.url, ready_by_formatted: readyByFormatted });
+  return res.status(200).json({ ok: true, remainder, payment_url: payUrl, ready_by_formatted: readyByFormatted });
 };
